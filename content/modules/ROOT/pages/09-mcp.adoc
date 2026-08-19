@@ -1,36 +1,36 @@
 = MCP
 
-In the previous module, you deployed the backend databases, REST APIs and MCP servers.
-This module demonstrates how to register the MCP servers with Llama Stack, how to programmatically interact with Llama Stack and MCP tools using Python - the primary language for AI application development.
+前のモジュールでは、バックエンドデータベース、REST API、および MCP サーバーをデプロイしました。
+このモジュールでは、MCP サーバーを Llama Stack に登録する方法と、AI アプリケーション開発の主要言語である Python を使用して Llama Stack および MCP ツールとプログラムで対話する方法を実証します。
 
-You'll explore 2 distinct approaches to building agents that consume MCP tools:
+MCP ツールを消費するエージェントを構築するための 2 つの異なるアプローチを探索します。
 
-1. **Llama Stack Client**: The native Python SDK for Llama Stack, providing direct access to tool invocation
-2. **LangGraph**: A popular third-party agentic framework that uses Llama Stack as its inference backend
+1. **Llama Stack クライアント (Llama Stack Client)**: Llama Stack 用のネイティブ Python SDK であり、ツール呼び出しへの直接アクセスを提供します。
+2. **LangGraph**: 推論バックエンドとして Llama Stack を使用する、人気のサードパーティ製エージェントフレームワークです。
 
-Both approaches demonstrate important patterns for agent development, from simple tool invocation to complex multi-step reasoning.
+どちらのアプローチも、単純なツール呼び出しから複雑な多段階推論まで、エージェント開発における重要なパターンを示しています。
 
-== Two approaches to agent development
+== エージェント開発への 2 つのアプローチ (Two approaches to agent development)
 
-Llama Stack's flexible architecture supports multiple development patterns:
+Llama Stack の柔軟なアーキテクチャは、複数の開発パターンをサポートしています。
 
-**Direct tool invocation (Llama Stack Client)**::
-Best for: Orchestrating tool calls programmatically when you control the logic
-- You decide which tools to call and when
-- Useful for deterministic workflows, testing, and integration scenarios
-- Full control over tool invocation, parameter passing, and result handling
+**直接的なツール呼び出し (Llama Stack クライアント) (Direct tool invocation (Llama Stack Client))**::
+最適：ロジックを自分で制御し、プログラムでツール呼び出しをオーケストレーションする場合
+- どのツールをいつ呼び出すかを自分で決定します。
+- 確定的なワークフロー、テスト、および統合シナリオに役立ちます。
+- ツールの呼び出し、パラメーターの受け渡し、および結果の処理を完全に制御できます。
 
-**Agent-driven invocation (LangGraph + Llama Stack)**::
-Best for: Building autonomous agents that reason about tool usage
-- The agent decides which tools to call based on user intent
-- Useful for conversational interfaces, customer support, and complex problem-solving
-- Agent handles tool selection, parameter extraction, and result synthesis
+**エージェント駆動の呼び出し (LangGraph + Llama Stack) (Agent-driven invocation (LangGraph + Llama Stack))**::
+最適：ツールの使用について推論する自律型エージェントを構築する場合
+- ユーザーの意図に基づいて、エージェントがどのツールを呼び出すかを決定します。
+- 対話型インターフェース、カスタマーサポート、および複雑な問題解決に役立ちます。
+- エージェントがツールの選択、パラメーターの抽出、および結果の統合を処理します。
 
-This module demonstrates both patterns so you can choose the right approach for your use case.  
+このモジュールでは、ユースケースに合わせて適切なアプローチを選択できるように、両方のパターンを実証します。
 
-== Setup
+== セットアップ (Setup)
 
-Make sure you are in the correct base directory
+正しいベースディレクトリにいることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -45,7 +45,7 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026
 ----
 
-Check that you have set key env variables
+主要な環境変数が設定されていることを確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -63,9 +63,7 @@ LLAMA_STACK_BASE_URL=http://llamastack-distribution-vllm-service.agentic-{user}.
 INFERENCE_MODEL=vllm/qwen3-14b
 ----
 
-
-
-If needed, create a Python virtual environment (venv) 
+必要に応じて、Python 仮想環境 (venv) を作成します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -73,7 +71,7 @@ If needed, create a Python virtual environment (venv)
 python -m venv .venv
 ----
 
-or you can look for an existing .venv folder
+または、既存の .venv フォルダを探すこともできます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -81,7 +79,7 @@ or you can look for an existing .venv folder
 ls .venv
 ----
 
-The following response indicates you need to create your Python venv
+以下のレスポンスが表示された場合は、Python venv を作成する必要があります。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -89,7 +87,7 @@ The following response indicates you need to create your Python venv
 ls: cannot access '.venv': No such file or directory
 ----
 
-and 
+および
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -103,7 +101,7 @@ echo $VIRTUAL_ENV
 /home/lab-user/fantaco-redhat-one-2026/.venv
 ----
 
-Set environment
+環境を設定します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -111,9 +109,9 @@ Set environment
 source .venv/bin/activate 
 ----
 
-And if you use Terminal 2 you wish to make sure all the env vars are set up there as well.
+ターミナル 2 (Terminal 2) を使用する場合は、そこでもすべての環境変数が設定されていることを確認してください。
 
-The execution of the *source* command will change the prompt itself to look like the following:
+*source* コマンドを実行すると、プロンプト自体が次のように変わります。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -121,8 +119,7 @@ The execution of the *source* command will change the prompt itself to look like
 ((.venv) ) [lab-user: ~/fantaco-redhat-one-2026]
 ----
 
-
-Change to the correct sub-directory
+正しいサブディレクトリに移動します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -137,9 +134,9 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026/mcp-examples/
 ----
 
-== Python Setup
+== Python のセットアップ (Python Setup)
 
-You should have access to *python* and *pip*
+*python* と *pip* にアクセスできる必要があります。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -177,7 +174,7 @@ which python
 ~/fantaco-redhat-one-2026/.venv/bin/python
 ----
 
-Install dependencies 
+依存関係をインストールします。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -185,16 +182,16 @@ Install dependencies
 pip install -r requirements.txt
 ----
 
-This installs the required Python packages:
+これにより、必要な Python パッケージがインストールされます。
 
-* `llamastack-client`: Official Python SDK for Llama Stack
-* `langgraph`: Graph-based agent framework
-* `langchain-openai`: OpenAI-compatible LangChain integration
-* Supporting libraries for HTTP requests and JSON processing
+* `llamastack-client`: Llama Stack 公式 Python SDK
+* `langgraph`: グラフベースのエージェントフレームワーク
+* `langchain-openai`: OpenAI 互換の LangChain 統合
+* HTTP リクエストと JSON 処理用のサポートライブラリ
 
-=== *Register MCP Servers*
+=== MCP サーバーの登録 (Register MCP Servers)
 
-Verify that you have connectivity to the MCP Servers which in turn have connectivity to the REST endpoints.
+REST エンドポイントに接続されている MCP サーバーへの接続を確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -212,7 +209,7 @@ https://mcp-customer-route-default.apps.cluster-frcqw.dynamic.redhatworkshops.io
 https://mcp-finance-route-default.apps.cluster-frcqw.dynamic.redhatworkshops.io/mcp
 ----
 
-==== *Register Customer MCP with Llama Stack*
+==== Customer MCP を Llama Stack に登録する (Register Customer MCP with Llama Stack)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -238,10 +235,9 @@ null
 HTTP Status: 200
 ----
 
+注：登録に失敗した（URL が間違っているなど）と感じた場合は、ツールの登録を解除するのに役立つ Python およびシェルスクリプトが用意されています。
 
-Note: If you feel that your registration failed, perhaps the wrong URL, then there Python and shell scripts to help you unregister the tool.
-
-See that the new toolgroup is registered
+新しいツールグループが登録されていることを確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -284,8 +280,7 @@ curl -sS -H "Content-Type: application/json" $LLAMA_STACK_BASE_URL/v1/toolgroups
 }
 ----
 
-
-==== *Register Finance MCP with Llama Stack*
+==== Finance MCP を Llama Stack に登録する (Register Finance MCP with Llama Stack)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -311,7 +306,7 @@ null
 HTTP Status: 200
 ----
 
-See if both the Customer and Finance MCP servers are registered
+Customer と Finance の両方の MCP サーバーが登録されているか確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -330,10 +325,10 @@ finance_mcp
 
 [TIP]
 ====
-*What just happened?* You registered two MCP servers as tool groups with Llama Stack. Llama Stack now knows where to find them and will query them for available tools at runtime. Notice the `provider_id` is `model-context-protocol` -- this tells Llama Stack to use the MCP protocol for tool discovery and invocation, as opposed to built-in tools like `builtin::rag`.
+**何が起きましたか？** 2 つの MCP サーバーをツールグループとして Llama Stack に登録しました。Llama Stack はそれらがどこにあるかを認識し、実行時に利用可能なツールを照会します。`provider_id` が `model-context-protocol` であることに注目してください。これは、`builtin::rag` のような組み込みツールではなく、ツールの検出と呼び出しに MCP プロトコルを使用するよう Llama Stack に指示するものです。
 ====
 
-==== List Customer Tools
+==== 顧客ツールの一覧表示 (List Customer Tools)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -353,7 +348,7 @@ Tool: get_customer
 Description: Get customer by ID
 ----
 
-==== List Finance Tools
+==== 財務ツールの一覧表示 (List Finance Tools)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -373,18 +368,17 @@ Tool: fetch_invoice_history
 Description: Get invoice history for a customer.
 ----
 
+== ツールの検出と検査 (Tool discovery and inspection)
 
-== Tool discovery and inspection
+エージェントを構築する前に、どのようなツールが利用可能かを理解する必要があります。Llama Stack は、登録されたツールグループを検出し、個々のツールを検査するための API を提供します。この動的な検出は MCP の主要な機能であり、エージェントはハードコーディングされた依存関係なしに、利用可能な機能に適応できます。
 
-Before building agents, you need to understand what tools are available. Llama Stack provides APIs for discovering registered tool groups and inspecting individual tools. This dynamic discovery is a key feature of MCP - agents can adapt to available capabilities without hardcoded dependencies.
+サンプルコードには、以下のための Python スクリプトが含まれています。
+- すべての登録済みツールグループのリスト表示
+- 各 MCP サーバー内のツールの検査
+- ツールの直接呼び出し（Llama Stack クライアントアプローチ）
+- 自律型エージェントの構築（LangGraph アプローチ）
 
-The sample code includes Python scripts for:
-- Listing all registered tool groups
-- Inspecting tools in each MCP server
-- Invoking tools directly (Llama Stack Client approach)
-- Building autonomous agents (LangGraph approach) 
-
-=== Available Tools
+=== 利用可能なツール (Available Tools)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -421,7 +415,7 @@ Total toolgroups: 4
 ==================================================
 ----
 
-=== Customer MCP Tools 
+=== Customer MCP ツール (Customer MCP Tools)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -467,7 +461,7 @@ Total tools: 2
 ==================================================
 ----
 
-=== Finance MCP tools
+=== Finance MCP ツール (Finance MCP tools)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -525,48 +519,45 @@ Total tools: 2
 ==================================================
 ----
 
-Notice the rich tool descriptions returned by the MCP servers. Each tool includes:
-- **Name**: Unique identifier for the tool
-- **Description**: Explains what the tool does and when to use it
-- **Args**: Detailed parameter specifications with types and requirements
-- **Returns**: Description of the expected result structure
+MCP サーバーから返される豊富なツールの説明に注目してください。各ツールには以下が含まれます。
+- **名前 (Name)**: ツールのユニークな識別子
+- **説明 (Description)**: ツールが何をするのか、いつ使用するのかを説明します
+- **引数 (Args)**: 型と要件を含む詳細なパラメーター仕様
+- **戻り値 (Returns)**: 期待される結果構造の説明
 
-This metadata enables agents to understand how to use tools without prior knowledge of the backend systems. The agent can read these descriptions and determine which tool to call for a given user request.
+このメタデータにより、エージェントはバックエンドシステムに関する事前の知識がなくても、ツールの使用方法を理解できます。エージェントはこれらの説明を読み、特定のユーザーリクエストに対してどのツールを呼び出すべきかを判断できます。
 
-== Approach 1: Llama Stack Client (direct tool invocation)
+== アプローチ 1: Llama Stack クライアント (直接的なツール呼び出し) (Approach 1: Llama Stack Client (direct tool invocation))
 
-The Llama Stack Client SDK provides a programmatic interface to all Llama Stack capabilities. When you use this approach, your Python code explicitly decides which tools to invoke and when - you're orchestrating the tool calls rather than letting an agent reason about them.
+Llama Stack クライアント SDK は、すべての Llama Stack 機能へのプログラムインターフェースを提供します。このアプローチを使用する場合、Python コードがどのツールをいつ呼び出すかを明示的に決定します。つまり、エージェントに推論させるのではなく、ツール呼び出しを自分でオーケストレーションします。
 
-This approach is useful when:
-- You have deterministic workflows with known tool sequences
-- You're testing tool connectivity and responses
-- You're building integrations where tool selection is rule-based
-- You need fine-grained control over error handling and retries
+このアプローチは次のような場合に役立ちます。
+- 既知のツールシーケンスを持つ確定的なワークフローがある
+- ツールの接続性とレスポンスをテストしている
+- ツールの選択がルールベースである統合を構築している
+- エラー処理や再試行をきめ細かく制御する必要がある
 
-=== Llama Stack Client: Customer
+=== Llama Stack クライアント: Customer (Llama Stack Client: Customer)
 
-The key elements of code to pay attention to in the Llama Stack Client for Customer are creation of the Client
+Llama Stack クライアントでの Customer 向けのコードで注目すべき主要な要素は、クライアントの作成です。
 
-
-[source,python]
-----
+```python
 client = Client(
     base_url=BASE_URL,
     api_key=API_KEY
 )
-----
+```
 
-And the invocation of the tool.
+そしてツールの呼び出しです。
 
-[source,python]
-----
+```python
 result = client.tool_runtime.invoke_tool(
     tool_name="search_customers",
     kwargs={"contact_email": email}
 )
-----
+```
 
-Run the script
+スクリプトを実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -612,12 +603,12 @@ CUSTOMER SEARCH RESULT
 
 [NOTE]
 ====
-*Direct invocation = no LLM involved.* This approach calls the MCP tool directly through `client.tool_runtime.invoke_tool()`. The LLM never sees the request -- your code decides which tool to call and with what parameters. This is useful for testing, scripted workflows, and cases where tool selection is deterministic.
+**直接呼び出し = LLM は関与しません。** このアプローチでは、`client.tool_runtime.invoke_tool()` を通じて MCP ツールを直接呼び出します。LLM はリクエストを一切見ません。コードがどのツールをどのようなパラメーターで呼び出すかを決定します。これは、テスト、スクリプト化されたワークフロー、およびツールの選択が確定的な場合に役立ちます。
 ====
 
-=== Llama Stack Client: Finance
+=== Llama Stack クライアント: Finance (Llama Stack Client: Finance)
 
-Also run the Llama Stack Client for Finance
+Finance 向けの Llama Stack クライアントも実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -665,83 +656,81 @@ Total Orders Found: 3
 ==================================================
 ----
 
-The Llama Stack Client approach demonstrates direct tool invocation where you control the workflow. Notice that:
-- Your code explicitly calls `client.tool_runtime.invoke_tool()`
-- You specify the exact tool name and parameters
-- You receive structured `ToolInvocationResult` objects
-- No LLM reasoning is involved - this is pure tool execution
+Llama Stack クライアントのアプローチは、ワークフローを自分で制御する直接的なツール呼び出しを実証しています。次の点に注目してください。
+- コードが明示的に `client.tool_runtime.invoke_tool()` を呼び出している。
+- 正確なツール名とパラメーターを指定している。
+- 構造化された `ToolInvocationResult` オブジェクトを受け取っている。
+- LLM の推論は関与していない。これは純粋なツールの実行です。
 
-This pattern is efficient for known workflows but doesn't leverage the agent's ability to reason about which tools to use based on natural language input.
+このパターンは既知のワークフローには効率的ですが、自然言語の入力に基づいてどのツールを使用するかを推論するエージェントの能力を活用していません。
 
-== Approach 2: LangGraph with Llama Stack (agent-driven invocation)
+== アプローチ 2: Llama Stack を使用した LangGraph (エージェント駆動の呼び出し) (Approach 2: LangGraph with Llama Stack (agent-driven invocation))
 
-LangGraph is a framework for building stateful, multi-agent applications using a graph-based execution model. When integrated with Llama Stack, LangGraph uses Llama Stack's Response API (or ChatCompletion API) for inference while adding sophisticated agent orchestration capabilities.
+LangGraph は、グラフベースの実行モデルを使用してステートフルなマルチエージェントアプリケーションを構築するためのフレームワークです。Llama Stack と統合すると、LangGraph は推論のために Llama Stack の Response API（または ChatCompletion API）を使用しつつ、高度なエージェントオーケストレーション機能を追加します。
 
-=== Why use LangGraph with Llama Stack?
+=== なぜ Llama Stack で LangGraph を使用するのですか？ (Why use LangGraph with Llama Stack?)
 
-**LangGraph adds agent capabilities**::
-- **Autonomous tool selection**: Agent decides which tools to call based on user intent
-- **Natural language understanding**: Extract tool parameters from conversational input
-- **Multi-step reasoning**: Chain multiple tool calls together to answer complex questions
-- **State management**: Maintain conversation context across turns
+**LangGraph がエージェント機能を追加します**::
+- **自律的なツールの選択**: エージェントがユーザーの意図に基づいてどのツールを呼び出すかを決定します。
+- **自然言語理解**: 対話型の入力からツールのパラメーターを抽出します。
+- **多段階推論**: 複数のツール呼び出しを連鎖させて、複雑な質問に答えます。
+- **状態管理**: ターンの枠を超えて会話のコンテキストを維持します。
 
-**Llama Stack provides the inference layer**::
-- **Model serving**: vLLM handles the heavy lifting of model inference
-- **Tool runtime**: MCP servers are invoked through Llama Stack's tool execution
-- **Unified API**: LangGraph uses standard OpenAI-compatible endpoints
+**Llama Stack が推論レイヤーを提供します**::
+- **モデルサービング**: vLLM がモデル推論の重労働を処理します。
+- **ツールランタイム**: Llama Stack のツール実行を通じて MCP サーバーが呼び出されます。
+- **統合 API**: LangGraph は標準の OpenAI 互換エンドポイントを使用します。
 
-**Together, they enable production agentic applications**::
-- LangGraph orchestrates the agent workflow (what to do)
-- Llama Stack executes the operations (how to do it)
-- MCP servers connect to business systems (where to get data)
+**これらが合わさることで、本番環境のエージェントアプリケーションが可能になります**::
+- LangGraph がエージェントのワークフロー（何をすべきか）をオーケストレーションします。
+- Llama Stack が操作（どのように行うか）を実行します。
+- MCP サーバーがビジネスシステム（どこからデータを取得するか）に接続します。
 
-.LangGraph agent workflow with Llama Stack
+.Llama Stack を使用した LangGraph エージェントのワークフロー (LangGraph agent workflow with Llama Stack)
 [mermaid,width=100%]
 ----
 sequenceDiagram
-    participant User
-    participant LG as LangGraph Agent
+    participant User as ユーザー
+    participant LG as LangGraph エージェント
     participant LLS as Llama Stack<br/>Response API
-    participant Model as vLLM Model
-    participant MCP as MCP Server
+    participant Model as vLLM モデル
+    participant MCP as MCP サーバー
 
-    User->>LG: "Find customer with email<br/>thomashardy@example.com"
-    LG->>LLS: POST /v1/responses<br/>(user message)
-    LLS->>Model: Inference request
-    Model->>Model: Analyze intent<br/>Generate tool call
-    Model-->>LLS: "Call search_customers<br/>with email parameter"
-    LLS->>MCP: Invoke search_customers
-    MCP-->>LLS: Customer data
-    LLS-->>LG: Tool result
-    LG->>LLS: POST /v1/responses<br/>(with tool result)
-    LLS->>Model: Generate response
-    Model-->>LLS: Natural language answer
-    LLS-->>LG: Final response
-    LG-->>User: "Found customer:<br/>Thomas Hardy at<br/>Around the Horn..."
+    User->>LG: 「email が thomashardy@example.com の<br/>顧客を見つけて」
+    LG->>LLS: POST /v1/responses<br/>(ユーザーメッセージ)
+    LLS->>Model: 推論リクエスト
+    Model->>Model: 意図を分析<br/>ツール呼び出しを生成
+    Model-->>LLS: 「email パラメーターを指定して<br/>search_customers を呼び出す」
+    LLS->>MCP: search_customers を呼び出す
+    MCP-->>LLS: 顧客データ
+    LLS-->>LG: ツールの実行結果
+    LG->>LLS: POST /v1/responses<br/>(ツール実行結果を含む)
+    LLS->>Model: 回答を生成
+    Model-->>LLS: 自然言語の回答
+    LLS-->>LG: 最終的な回答
+    LG-->>User: 「顧客が見つかりました:<br/>Around the Horn の<br/>Thomas Hardy さんです...」
 
-    Note over User,MCP: Agent reasons about tools,<br/>Llama Stack executes them
+    Note over User,MCP: エージェントがツールについて推論し、<br/>Llama Stack がそれらを実行します
 ----
 
-=== LangGraph integration with Llama Stack
+### LangGraph と Llama Stack の統合 (LangGraph integration with Llama Stack)
 
-LangGraph connects to Llama Stack through OpenAI-compatible APIs, making it easy to swap between different inference providers. The key integration points are:
+LangGraph は OpenAI 互換の API を介して Llama Stack に接続するため、異なる推論プロバイダー間での切り替えが容易です。主な統合ポイントは以下の通りです。
 
-**OpenAI-compatible endpoints**::
-Llama Stack exposes `/v1/chat/completions` and `/v1/responses` endpoints that follow OpenAI's API specification. LangGraph uses these endpoints as if it were talking to OpenAI's GPT models.
+**OpenAI 互換エンドポイント (OpenAI-compatible endpoints)**::
+Llama Stack は、OpenAI の API 仕様に従った `/v1/chat/completions` および `/v1/responses` エンドポイントを公開しています。LangGraph は、OpenAI の GPT モデルと話しているかのようにこれらのエンドポイントを使用します。
 
-**Response API usage**::
-The code uses `use_responses_api=True` to leverage Llama Stack's native Response API instead of ChatCompletion. This provides better integration with Llama Stack's tool runtime.
+**Response API の使用 (Response API usage)**::
+コードでは `use_responses_api=True` を使用して、ChatCompletion ではなく Llama Stack ネイティブの Response API を活用しています。これにより、Llama Stack のツールランタイムとの統合が向上します。
 
-**MCP tool binding**::
-Tools are bound to the LLM using MCP server references. LangGraph tells Llama Stack which MCP servers to make available to the agent.
+**MCP ツールのバインド (MCP tool binding)**::
+ツールは MCP サーバー参照を使用して LLM にバインドされます。LangGraph は Llama Stack に対し、どの MCP サーバーをエージェントで利用可能にするかを伝えます。
 
-Since Llama Stack's OpenAI-compatible endpoints don't require real authentication (when using local vLLM), you can set a placeholder API key. 
+Llama Stack の OpenAI 互換エンドポイントは、（ローカルの vLLM を使用する場合）実際の認証を必要としないため、プレースホルダーの API キーを設定できます。
 
+=== セットアップ (Setup)
 
-
-=== Setup
-
-Many frameworks assume that you need an OpenAI API key but in the case of using vLLM via MaaS and/or via Llama Stack, we simply need to set a "not-applicable" value. 
+多くのフレームワークは OpenAI API キーが必要であると想定していますが、MaaS 経由や Llama Stack 経由で vLLM を使用する場合、単に「not-applicable」という値を設定するだけで済みます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -749,23 +738,21 @@ Many frameworks assume that you need an OpenAI API key but in the case of using 
 export API_KEY="not-applicable"
 ----
 
-=== LangGraph Client: Customer
+=== LangGraph クライアント: Customer (LangGraph Client: Customer)
 
-The key elements in the code include:
+コード内の主要な要素は以下の通りです。
 
-[source,python]
-----
+```python
 llm = ChatOpenAI(
     model=INFERENCE_MODEL,
     openai_api_key=API_KEY,
     base_url=f"{BASE_URL}/v1",
     use_responses_api=True
 )
-----
+```
 
-[source,python]
-----
-# MCP tool binding using OpenAI Responses API format
+```python
+# OpenAI Responses API フォーマットを使用した MCP ツールのバインド
 llm_with_tools = llm.bind(
     tools=[
         {
@@ -775,15 +762,14 @@ llm_with_tools = llm.bind(
             "require_approval": "never",
         },
     ])
-----
+```
 
-[source,python]
-----
+```python
 response = graph.invoke(
     {"messages": [{"role": "user", "content": "Search for customer with email thomashardy@example.com"}]})
-----
+```
 
-Execute it 
+実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -796,46 +782,46 @@ python 5_langgraph_client_customer.py
 ----
 Base URL: http://localhost:8321
 Model:    vllm/qwen3-14b
-Testing LLM connectivity...
-LLM connectivity OK
+LLM 接続をテスト中... (Testing LLM connectivity...)
+LLM 接続 OK (LLM connectivity OK)
 
 ==================================================
-Searching for customer: thomashardy@example.com
+顧客を検索中: thomashardy@example.com (Searching for customer: thomashardy@example.com)
 ==================================================
 
 ==================================================
-CUSTOMER SEARCH RESULTS
+顧客の検索結果 (CUSTOMER SEARCH RESULTS)
 ==================================================
 
-Customer ID:   AROUT
-Company Name:  Around the Horn
-Contact Name:  Thomas Hardy
-Contact Email: thomashardy@example.com
+顧客 ID (Customer ID):   AROUT
+会社名 (Company Name):  Around the Horn
+担当者名 (Contact Name):  Thomas Hardy
+担当者メール (Contact Email): thomashardy@example.com
 ==================================================
 
 
 Assistant:
 
-Here is the customer information matching the email **thomashardy@example.com**:
+メールアドレス **thomashardy@example.com** に一致する顧客情報は以下の通りです。
 
-**Customer ID:** AROUT
-**Company:** Around the Horn
-**Contact Name:** Thomas Hardy
-**Title:** Sales Representative
-**Address:** 120 Hanover Sq.
-**City:** London
-**Postal Code:** WA1 1DP
-**Country:** UK
-**Phone:** (171) 555-7788
-**Fax:** (171) 555-6750
-**Email:** thomashardy@example.com
-**Created At:** 2026-01-02 18:21:35
-**Updated At:** 2026-01-02 18:21:35
+**顧客 ID (Customer ID):** AROUT
+**会社名 (Company):** Around the Horn
+**担当者名 (Contact Name):** Thomas Hardy
+**役職 (Title):** Sales Representative
+**住所 (Address):** 120 Hanover Sq.
+**市区町村 (City):** London
+**郵便番号 (Postal Code):** WA1 1DP
+**国 (Country):** UK
+**電話番号 (Phone):** (171) 555-7788
+**ファックス (Fax):** (171) 555-6750
+**メール (Email):** thomashardy@example.com
+**作成日 (Created At):** 2026-01-02 18:21:35
+**更新日 (Updated At):** 2026-01-02 18:21:35
 
-Let me know if you'd like to view more details or perform any actions for this customer!
+詳細の確認や、この顧客に対するアクションの実行が必要な場合はお知らせください！
 ----
 
-=== LangGraph Client: Finance
+=== LangGraph クライアント: Finance (LangGraph Client: Finance)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -848,76 +834,75 @@ python 5_langgraph_client_finance.py
 ----
 Base URL: http://localhost:8321
 Model:    vllm/qwen3-14b
-Testing LLM connectivity...
-LLM connectivity OK
+LLM 接続をテスト中... (Testing LLM connectivity...)
+LLM 接続 OK (LLM connectivity OK)
 
 ==================================================
-Fetching order history for customer: AROUT
+顧客 AROUT の注文履歴を取得中 (Fetching order history for customer: AROUT)
 ==================================================
 
 ==================================================
-ORDER HISTORY RESULTS
+注文履歴の結果 (ORDER HISTORY RESULTS)
 ==================================================
 
-Order #1:
-  Order ID:     8
-  Order Number: ORD-008
-  Order Date:   2024-01-30T15:20:00
-  Status:       PENDING
-  Total Amount: $59.99
+注文 #1 (Order #1):
+  注文 ID (Order ID):     8
+  注文番号 (Order Number): ORD-008
+  注文日 (Order Date):   2024-01-30T15:20:00
+  ステータス (Status):       PENDING
+  合計金額 (Total Amount): $59.99
 
-Order #2:
-  Order ID:     3
-  Order Number: ORD-003
-  Order Date:   2024-01-25T09:45:00
-  Status:       PENDING
-  Total Amount: $89.99
+注文 #2 (Order #2):
+  注文 ID (Order ID):     3
+  注文番号 (Order Number): ORD-003
+  注文日 (Order Date):   2024-01-25T09:45:00
+  ステータス (Status):       PENDING
+  合計金額 (Total Amount): $89.99
 
-Order #3:
-  Order ID:     4
-  Order Number: ORD-004
-  Order Date:   2024-01-10T16:20:00
-  Status:       DELIVERED
-  Total Amount: $199.99
+注文 #3 (Order #3):
+  注文 ID (Order ID):     4
+  注文番号 (Order Number): ORD-004
+  注文日 (Order Date):   2024-01-10T16:20:00
+  ステータス (Status):       DELIVERED
+  合計金額 (Total Amount): $199.99
 
 ==================================================
-Total Orders: 3
+合計注文数 (Total Orders): 3
 ==================================================
 
 
 Assistant:
 
-Here is the order history for customer AROUT:
+顧客 AROUT の注文履歴は以下の通りです。
 
-**Order History (3 orders total):**
+**注文履歴（計 3 件）:**
 1. **ORD-008**
-   - Total: $59.99
-   - Status: PENDING
-   - Date: January 30, 2024, 3:20 PM
+   - 合計: $59.99
+   - ステータス: PENDING
+   - 日時: 2024年1月30日 15:20
 
 2. **ORD-003**
-   - Total: $89.99
-   - Status: PENDING
-   - Date: January 25, 2024, 9:45 AM
+   - 合計: $89.99
+   - ステータス: PENDING
+   - 日時: 2024年1月25日 09:45
 
 3. **ORD-004**
-   - Total: $199.99
-   - Status: DELIVERED
-   - Date: January 10, 2024, 4:20 PM
+   - 合計: $199.99
+   - ステータス: DELIVERED
+   - 日時: 2024年1月10日 16:20
 
-Let me know if you'd like to investigate any specific order or need further assistance!
+特定の注文の調査が必要な場合や、さらなるサポートが必要な場合はお知らせください！
 ----
 
+=== LangGraph クライアント: Customer + Finance (LangGraph Client: Customer + Finance)
 
-=== LangGraph Client: Customer + Finance
-
-The real power is seen when combining a natural language query that works across BOTH the customer and finance tools. 
+本当の力は、顧客ツールと財務ツールの両方にまたがって動作する自然言語クエリを組み合わせたときに発揮されます。
 
 ----
 Find all orders for franwilson@example.com
 ----
 
-Where the use of the contact email address first requires a search of the customers to find the correct customer id which is then used to retrieve the orders from the finance tool.
+ここでは、連絡先メールアドレスを使用するために、まず顧客を検索して正しい顧客 ID を見つける必要があり、その後、その ID を使用して財務ツールから注文を取得します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -930,78 +915,78 @@ python 6_langgraph_client_list_orders_for_franwilson.py
 ----
 Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
-Testing LLM connectivity...
-LLM connectivity OK
+LLM 接続をテスト中... (Testing LLM connectivity...)
+LLM 接続 OK (LLM connectivity OK)
 
 ==================================================
-Finding orders for: franwilson@example.com
-==================================================
-
-==================================================
-CUSTOMER INFORMATION
-==================================================
-
-Customer ID:   LONEP
-Company Name:  Lonesome Pine Restaurant
-Contact Name:  Fran Wilson
-Contact Email: franwilson@example.com
+franwilson@example.com の注文を検索中 (Finding orders for: franwilson@example.com)
 ==================================================
 
 ==================================================
-ORDER HISTORY
+顧客情報 (CUSTOMER INFORMATION)
 ==================================================
 
-Order #1:
-  Order ID:     2
-  Order Number: ORD-002
-  Order Date:   2024-01-20T14:15:00
-  Status:       SHIPPED
-  Total Amount: $149.5
-
-Order #2:
-  Order ID:     1
-  Order Number: ORD-001
-  Order Date:   2024-01-15T10:30:00
-  Status:       DELIVERED
-  Total Amount: $299.99
-
-Order #3:
-  Order ID:     6
-  Order Number: ORD-006
-  Order Date:   2024-01-05T08:30:00
-  Status:       DELIVERED
-  Total Amount: $399.99
+顧客 ID (Customer ID):   LONEP
+会社名 (Company Name):  Lonesome Pine Restaurant
+担当者名 (Contact Name):  Fran Wilson
+担当者メール (Contact Email): franwilson@example.com
+==================================================
 
 ==================================================
-Total Orders: 3
+注文履歴 (ORDER HISTORY)
+==================================================
+
+注文 #1 (Order #1):
+  注文 ID (Order ID):     2
+  注文番号 (Order Number): ORD-002
+  注文日 (Order Date):   2024-01-20T14:15:00
+  ステータス (Status):       SHIPPED
+  合計金額 (Total Amount): $149.5
+
+注文 #2 (Order #2):
+  注文 ID (Order ID):     1
+  注文番号 (Order Number): ORD-001
+  注文日 (Order Date):   2024-01-15T10:30:00
+  ステータス (Status):       DELIVERED
+  合計金額 (Total Amount): $299.99
+
+注文 #3 (Order #3):
+  注文 ID (Order ID):     6
+  注文番号 (Order Number): ORD-006
+  注文日 (Order Date):   2024-01-05T08:30:00
+  ステータス (Status):       DELIVERED
+  合計金額 (Total Amount): $399.99
+
+==================================================
+合計注文数 (Total Orders): 3
 ==================================================
 
 
 Assistant:
 
-Here are all the orders for Fran Wilson (LONEP):
+Fran Wilson (LONEP) のすべての注文は以下の通りです。
 
-1. **Order #ORD-001**
-   - Date: January 15, 2024
-   - Status: DELIVERED
-   - Total: $299.99
+1. **注文 #ORD-001**
+   - 日付: 2024年1月15日
+   - ステータス: DELIVERED
+   - 合計: $299.99
 
-2. **Order #ORD-006**
-   - Date: January 5, 2024
-   - Status: DELIVERED
-   - Total: $399.99
+2. **注文 #ORD-006**
+   - 日付: 2024年1月5日
+   - ステータス: DELIVERED
+   - 合計: $399.99
 
-3. **Order #ORD-002**
-   - Date: January 20, 2024
-   - Status: SHIPPED
-   - Total: $149.50
+3. **注文 #ORD-002**
+   - 日付: 2024年1月20日
+   - ステータス: SHIPPED
+   - 合計: $149.50
 
-Let me know if you need details about a specific order!
+特定の注文の詳細が必要な場合はお知らせください！
 ----
 
 [NOTE]
 ====
-*Multi-step reasoning in action:* The agent received a single request ("Find all orders for franwilson@example.com") and autonomously executed two tool calls: first `search_customers` to resolve the email to a customer ID (LONEP), then `fetch_order_history` with that ID. The agent planned this sequence on its own -- you didn't have to code the workflow.
+**多段階推論の動作:** エージェントは単一のリクエスト（「franwilson@example.com のすべての注文を検索して」）を受け取り、自律的に 2 つのツール呼び出しを実行しました。まず、メールアドレスを顧客 ID (LONEP) に解決するために `search_customers` を呼び出し、次にその ID を使用して `fetch_order_history` を呼び出しました。エージェントはこのシーケンスを自ら計画しました。ワークフローをコーディングする必要はありませんでした。
 ====
 
 [.console-input]
@@ -1015,61 +1000,61 @@ python 7_langgraph_client_list_orders_any_customer.py liuwong@example.com
 ----
 Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
-Testing LLM connectivity...
-LLM connectivity OK
+LLM 接続をテスト中... (Testing LLM connectivity...)
+LLM 接続 OK (LLM connectivity OK)
 
 ==================================================
-Finding orders for: liuwong@example.com
-==================================================
-
-==================================================
-CUSTOMER INFORMATION
-==================================================
-
-Customer ID:   THECR
-Company Name:  The Cracker Box
-Contact Name:  Liu Wong
-Contact Email: liuwong@example.com
+liuwong@example.com の注文を検索中 (Finding orders for: liuwong@example.com)
 ==================================================
 
 ==================================================
-ORDER HISTORY
+顧客情報 (CUSTOMER INFORMATION)
 ==================================================
 
-Order #1:
-  Order ID:     7
-  Order Number: ORD-007
-  Order Date:   2024-01-28T13:45:00
-  Status:       SHIPPED
-  Total Amount: $129.99
-
-Order #2:
-  Order ID:     5
-  Order Number: ORD-005
-  Order Date:   2024-01-22T11:10:00
-  Status:       CANCELLED
-  Total Amount: $79.99
+顧客 ID (Customer ID):   THECR
+会社名 (Company Name):  The Cracker Box
+担当者名 (Contact Name):  Liu Wong
+担当者メール (Contact Email): liuwong@example.com
+==================================================
 
 ==================================================
-Total Orders: 2
+注文履歴 (ORDER HISTORY)
+==================================================
+
+注文 #1 (Order #1):
+  注文 ID (Order ID):     7
+  注文番号 (Order Number): ORD-007
+  注文日 (Order Date):   2024-01-28T13:45:00
+  ステータス (Status):       SHIPPED
+  合計金額 (Total Amount): $129.99
+
+注文 #2 (Order #2):
+  注文 ID (Order ID):     5
+  注文番号 (Order Number): ORD-005
+  注文日 (Order Date):   2024-01-22T11:10:00
+  ステータス (Status):       CANCELLED
+  合計金額 (Total Amount): $79.99
+
+==================================================
+合計注文数 (Total Orders): 2
 ==================================================
 
 
 Assistant: 
 
-Here are the orders for liuwong@example.com (customer ID THECR):
+liuwong@example.com (顧客 ID THECR) の注文は以下の通りです。
 
-1. **Order #ORD-007**  
-   - Date: January 28, 2024  
-   - Status: ✅ SHIPPED  
-   - Total: $129.99  
+1. **注文 #ORD-007**  
+   - 日付: 2024年1月28日  
+   - ステータス: ✅ SHIPPED  
+   - 合計: $129.99  
 
-2. **Order #ORD-005**  
-   - Date: January 22, 2024  
-   - Status: ❌ CANCELLED  
-   - Total: $79.99  
+2. **注文 #ORD-005**  
+   - 日付: 2024年1月22日  
+   - ステータス: ❌ CANCELLED  
+   - 合計: $79.99  
 
-Let me know if you need details about a specific order!
+特定の注文の詳細が必要な場合はお知らせください！
 ----
 
 [.console-input]
@@ -1083,69 +1068,69 @@ python 8_langgraph_client_list_invoices_any_customer.py liuwong@example.com
 ----
 Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
-Testing LLM connectivity...
-LLM connectivity OK
+LLM 接続をテスト中... (Testing LLM connectivity...)
+LLM 接続 OK (LLM connectivity OK)
 
 ==================================================
-Finding invoices for: liuwong@example.com
-==================================================
-
-==================================================
-CUSTOMER INFORMATION
-==================================================
-
-Customer ID:   THECR
-Company Name:  The Cracker Box
-Contact Name:  Liu Wong
-Contact Email: liuwong@example.com
+liuwong@example.com の請求書を検索中 (Finding invoices for: liuwong@example.com)
 ==================================================
 
 ==================================================
-INVOICE HISTORY
+顧客情報 (CUSTOMER INFORMATION)
 ==================================================
 
-Invoice #1:
-  Invoice ID:     7
-  Invoice Number: INV-007
-  Invoice Date:   2024-01-28T13:50:00
-  Status:         SENT
-  Total Amount:   $129.99
-
-Invoice #2:
-  Invoice ID:     5
-  Invoice Number: INV-005
-  Invoice Date:   2024-01-22T11:15:00
-  Status:         CANCELLED
-  Total Amount:   $79.99
+顧客 ID (Customer ID):   THECR
+会社名 (Company Name):  The Cracker Box
+担当者名 (Contact Name):  Liu Wong
+担当者メール (Contact Email): liuwong@example.com
+==================================================
 
 ==================================================
-Total Invoices: 2
+請求履歴 (INVOICE HISTORY)
+==================================================
+
+請求書 #1 (Invoice #1):
+  請求書 ID (Invoice ID):     7
+  請求書番号 (Invoice Number): INV-007
+  請求日 (Invoice Date):   2024-01-28T13:50:00
+  ステータス (Status):         SENT
+  合計金額 (Total Amount):   $129.99
+
+請求書 #2 (Invoice #2):
+  請求書 ID (Invoice ID):     5
+  請求書番号 (Invoice Number): INV-005
+  請求日 (Invoice Date):   2024-01-22T11:15:00
+  ステータス (Status):         CANCELLED
+  合計金額 (Total Amount):   $79.99
+
+==================================================
+合計請求数 (Total Invoices): 2
 ==================================================
 
 
 Assistant: 
 
-Here are the invoices for Liu Wong (The Cracker Box):
+Liu Wong (The Cracker Box) の請求書は以下の通りです。
 
-**Invoice History for THECR (The Cracker Box):**
-1. **Invoice #INV-007**
-   - Status: SENT
-   - Amount: $129.99
-   - Invoice Date: Jan 28, 2024
-   - Due Date: Feb 28, 2024
-   - No payment date recorded
+**THECR (The Cracker Box) の請求履歴:**
+1. **請求書 #INV-007**
+   - ステータス: SENT
+   - 金額: $129.99
+   - 請求日: 2024年1月28日
+   - 支払期日: 2024年2月28日
+   - 支払日の記録なし
 
-2. **Invoice #INV-005**
-   - Status: CANCELLED
-   - Amount: $79.99
-   - Invoice Date: Jan 22, 2024
-   - Due Date: Feb 22, 2024
-   - No payment date recorded
+2. **請求書 #INV-005**
+   - ステータス: CANCELLED
+   - 金額: $79.99
+   - 請求日: 2024年1月22日
+   - 支払期日: 2024年2月22日
+   - 支払日の記録なし
 
-Would you like me to check details about the cancelled invoice or look up any other information?
+キャンセルされた請求書の詳細を確認しますか、それとも他の情報を検索しますか？
 ----
 
-The data comes from the Postgres databases behind the REST APIs behind the MCP Servers.  If you would like to know which customers have orders or invoices you can go look in the following file:
+データは、MCP サーバーの背後にある REST API の背後にある Postgres データベースから取得されます。どの顧客に注文や請求書があるかを知りたい場合は、次のファイルを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -1153,53 +1138,50 @@ The data comes from the Postgres databases behind the REST APIs behind the MCP S
 ls $HOME/fantaco-redhat-one-2026/fantaco-finance-main/src/main/resources/data.sql
 ----
 
-The LangGraph examples demonstrate agentic behavior and offers a different approach to building more complex, stateful agent
-systems with explicit control flow via graph-based orchestration.
+LangGraph の例は、エージェント的な動作を実証しており、グラフベースのオーケストレーションによる明示的な制御フローを備えた、より複雑でステートフルなエージェントシステムの構築に向けた異なるアプローチを提供しています。
 
-Notice the key differences from direct tool invocation:
+直接的なツール呼び出しとの主な違いに注目してください。
 
-**Agent reasoning**::
-The agent analyzes the user's request, determines which tools to use, plans the response format, and synthesizes a natural language answer.
+**エージェントの推論 (Agent reasoning)**::
+エージェントはユーザーのリクエストを分析し、使用するツールを決定し、回答の形式を計画し、自然言語の回答を統合します。
 
-**Natural language interface**::
-You provide conversational input like "Search for customer with email thomashardy@example.com" rather than specifying tool names and parameters programmatically.
+**自然言語インターフェース (Natural language interface)**::
+プログラムでツール名やパラメーターを指定するのではなく、「email が thomashardy@example.com の顧客を検索して」といった対話型の入力を提供します。
 
-**Tool selection**::
-The agent autonomously decides to call `search_customers` with the appropriate email parameter extracted from the user's message.
+**ツールの選択 (Tool selection)**::
+エージェントは、ユーザーのメッセージから抽出された適切な email パラメーターを使用して `search_customers` を呼び出すことを自律的に決定します。
 
-**Response synthesis**::
-After receiving tool results, the agent generates a human-friendly response, formatting the data in a readable way and offering follow-up assistance.
+**回答の統合 (Response synthesis)**::
+ツールの結果を受け取った後、エージェントは人間にとって分かりやすい回答を生成し、データを読みやすい形式に整え、さらなるサポートを提案します。
 
-This is the power of agentic AI - the LLM acts as an intelligent coordinator that understands user intent, selects appropriate tools, and presents results conversationally.
+これがエージェント型 AI の力です。LLM がインテリジェントなコーディネーターとして機能し、ユーザーの意図を理解し、適切なツールを選択し、結果を対話形式で提示します。
 
-== Summary
+== まとめ (Summary)
 
-In this module, you explored 2 approaches to interacting with MCP tools:
+このモジュールでは、MCP ツールと対話するための 2 つのアプローチを探索しました。
 
-**Approach 1: Llama Stack Client (direct invocation)**::
-- Programmatic tool invocation where your code controls the workflow
-- Useful for deterministic workflows, testing, and rule-based integrations
-- Direct access to `client.tool_runtime.invoke_tool()`
-- No LLM reasoning - pure tool execution
+**アプローチ 1: Llama Stack クライアント (直接呼び出し) (Approach 1: Llama Stack Client (direct invocation))**::
+- コードがワークフローを制御する、プログラムによるツール呼び出し。
+- 確定的なワークフロー、テスト、およびルールベースの統合に役立ちます。
+- `client.tool_runtime.invoke_tool()` への直接アクセス。
+- LLM の推論はなし。純粋なツールの実行です。
 
-**Approach 2: LangGraph with Llama Stack (agent-driven)**::
-- Autonomous agent that reasons about tool selection
-- Natural language interface for user input
-- Agent extracts parameters, chains tools, and synthesizes responses
+**アプローチ 2: Llama Stack を使用した LangGraph (エージェント駆動) (Approach 2: LangGraph with Llama Stack (agent-driven))**::
+- ツールの選択について推論する自律型エージェント。
+- ユーザー入力のための自然言語インターフェース。
+- エージェントがパラメーターを抽出し、ツールを連鎖させ、回答を統合します。
 
+**実証された主要概念**::
+* **ツールの検出**: エージェントは、利用可能なツールとその説明を動的に照会できます。
+* **MCP の抽象化**: どちらのアプローチでも同じツールが動作します。MCP インターフェースは一貫しています。
+* **Llama Stack の柔軟性**: ネイティブクライアント SDK と LangGraph のようなサードパーティフレームワークの両方をサポートしています。
+* **Response API の統合**: どちらのアプローチも、効率的な推論のために Llama Stack の Response API を活用しています。
 
-**Key concepts demonstrated**::
-* **Tool discovery**: Agents can query available tools and their descriptions dynamically
-* **MCP abstraction**: Same tools work with both approaches - the MCP interface is consistent
-* **Llama Stack flexibility**: Support for native client SDK and third-party frameworks like LangGraph
-* **Response API integration**: Both approaches leverage Llama Stack's Response API for streamlined inference
+**構築したもの**::
+- MCP ツールを検出し検査する Python スクリプト。
+- Llama Stack クライアントを使用した直接的なツール呼び出し。
+- 顧客および財務に関するクエリを推論する、LangGraph を使用したエージェント。
 
+これで、自然言語の入力からエージェントの推論、ツール呼び出し、MCP サーバー、バックエンド API、およびデータベースに至るまで、完全なエンドツーエンドの接続を実証できました。
 
-**What you built**::
-- Python scripts that discover and inspect MCP tools
-- Direct tool invocation using Llama Stack Client
-- Agents using LangGraph that reason about customer and finance queries
-
-You've now demonstrated complete end-to-end connectivity from natural language input through agent reasoning, tool invocation, MCP servers, backend APIs, and databases. 
-
-In the next module, you will dive into Llama Stack's native agent capabilities. 
+次のモジュールでは、Llama Stack ネイティブのエージェント機能について深く掘り下げます。
