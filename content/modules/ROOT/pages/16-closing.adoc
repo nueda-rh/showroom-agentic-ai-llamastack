@@ -1,111 +1,82 @@
-= Closing
+= 終了
 
-Congratulations on completing this hands-on workshop on building agentic AI applications using
-*Llama Stack*, *LangGraph*, *Langfuse*, *FastAPI* and *FastMCP* on Red Hat OpenShift AI. 
-You've journeyed from deploying your first Llama Stack instance to 
-building AI agents that interact with enterprise systems through the Model Context
-Protocol (MCP).
+Red Hat OpenShift AI上で、*Llama Stack*、*LangGraph*、*Langfuse*、*FastAPI*、および *FastMCP* を使用してエージェンティックAIアプリケーションを構築するハンズオンワークショップを完了されたことをお祝い申し上げます。最初のLlama Stackインスタンスのデプロイから、Model Context Protocol (MCP) を通じてエンタープライズシステムと対話するAIエージェントの構築まで、一連のプロセスを完了されました。
 
 image::lab_arch_flow.png[]
 
-== What you've learned
+== 学んだ内容
 
-**Deployed and explored Llama Stack**:: You deployed a Llama Stack
-distribution on OpenShift, discovered its comprehensive API landscape, and
-interacted with language models through multiple inference interfaces
-including the native Response API.
+**Llama Stackのデプロイと探索**:: OpenShift上にLlama Stackディストリビューションをデプロイし、その包括的なAPIランドスケープを探索しました。また、ネイティブのResponse APIを含む複数の推論インターフェースを通じて言語モデルと対話しました。
 
-**Implemented RAG capabilities**:: You built Retrieval-Augmented Generation (RAG)
-systems using Llama Stack's built-in vector stores, embedding models, and
-file search tools to ground AI responses in your own documents.
+**RAG機能の提供**:: Llama Stackに組み込まれたベクターストア、埋め込みモデル、およびファイル検索ツールを使用して、AIの回答を独自のドキュメントに基づかせる検索拡張生成 (RAG) システムを構築しました。
 
-**Applied safety guardrails**:: You learned how to implement content moderation and
-safety shields to ensure your AI applications meet enterprise security and
-compliance requirements.
+**セーフティガードレールの適用**:: AIアプリケーションが企業のセキュリティおよびコンプライアンス要件を確実に満たすようにするための、コンテンツモデレーションとセーフティシールドの実装方法を学びました。
 
-**Leveraged Web Search Tools**:: You used Tavily to augment context and address your 
-model's knowledge cutoff and limited training data.
+**Web検索ツールの活用**:: モデルの知識のカットオフや限定された学習データを補完するために、Tavilyを使用してコンテキストを拡張しました。
 
-**Integrated business systems via MCP**:: You deployed and registered Model Context
-Protocol servers that bridge Llama Stack and LangGraph agents with backend microservices,
-enabling AI to access customer data, financial transactions, and other
-enterprise capabilities.
+**MCPによるビジネスシステムとの統合**:: Llama StackやLangGraphエージェントをバックエンドのマイクロサービスと橋渡しするModel Context Protocol (MCP) サーバーをデプロイおよび登録し、AIが顧客データ、財務取引、その他のエンタープライズ機能にアクセスできるようにしました。
 
-**Built autonomous agents**:: You created intelligent agents using both the
-native Llama Stack Client and popular frameworks like LangGraph that can
-reason about tool usage, execute multi-step workflows, and provide natural
-language interfaces to complex business functions.
+**自律型エージェントの構築**:: ネイティブのLlama StackクライアントとLangGraphのような一般的なフレームワークの両方を使用して、ツールの使用方法を推論し、多段階のワークフローを実行し、複雑なビジネス機能に対して自然言語インターフェースを提供できるインテリジェントなエージェントを作成しました。
 
-**Deployed production applications**:: You completed the journey by deploying a
-full-stack AI agent application with a web-based chat interface that brings
-together inference, tools, MCP, traces, evals and feedback.
+**本番アプリケーションのデプロイ**:: 推論、ツール、MCP、トレース、評価、およびフィードバックを統合した、Webベースのチャットインターフェースを備えたフルスタックのAIエージェントアプリケーションをデプロイすることで、一連のプロセスを締めくくりました。
 
-Throughout this workshop, you worked with an enterprise AI
-architecture running on OpenShift:
+このワークショップを通じて、OpenShift上で動作するエンタープライズAIアーキテクチャを使用して作業を行いました。
 
-* **Llama Stack Distribution**: The core AI platform providing unified APIs
-for inference, agents, RAG, and tools
-* **vLLM**: High-performance model serving using the Qwen3
-14B model, Llama Scout 17B, Llama Guard 3 1B, etc.
-* **MCP Servers**: Protocol translation layer connecting agents to backend
-systems
-* **Backend Microservices**: PostgreSQL-backed REST APIs providing customer
-and finance capabilities
-* **Agent Applications**: Python applications demonstrating
-various agent architectures and frameworks
+* **Llama Stackディストリビューション**: 推論、エージェント、RAG、およびツールのための統合APIを提供するコアAIプラットフォーム
+* **vLLM**: Qwen3 14Bモデル、Llama Scout 17B、Llama Guard 3 1Bなどを使用した高性能なモデルサービング
+* **MCPサーバー**: エージェントをバックエンドシステムに接続するプロトコル変換レイヤー
+* **バックエンドマイクロサービス**: 顧客および財務機能を提供するPostgreSQLベースのREST API
+* **エージェントアプリケーション**: さまざまなエージェントアーキテクチャとフレームワークを示すPythonアプリケーション
 
-All components ran on Red Hat OpenShift AI 3, leveraging enterprise-grade
-infrastructure for production AI workloads.
+すべてのコンポーネントは Red Hat OpenShift AI 3 上で動作し、本番環境のAIワークロード向けにエンタープライズグレードのインフラストラクチャを活用しました。
 
-== Workshop modules completed
+== 完了したワークショップモジュール
 
-1. **Introduction** - Workshop overview and objectives
-2. **Deploying Llama Stack** - Installed and configured your AI platform
-3. **Exploring Llama Stack** - Discovered APIs and tested inference capabilities
-4. **RAG** - Implemented document retrieval and knowledge grounding
-5. **Evals** - Evaluated the responses from models
-6. **Shields** - Applied safety and content moderation
-7. **Web Search** - Used Tavily to augment context with web results
-8. **Backend Setup** - Deployed microservices and MCP servers
-9. **MCP** - Built agents with Python that use business function tools via MCP
-10. **Agent** - Explored the Llama Stack Agent API
-11. **Agent** - Deployed a complete LangGraph-based agent application
-12. **Traces** - Used Langfuse for traces, evals and feedback
-13. **Langflow** - Built graphical agent workflows
-14. **Workbench** - Explored OpenShift AI's in-cluster, in-browser VS Code
+1. **はじめに (Introduction)** - ワークショップの概要と目的
+2. **Llama Stackのデプロイ (Deploying Llama Stack)** - AIプラットフォームのインストールと構成
+3. **Llama Stackの探索 (Exploring Llama Stack)** - APIの発見と推論機能のテスト
+4. **RAG** - ドキュメント検索と知識ベースの回答の実装
+5. **評価 (Evals)** - モデルからの回答の評価
+6. **シールド (Shields)** - セーフティとコンテンツモデレーションの適用
+7. **Web検索 (Web Search)** - Web検索結果によるコンテキストの拡張
+8. **バックエンドのセットアップ (Backend Setup)** - マイクロサービスとMCPサーバーのデプロイ
+9. **MCP** - MCPを介してビジネス関数ツールを使用するPythonエージェントの構築
+10. **エージェント (Agent)** - Llama Stack Agent APIの探索
+11. **エージェント (Agent)** - LangGraphベースの完全なエージェントアプリケーションのデプロイ
+12. **トレース (Traces)** - トレース、評価、フィードバックへのLangfuseの活用
+13. **Langflow** - グラフィカルなエージェントワークフローの構築
+14. **Workbench** - OpenShift AIのクラスター内ブラウザベースVS Codeの探索
 
+これで、Llama Stack、FastMCP、LangGraph、FastAPI、Langfuse、Langflow、およびエンタープライズインフラストラクチャを使用して、OpenShift上でエージェンティックAIシステムを構築、デプロイ、および運用するハンズオンの経験を得られました。
 
-
-You now have hands-on experience building, deploying, and operating agentic AI systems on OpenShift using Llama Stack,FastMCP, LangGraph, FastAPI, Langfuse, Langflow and enterprise infrastructure.
-
-== Next steps
+== 次のステップ
 
 [TIP]
 ====
-*Taking this to your own environment:* The patterns you practiced — Llama Stack distribution, MCP servers, agent frameworks, observability with Langfuse — are all portable. You can reproduce this architecture on any OpenShift cluster with GPU access by following the same Helm charts and CRDs used in this lab. The key components (Llama Stack, vLLM, FastMCP, LangGraph, Langfuse, Langflow) are all open source.
+*自身の環境への導入：* Llama Stackディストリビューション、MCPサーバー、エージェントフレームワーク、Langfuseによるオブザーバビリティなど、実習したパターンはすべてポータブルです。このラボで使用したのと同じHelmチャートとCRDに従うことで、GPUアクセスが可能な任意のOpenShiftクラスター上でこのアーキテクチャを再現できます。主要なコンポーネント（Llama Stack、vLLM、FastMCP、LangGraph、Langfuse、Langflow）はすべてオープンソースです。
 ====
 
-Ready to continue your AI journey? Explore more innovative AI use cases and quickstart guides:
+AIの旅を続ける準備はできましたか？さらに革新的なAIのユースケースとクイックスタートガイドを探索してください。
 
-**Red Hat AI Quickstarts**: https://docs.redhat.com/en/learn/ai-quickstarts
+**Red Hat AI クイックスタート**: https://docs.redhat.com/en/learn/ai-quickstarts
 
-The AI quickstarts provide simple, focused examples designed for fast and easy deployment on the Red Hat AI platform, including:
+AIクイックスタートは、Red Hat AIプラットフォーム上で迅速かつ容易にデプロイできるように設計された、シンプルで焦点を絞った例を提供します。以下が含まれます。
 
-* **Enterprise RAG Chatbot** - Centralize company knowledge with retrieval-augmented generation
-* **AI-powered Virtual Agent** - Build conversational AI to automate customer interactions
-* **Privacy-focused AI Assistant** - Deploy healthcare AI with PII detection and content moderation
-* **Self-Service IT Agents** - Automate IT processes like laptop refresh workflows
-* **HR Assistant** - Replace hours of policy document searches with AI-powered assistance
-* **Compliance Audit Systems** - Deploy financial audit systems with real-time insights
-* **Observability Analysis** - Summarize and analyze AI model performance and cluster metrics
-* **AI Product Recommendations** - Transform e-commerce with AI-driven discovery
+* **エンタープライズRAGチャットボット** - 検索拡張生成を使用して社内の知識を集約
+* **AI駆動型バーチャルエージェント** - 顧客対応を自動化する対話型AIの構築
+* **プライバシー重視のAIアシスタント** - 個人情報（PII）検出とコンテンツモデレーションを備えたヘルスケアAIのデプロイ
+* **セルフサービスITエージェント** - ラップトップの更新ワークフローなどのITプロセスを自動化
+* **人事アシスタント** - ポリシー文書の検索にかかる時間をAIによる支援で短縮
+* **コンプライアンス監査システム** - リアルタイムのインサイトを備えた財務監査システムのデプロイ
+* **オブザーバビリティ分析** - AIモデルのパフォーマンスとクラスターメトリクスの要約と分析
+* **AI製品レコメンデーション** - AI駆動の発見によりeコマースを変革
 
-Each quickstart has been created by Red Hat experts and is designed to help you adopt and scale AI in your organization.
+各クイックスタートはRed Hatのエキスパートによって作成され、組織でのAIの採用と拡張を支援するように設計されています。
 
-== Thank you!
+== ありがとうございました！
 
-Thank you for participating in this workshop. We hope you found it valuable and that you're excited to bring these agentic AI capabilities to your own projects and organization.
+本ワークショップにご参加いただきありがとうございました。このワークショップが有益であり、これらのエージェンティックAI機能を皆様のプロジェクトや組織に活用されることを楽しみにしています。
 
-For questions, feedback, or support, please reach out to your Red Hat team or visit the Red Hat Customer Portal.
+ご質問、フィードバック、またはサポートが必要な場合は、Red Hatチームにお問い合わせいただくか、Red Hatカスタマーポータルをご覧ください。
 
-Happy building!
+開発を楽しんでください！
