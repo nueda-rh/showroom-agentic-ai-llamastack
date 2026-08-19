@@ -1,28 +1,28 @@
-// NOTE this is a sample description of this workshop intended to be used to ingest into the showroom-assistant RAG system to provide attendees with workshop-specific guidance as part of the AI assistant.
+// 注：これはこのワークショップのサンプル説明であり、AIアシスタントの一部として参加者にワークショップ固有のガイダンスを提供するために、showroom-assistantのRAGシステムに取り込まれることを意図しています。
 
-= Workshop Details: Agentic AI with Llama Stack and 3rd party Frameworks
+= ワークショップ詳細：Llama Stackとサードパーティ製フレームワークによるエージェンティックAI
 
 [.lead]
-This hands-on workshop explores building production-ready agentic AI applications using LlamaStack on Red Hat OpenShift. Participants will deploy and configure a complete AI agent stack, integrate external data sources through the Model Context Protocol (MCP), and build intelligent agents that can interact with customer and financial systems in real-time.
+このハンズオンワークショップでは、Red Hat OpenShift上のLlama Stackを使用して、本番環境に対応したエージェンティックAIアプリケーションの構築について探求します。参加者は、完全なAIエージェントスタックをデプロイおよび構成し、Model Context Protocol（MCP）を通じて外部データソースを統合し、顧客システムや財務システムとリアルタイムで対話できるインテリジェントなエージェントを構築します。
 
-== Red Hat Products Covered
+== 対象となるRed Hat製品
 
 * Red Hat OpenShift
 * Red Hat OpenShift AI
 
-== Intended Audience
+== 想定受講者
 
-  This workshop is designed for AI Engineers and application developers who want to build next-generation AI-infused applications. Participants should have:
-  - Basic familiarity with Python programming
-  - Understanding of Kubernetes/OpenShift concepts (pods, services, routes)
-  - Interest in LLMs, agentic workflows, and tool-calling patterns
-  - Experience with REST APIs and containerized applications
+  このワークショップは、次世代のAIを組み込んだアプリケーションを構築したいAIエンジニアおよびアプリケーション開発者を対象としています。参加者には以下のことが求められます：
+  - Pythonプログラミングに関する基本的な知識
+  - Kubernetes/OpenShiftの概念（ポッド、サービス、ルート）の理解
+  - LLM、エージェンティック・ワークフロー、およびツール呼び出しパターンへの関心
+  - REST APIおよびコンテナ化されたアプリケーションの経験
 
-== Lab Highlights
+== ラボのハイライト
 
-  - Deploy LlamaStack on OpenShift using the LlamaStackDistribution operator and OpenShift AI
-  - Explore LlamaStack's comprehensive API surface (chat completions, responses, tool runtime)
-  - Register and configure MCP servers to extend agent capabilities with custom tools
-  - Build agents using both native LlamaStack Client and LangGraph frameworks
-  - Implement multi-tool agents that orchestrate customer lookup and financial transaction workflows
-  - Deploy a production-ready agent with web-based chat UI using Helm charts
+  - LlamaStackDistributionオペレーターとOpenShift AIを使用してOpenShift上にLlama Stackをデプロイする
+  - Llama Stackの包括的なAPIサーフェス（チャット補完、レスポンス、ツールランタイム）を探索する
+  - MCPサーバーを登録および構成し、カスタムツールでエージェントの機能を拡張する
+  - ネイティブのLlama StackクライアントとLangGraphフレームワークの両方を使用してエージェントを構築する
+  - 顧客検索と財務取引ワークフローをオーケストレートするマルチツールエージェントを構築する
+  - Helmチャートを使用して、WebベースのチャットUIを備えた本番環境対応のエージェントをデプロイする
