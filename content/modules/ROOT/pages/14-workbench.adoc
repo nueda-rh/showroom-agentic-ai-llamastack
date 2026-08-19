@@ -1,39 +1,17 @@
-= OpenShift AI Workbench Setup and usage
+= OpenShift AI Workbenchのセットアップと使用
 
-Another approach to executing the exercises of this workshop is to use the Red Hat OpenShift AI Workbench feature that gives you either a Jupyter Notebook, R Studio or Visual Studio Code Server development environment.
+このワークショップの演習を実行するためのもう一つのアプローチは、Jupyter Notebook、R Studio、またはVisual Studio Code Serverの開発環境を提供するRed Hat OpenShift AIのWorkbench機能を使用することです。
 
-As the primary audience for this workshop is architects, platform engineers and developers, we will take the Code Server approach as seen in the screenshots.
+このワークショップの主な対象者はアーキテクト、プラットフォームエンジニア、開発者であるため、スクリーンショットにあるようにCode Serverのアプローチを採用します。
 
 [TIP]
 ====
-*Why use a Workbench?* The Showroom terminals work well for running commands, but a Workbench gives you a full IDE experience inside the cluster — you can browse and edit the Python scripts, set breakpoints, and have multiple files open side-by-side. It's running as a pod in your namespace, so it has the same network access to Llama Stack and MCP services as your other workloads.
+*なぜWorkbenchを使用するのですか？* Showroomのターミナルはコマンドの実行には適していますが、Workbenchを使用するとクラスター内で完全なIDE体験が得られます。Pythonスクリプトの閲覧や編集、ブレークポイントの設定、複数のファイルを並べて開くことが可能です。これはお客様のネームスペース内のポッドとして実行されるため、他のワークロードと同様にLlama StackやMCPサービスへのネットワークアクセスが可能です。
 ====
 
-Open the
-https://data-science-gateway.{openshift_cluster_ingress_domain}[OpenShift AI Console^] as
+以下として https://data-science-gateway.{openshift_cluster_ingress_domain}[OpenShift AI Console^] を開きます。
 
-Username:
-
-[.console-input]
-[source,bash,role="copypaste",subs=attributes+]
-----
-{user}
-----
-
-
-Password:
-
-[.console-input]
-[source,bash,role="copypaste",subs=attributes+]
-----
-{password}
-----
-
-OR
-
-Open the {console_url}[OpenShift Console^] as
-
-Username:
+ユーザー名 (Username):
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -42,7 +20,28 @@ Username:
 ----
 
 
-Password:
+パスワード (Password):
+
+[.console-input]
+[source,bash,role="copypaste",subs=attributes+]
+----
+{password}
+----
+
+または
+
+以下として {console_url}[OpenShift Console^] を開きます。
+
+ユーザー名 (Username):
+
+[.console-input]
+[source,bash,role="copypaste",subs=attributes+]
+----
+{user}
+----
+
+
+パスワード (Password):
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -51,100 +50,100 @@ Password:
 ----
 
 
-Depending on your browser (Firefox, Chrome, Safari) the different consoles may or may not work. 
+ブラウザ（Firefox、Chrome、Safari）によっては、コンソールが正常に動作する場合としない場合があります。
 
 
 image::RHOAI-console-1.png[]
 
-Select *Red Hat OpenShift AI* from the menu
+メニューから *Red Hat OpenShift AI* を選択 (Select *Red Hat OpenShift AI* from the menu)します。
 
 image::RHOAI-console-3.png[]
 
-Login to the OpenShift AI console using the same provided user id and password
+提供された同じユーザーIDとパスワードを使用して、OpenShift AIコンソールにログインします。
 
 image::RHOAI-console-4.png[]
 
-Click *Workspace*
+*Workspace* をクリック (Click *Workspace*)します。
 
 image::RHOAI-console-5-projects.png[]
 
-Click *Create a workbench*
+*Create a workbench* をクリック (Click *Create a workbench*)します。
 
 image::RHOAI-console-7.png[]
 
-Use **my-workbench** for the workbench name
+Workbench名に **my-workbench** を使用 (Use **my-workbench** for the workbench name)します。
 
 image::RHOAI-console-8.png[]
 
-Select *Code Server* for *Workbench image*
+*Workbench image* に *Code Server* を選択 (Select *Code Server* for *Workbench image*)します。
 
 image::RHOAI-console-8-code-server.png[]
 
-and click *Create workbench*
+*Create workbench* をクリック (Click *Create workbench*)します。
 
 image::RHOAI-console-9.png[]
 
-Wait for it to start 
+開始されるまで待ちます。
 
 image::RHOAI-console-10.png[]
 
-When *Running* then click the name of the workbench 
+*Running* になったら、Workbenchの名前をクリック (click the name of the workbench)します。
 
 image::RHOAI-console-11.png[]
 
-When it loads, it should look like the following.
+ロードされると、以下のようになります。
 
-This is Visual Studio Code but running in the browser and inside a pod
+これはブラウザ上およびポッド内で実行されているVisual Studio Codeです。
 
 image::RHOAI-console-12.png[]
 
-Open a *New Terminal* window
+*New Terminal* ウィンドウを開き (Open a *New Terminal* window)ます。
 
 image::RHOAI-console-13.png[]
 
-Paste error when using Command-V on Safari
+Safariで Command-V を使用した際の貼り付けエラー：
 
 image::RHOAI-console-14.png[]
 
-Workaround on Safari is to use Command-V and also click the word "Paste" that appears where the mouse happens to be pointing. 
+Safariでの回避策は、Command-V を使用し、マウスが指している場所に表示される「貼り付け (Paste)」という単語をクリックすることです。
 
 image::RHOAI-console-15-Safari-paste.png[]
 
-Chrome will pop-up a warning, click *Allow*
+Chromeでは警告が表示されます。*許可 (Allow)* をクリック (click *Allow*)します。
 
 image::RHOAI-console-copy-paste-chrome.png[]
 
-After a successful copy & paste, hit "return" and execute the commands for the workshop
+コピー＆ペーストに成功したら、「Return」キーを押してワークショップのコマンドを実行します。
 
 image::RHOAI-console-16.png[]
 
-Remember, in Safari, the extra click on the hovering *Paste* takes some getting used to
+Safariでは、ホバリングしている *貼り付け (Paste)* を追加でクリックする操作に慣れが必要であることに注意してください。
 
 image::RHOAI-console-17.png[]
 
 image::RHOAI-console-18.png[]
 
-Have the workshop documentation and the Code Server Workbench side-by-side.   
+ワークショップのドキュメントとCode Server Workbenchを横に並べて表示します。
 
 image::RHOAI-console-19.png[]
 
 image::RHOAI-console-20.png[]
 
-With the Code Server Workbench you can see the Python script code as well as make changes. 
+Code Server Workbenchでは、Pythonスクリプトのコードを確認したり、変更を加えたりすることができます。
 
 image::RHOAI-console-21.png[]
 
-You can open a 2nd terminal inside of Code Server Workbench when needed
+必要に応じて、Code Server Workbench内でもう一つのターミナルを開くことができます。
 
 image::RHOAI-code-server-terminal.png[]
 
-Like VS Code, you can open multiple files for editing 
+VS Codeと同様に、編集用に複数のファイルを開くことができます。
 
 image::RHOAI-code-server-multi-tab.png[]
 
-== Helm 
+== Helm
 
-This workshop uses *helm* CLI and it is not within the Code Server Workbench by default therefore you need to install it.
+このワークショップでは *helm* CLIを使用しますが、デフォルトではCode Server Workbenchに含まれていないため、インストールする必要があります。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -171,7 +170,7 @@ helm version
 version.BuildInfo{Version:"v3.14.4", GitCommit:"81c902a123462fd4052bc5e9aa9c513c4c8fc142", GitTreeState:"clean", GoVersion:"go1.21.9"}
 ----
 
-Make sure to get back to $HOME before beginning the exercises.
+演習を開始する前に、$HOME に戻っていることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -179,11 +178,11 @@ Make sure to get back to $HOME before beginning the exercises.
 cd $HOME
 ----
 
-Now that your workbench is set up, continue with xref:02-llamastack.adoc[Deploying Llama Stack].
+Workbenchのセットアップが完了しました。xref:02-llamastack.adoc[Llama Stackのデプロイ] に進んでください。
 
-== Troubleshooting
+== トラブルシューティング (Troubleshooting)
 
-There is a particular label that must be set for the project/namespace to be recognized within the OpenShift AI Console. 
+OpenShift AIコンソール内でプロジェクト/ネームスペースを認識させるために設定する必要がある特定のラベルがあります。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
