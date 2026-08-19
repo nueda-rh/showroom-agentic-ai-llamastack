@@ -1,88 +1,88 @@
-= Backend and MCP Architecture
+= バックエンドおよび MCP アーキテクチャ (Backend and MCP Architecture)
 
-In previous modules, you explored Llama Stack's APIs in isolation. Now you'll see how Llama Stack agents interact with real business functions through the Model Context Protocol (MCP). This module demonstrates how agents can access enterprise capabilities - customer data, financial transactions, order management - through standardized tool interfaces.
+前のモジュールでは、Llama Stack の API を個別に探索しました。ここでは、Llama Stack エージェントがモデルコンテキストプロトコル (Model Context Protocol: MCP) を介して実際のビジネス機能とどのように対話するかを確認します。このモジュールでは、標準化されたツールインターフェースを通じて、エージェントがエンタープライズ機能（顧客データ、財務取引、注文管理など）にどのようにアクセスできるかを示します。
 
-== From APIs to agent tools
+== API からエージェントツールへ (From APIs to agent tools)
 
-Traditional enterprise applications expose business functions through REST APIs. While powerful, these APIs require developers to write custom integration code, manage authentication, handle errors, and understand domain-specific schemas. Every new application means more integration work.
+従来のエンタープライズアプリケーションは、REST API を通じてビジネス機能を公開しています。強力ではありますが、これらの API を使用するには、開発者がカスタムの統合コードを記述し、認証を管理し、エラーを処理し、ドメイン固有のスキーマを理解する必要があります。新しいアプリケーションが登場するたびに、統合のための作業が増えることを意味します。
 
-**Llama Stack agents change this paradigm.** Instead of hardcoding API integrations, agents can:
+**Llama Stack エージェントはこのパラダイムを変えます。** API 統合をハードコーディングする代わりに、エージェントは以下を行うことができます。
 
-* **Discover tools dynamically** at runtime through MCP servers
-* **Reason about which tools to use** based on user intent
-* **Invoke business functions naturally** using tool calling
-* **Compose multi-step workflows** across different systems
+* MCP サーバーを通じて実行時に**ツールを動的に検出**する
+* ユーザーの意図に基づいて**どのツールを使用するかを推論**する
+* ツール呼び出しを使用して**ビジネス機能を自然に呼び出す**
+* さまざまなシステムにわたる**多段階のワークフローを構成**する
 
-The bridge between agents and existing business systems is the **Model Context Protocol (MCP)**.
+エージェントと既存のビジネスシステム間の架け橋となるのが、**モデルコンテキストプロトコル (Model Context Protocol: MCP)** です。
 
-== What is MCP and why does it matter?
+== MCP とは何か、なぜ重要なのか？ (What is MCP and why does it matter?)
 
-The Model Context Protocol is an open standard that allows AI agents to interact with external tools and data sources through a consistent interface. Think of MCP as "API for AI" - while REST APIs are designed for developers, MCP is designed for agents.
+モデルコンテキストプロトコル (Model Context Protocol) は、AI エージェントが一貫したインターフェースを通じて外部ツールやデータソースと対話できるようにするためのオープンな標準です。REST API が開発者向けに設計されているのに対し、MCP はエージェント向けに設計された「AI のための API」であると考えてください。
 
-=== MCP solves the agent integration challenge
+=== MCP はエージェント統合の課題を解決する (MCP solves the agent integration challenge)
 
-**Without MCP**, integrating agents with business systems requires:
+**MCP がない場合**、エージェントをビジネスシステムと統合するには以下が必要になります。
 
-* Writing custom tool wrappers for every API endpoint
-* Hardcoding business logic into agent prompts
-* Managing credentials and authentication separately
-* Rebuilding tools when APIs change
-* No standardization across different systems
+* すべての API エンドポイントに対してカスタムツールのラッパーを記述する
+* ビジネスロジックをエージェントのプロンプトにハードコーディングする
+* 資格情報と認証を個別に管理する
+* API が変更されたときにツールを再構築する
+* 異なるシステム間で標準化が行われない
 
-**With MCP**, you get:
+**MCP がある場合**、以下のメリットが得られます。
 
-* **Standardized tool discovery**: Agents ask MCP servers "what can you do?" and receive structured tool descriptions
-* **Unified invocation protocol**: All tools are called the same way, regardless of underlying implementation
-* **Security boundary**: MCP servers control access, validate requests, and enforce policies
-* **Backend abstraction**: Business systems can evolve without breaking agents
-* **Ecosystem compatibility**: Any MCP-compliant agent can use any MCP-compliant server
+* **標準化されたツールの検出**: エージェントが MCP サーバーに「何ができるか」を問いかけ、構造化されたツールの説明を受け取ります。
+* **統合された呼び出しプロトコル**: 基盤となる実装に関係なく、すべてのツールが同じ方法で呼び出されます。
+* **セキュリティ境界**: MCP サーバーがアクセスを制御し、リクエストを検証し、ポリシーを適用します。
+* **バックエンドの抽象化**: エージェントを壊すことなく、ビジネスシステムを論理的に進化させることができます。
+* **エコシステムの互換性**: 任意の MCP 準拠エージェントが、任意の MCP 準拠サーバーを使用できます。
 
-=== How Llama Stack uses MCP
+=== Llama Stack がどのように MCP を使用するか (How Llama Stack uses MCP)
 
-Llama Stack provides first-class MCP support through its tool runtime:
+Llama Stack は、そのツールランタイムを通じてファーストクラスの MCP サポートを提供します。
 
-1. **MCP server registration**: Register MCP endpoints as tool groups with Llama Stack
-2. **Tool discovery**: Llama Stack queries MCP servers for available tools
-3. **Agent reasoning**: When an agent needs capabilities, Llama Stack makes tools available for invocation
-4. **Tool execution**: Llama Stack invokes MCP tools and returns results to the agent
-5. **Response synthesis**: The agent uses tool results to formulate natural language responses
+1. **MCP サーバーの登録**: MCP エンドポイントをツールグループとして Llama Stack に登録します。
+2. **ツールの検出**: Llama Stack が MCP サーバーに対して利用可能なツールを照会します。
+3. **エージェントの推論**: エージェントが機能を必要とするとき、Llama Stack はツールを呼び出し可能な状態にします。
+4. **ツールの実行**: Llama Stack が MCP ツールを呼び出し、結果をエージェントに返します。
+5. **回答の統合**: エージェントはツールの結果を使用して、自然言語の回答を構成します。
 
-This module demonstrates this pattern with business functions for customer management and financial operations.
+このモジュールでは、顧客管理および財務運用のビジネス機能を使用して、このパターンを実証します。
 
-== Agent-to-business-function architecture
+== エージェントからビジネス機能へのアーキテクチャ (Agent-to-business-function architecture)
 
-This lab demonstrates how Llama Stack agents access business capabilities through MCP servers. The example uses Fantaco, a fictional company with customer and finance business functions:
+このラボでは、Llama Stack エージェントが MCP サーバーを介してビジネス機能にアクセスする方法を示します。例として、顧客および財務のビジネス機能を持つ架空の企業 FantaCo を使用します。
 
-.Llama Stack agent with MCP business function access
+.MCP ビジネス機能へのアクセスを備えた Llama Stack エージェント (Llama Stack agent with MCP business function access)
 [mermaid,width=100%]
 ----
 graph TB
-    subgraph Users["User Layer"]
-        SUPPORT[Support Agent<br/>Chat Interface]
+    subgraph Users["ユーザー層 (User Layer)"]
+        SUPPORT[サポートエージェント<br/>チャットインターフェース<br/>Support Agent Chat Interface]
     end
 
-    subgraph AI["AI Platform - OpenShift"]
-        subgraph LLS["Llama Stack Distribution"]
-            AGENT[AI Agent<br/>Multi-turn reasoning]
-            API[Llama Stack APIs<br/>Responses, Tools, Agents]
-            VLLM[vLLM Inference<br/>Qwen3-14B]
+    subgraph AI["AI プラットフォーム - OpenShift"]
+        subgraph LLS["Llama Stack ディストリビューション"]
+            AGENT[AI エージェント<br/>マルチターン推論]
+            API[Llama Stack API<br/>Responses, Tools, Agents]
+            VLLM[vLLM 推論<br/>Qwen3-14B]
         end
     end
 
-    subgraph MCP["MCP Layer - Tool Abstraction"]
-        MCP_CUST[Customer MCP Server<br/>Port: 8001]
-        MCP_FIN[Finance MCP Server<br/>Port: 8002]
+    subgraph MCP["MCP 層 - ツールの抽象化"]
+        MCP_CUST[Customer MCP サーバー<br/>ポート: 8001]
+        MCP_FIN[Finance MCP サーバー<br/>ポート: 8002]
     end
 
-    subgraph Backend["Backend Microservices"]
-        subgraph CustSvc["Customer Domain"]
+    subgraph Backend["バックエンドマイクロサービス"]
+        subgraph CustSvc["顧客ドメイン (Customer Domain)"]
             CUST_API[Customer REST API<br/>FastAPI]
-            CUST_DB[(PostgreSQL<br/>Customer Data)]
+            CUST_DB[(PostgreSQL<br/>顧客データ)]
         end
 
-        subgraph FinSvc["Finance Domain"]
+        subgraph FinSvc["財務ドメイン (Finance Domain)"]
             FIN_API[Finance REST API<br/>FastAPI]
-            FIN_DB[(PostgreSQL<br/>Orders, Invoices)]
+            FIN_DB[(PostgreSQL<br/>注文, 請求書)]
         end
     end
 
@@ -107,94 +107,93 @@ graph TB
     style FinSvc fill:#e8eaf6
 ----
 
-=== How agents access business functions
+=== エージェントがビジネス機能にアクセスする方法 (How agents access business functions)
 
-**Step 1: User makes a request**::
-A user asks a natural language question: "Find the customer with email thomashardy@example.com and show their order history"
+**ステップ 1: ユーザーがリクエストを行う**::
+ユーザーが自然言語で質問します。「メールアドレスが thomashardy@example.com の顧客を見つけ、その注文履歴を表示して」
 
-**Step 2: The LLM reasons about the request**::
-The agent sends the request to the LLM, which analyzes it and determines that 2 capabilities are needed:
-- Search for a customer by email
-- Retrieve order history for that customer
+**ステップ 2: LLM がリクエストについて推論する**::
+エージェントはリクエストを LLM に送信し、LLM はそれを分析して、2 つの機能が必要であると判断します。
+- メールアドレスによる顧客の検索
+- その顧客の注文履歴の取得
 
-**Step 3: Tool discovery**::
-Llama Stack queries the registered MCP servers to find available tools:
+**ステップ 3: ツールの検出**::
+Llama Stack は登録された MCP サーバーを照会して、利用可能なツールを見つけます。
 - Customer MCP: `search_customers`, `get_customer`
-- Finance MCP: `fetch_order_history`, `fetch_invoice_history`, etc.
+- Finance MCP: `fetch_order_history`, `fetch_invoice_history` など
 
-**Step 4: Agent invokes tools**::
-The agent makes tool calls through Llama Stack's tool runtime:
-1. Call `search_customers(email="thomashardy@example.com")` via Customer MCP
-2. Extract customer ID from result
-3. Call `fetch_order_history(customer_id="AROUT")` via Finance MCP
+**ステップ 4: エージェントがツールを呼び出す**::
+エージェントは Llama Stack のツールランタイムを介してツールを呼び出します。
+1. Customer MCP を介して `search_customers(email="thomashardy@example.com")` を呼び出す
+2. 結果から顧客 ID を抽出する
+3. Finance MCP を介して `fetch_order_history(customer_id="AROUT")` を呼び出す
 
-**Step 5: MCP servers execute business logic**::
-Each MCP server:
-- Validates the request
-- Calls the appropriate backend API
-- Formats the response as MCP tool result
-- Returns data to Llama Stack
+**ステップ 5: MCP サーバーがビジネスロジックを実行する**::
+各 MCP サーバーは以下を行います。
+- リクエストを検証する
+- 適切なバックエンド API を呼び出す
+- レスポンスを MCP ツール実行結果としてフォーマットする
+- データを Llama Stack に返す
 
-**Step 6: Agent synthesizes response**::
-The agent receives tool results and generates a natural language response combining customer information with order history
+**ステップ 6: エージェントが回答を統合する**::
+エージェントはツールの結果を受け取り、顧客情報と注文履歴を組み合わせた自然言語の回答を生成します。
 
-== The agent-MCP-business function flow
+== エージェント、MCP、ビジネス機能のフロー (The agent-MCP-business function flow)
 
-MCP creates a clean separation between agent reasoning and business logic execution. Agents don't need to know about REST APIs, database schemas, or authentication mechanisms - they simply invoke tools and receive structured results.
+MCP は、エージェントの推論とビジネスロジックの実行を明確に分離します。エージェントは REST API、データベーススキーマ、または認証メカニズムについて知る必要はありません。単にツールを呼び出し、構造化された結果を受け取るだけです。
 
-.MCP request flow sequence
+.MCP リクエストフローのシーケンス (MCP request flow sequence)
 [mermaid,width=100%]
 ----
 sequenceDiagram
-    participant Agent as Llama Stack Agent
-    participant LLS as Llama Stack Server
-    participant MCP as MCP Server
-    participant API as Backend API
-    participant DB as Database
+    participant Agent as Llama Stack エージェント
+    participant LLS as Llama Stack サーバー
+    participant MCP as MCP サーバー
+    participant API as バックエンド API
+    participant DB as データベース
 
-    Agent->>LLS: "Find customer with email<br/>thomashardy@example.com"
-    LLS->>LLS: Analyze request<br/>Determine tool needed
-    LLS->>MCP: GET /v1/tools<br/>Discover available tools
+    Agent->>LLS: 「email が thomashardy@example.com の<br/>顧客を見つけて」
+    LLS->>LLS: リクエストを分析<br/>必要なツールを決定
+    LLS->>MCP: GET /v1/tools<br/>利用可能なツールを検出
     MCP-->>LLS: [search_customers,<br/>get_customer]
-    LLS->>LLS: Generate tool call<br/>search_customers()
+    LLS->>LLS: ツール呼び出しを生成<br/>search_customers()
     LLS->>MCP: POST /v1/tool-runtime/invoke<br/>search_customers(email=...)
-    MCP->>MCP: Validate request<br/>Check permissions
+    MCP->>MCP: リクエストを検証<br/>権限を確認
     MCP->>API: GET /api/customers?<br/>contactEmail=...
     API->>DB: SELECT * FROM customers<br/>WHERE contact_email LIKE...
-    DB-->>API: Customer record(s)
-    API-->>MCP: JSON response
-    MCP->>MCP: Format as MCP result
+    DB-->>API: 顧客レコード
+    API-->>MCP: JSON レスポンス
+    MCP->>MCP: MCP 結果としてフォーマット
     MCP-->>LLS: ToolInvocationResult
-    LLS->>Agent: Synthesize natural<br/>language response
-    Agent-->>LLS: "Found customer:<br/>Thomas Hardy at<br/>Around the Horn..."
+    LLS->>Agent: 自然言語の回答を統合
+    Agent-->>LLS: 「顧客が見つかりました:<br/>Around the Horn の<br/>Thomas Hardy さんです...」
 
-    Note over Agent,DB: MCP servers translate between agent tool calls<br/>and backend business functions
+    Note over Agent,DB: MCP サーバーはエージェントのツール呼び出しと<br/>バックエンドのビジネス機能を仲介します
 ----
 
-=== Business functions exposed as agent tools
+### エージェントツールとして公開されるビジネス機能 (Business functions exposed as agent tools)
 
-In this lab, 2 MCP servers expose business capabilities to Llama Stack agents:
+このラボでは、2 つの MCP サーバーがビジネス機能を Llama Stack エージェントに公開します。
 
-**Customer tools** (via Customer MCP Server)::
-* `search_customers`: Find customers by various criteria with partial matching
-* `get_customer`: Retrieve complete customer details by ID
+**顧客ツール (Customer tools)** (Customer MCP サーバー経由)::
+* `search_customers`: 部分一致を含むさまざまな条件で顧客を検索します
+* `get_customer`: ID によって完全な顧客詳細を取得します
 
-**Finance tools** (via Finance MCP Server)::
-* `fetch_order_history`: Get order history with date filtering and pagination
-* `fetch_invoice_history`: Get invoice history with date filtering and pagination
+**財務ツール (Finance tools)** (Finance MCP サーバー経由)::
+* `fetch_order_history`: 日付フィルタリングとページネーションを使用して注文履歴を取得します
+* `fetch_invoice_history`: 日付フィルタリングとページネーションを使用して請求履歴を取得します
 
+エージェントは、基盤となる API、データベース、または実装の詳細を知ることなく、Llama Stack のツールランタイムを介してこれらのツールを自然に呼び出します。MCP サーバーは、ツール呼び出しをビジネス操作に変換するすべての複雑な処理を担います。
 
-Agents invoke these tools naturally through Llama Stack's tool runtime without knowing about the underlying APIs, databases, or implementation details. The MCP servers handle all the complexity of translating tool calls into business operations.
+== FantaCo バックエンド (FantaCo Backend)
 
-== FantaCo Backend 
+=== マイクロサービスとデータベースバックエンドのデプロイ (Deploy Microservices and Database Backend)
 
-=== Deploy Microservices and Database Backend
-
-The backend system consists of two REST APIs, one for Customer and one for Finance. Each has its own Postgres database and the two services are fully independent of each other.
+バックエンドシステムは、Customer 用と Finance 用の 2 つの REST API で構成されています。それぞれが独自の Postgres データベースを持ち、2 つのサービスは互いに完全に独立しています。
 
 image::architecture_diagram.png[]
 
-Make sure you are in the correct directory
+正しいディレクトリにいることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -209,11 +208,11 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026
 ----
 
-Install the enterprise backend databases and REST APIs
+エンタープライズバックエンドのデータベースと REST API をインストールします。
 
 [TIP]
 ====
-*What is Helm?* Helm is the package manager for Kubernetes. A Helm chart bundles all the YAML manifests (Deployments, Services, ConfigMaps, etc.) needed to deploy an application. Running `helm install` deploys the entire FantaCo backend — two PostgreSQL databases and two FastAPI services — in a single command.
+**Helm とは何ですか？** Helm は Kubernetes 用のパッケージマネージャーです。Helm チャートは、アプリケーションのデプロイに必要なすべての YAML マニフェスト（Deployments, Services, ConfigMaps など）をバンドルしたものです。`helm install` を実行すると、2 つの PostgreSQL データベースと 2 つの FastAPI サービスを含む FantaCo バックエンド全体が単一のコマンドでデプロイされます。
 ====
 
 [.console-input]
@@ -250,16 +249,16 @@ postgresql-customer-ff78dffdf-tpj9c             1/1     Running   0          12m
 postgresql-finance-689d97894f-2fq89             1/1     Running   0          12m
 ----
 
-And wait for the *1/1 Running* before continuing
+ステータスが **1/1 Running** になるまで待ってから続行してください。
 
 [NOTE]
 ====
-*What's running now?* You have 5 pods: the Llama Stack server from the earlier module, two PostgreSQL databases (one for customer data, one for financial data), and two FastAPI microservices that expose REST APIs over those databases. This mirrors a real enterprise setup where business data lives in separate domain-specific services.
+**現在何が実行されていますか？** 5 つのポッドがあります。前のモジュールの Llama Stack サーバー、2 つの PostgreSQL データベース（顧客データ用と財務データ用）、およびそれらのデータベース上の REST API を公開する 2 つの FastAPI マイクロサービスです。これは、ビジネスデータがドメイン固有の個別のサービスに存在する、実際のエンタープライズセットアップを反映しています。
 ====
 
-=== *Test backend*
+=== バックエンドのテスト (Test backend)
 
-Verify that you have connectivity to the backend REST endpoints and their databases with some simple curl commands.
+いくつかの簡単な curl コマンドを使用して、バックエンドの REST エンドポイントとそのデータベースへの接続を確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -306,7 +305,7 @@ curl -sS -L "$CUST_URL/api/customers?contactEmail=thomashardy%40example.com" | j
 
 [TIP]
 ====
-*Why test with curl first?* Verifying the REST APIs directly confirms the backend is healthy before adding the MCP layer. If something fails later, you'll know the issue is in the MCP translation — not the underlying data.
+**なぜ最初に curl でテストするのですか？** REST API を直接検証することで、MCP レイヤーを追加する前にバックエンドが正常であることを確認できます。後で問題が発生した場合、原因が基盤となるデータではなく MCP の変換にあることがわかります。
 ====
 
 [.console-input]
@@ -375,24 +374,24 @@ curl -sS -X POST $FIN_URL/api/finance/orders/history \
 }
 ----
 
-You've now verified that the Fantaco backend microservices are operational and can respond to direct REST API calls. The Customer API provides anagraphic data, while the Finance API delivers transactional information. Both services are backed by PostgreSQL databases containing realistic sample data.
+FantaCo バックエンドのマイクロサービスが稼働し、直接の REST API 呼び出しに応答できることが確認できました。Customer API は名簿データを提供し、Finance API は取引情報を提供します。どちらのサービスも、現実的なサンプルデータを含む PostgreSQL データベースによって支えられています。
 
-Next, you'll deploy the MCP servers that will bridge these backend APIs to Llama Stack agents.
+次に、これらのバックエンド API を Llama Stack エージェントに橋渡しする MCP サーバーをデプロイします。
 
-== Deploy MCP Servers
+== MCP サーバーのデプロイ (Deploy MCP Servers)
 
-MCP servers act as the translation layer between Llama Stack's tool invocation protocol and the backend REST APIs. Each MCP server:
+MCP サーバーは、Llama Stack のツール呼び出しプロトコルとバックエンド REST API の間の変換レイヤーとして機能します。各 MCP サーバーは以下を行います。
 
-1. **Implements the MCP specification**: Provides standardized endpoints for tool discovery and invocation
-2. **Wraps backend APIs**: Translates MCP tool calls into appropriate REST API requests
-3. **Handles authentication and validation**: Ensures only authorized operations are performed
-4. **Formats responses**: Converts API responses into MCP-compatible tool results
+1. **MCP 仕様の実装**: ツールの検出と呼び出しのための標準化されたエンドポイントを提供します。
+2. **バックエンド API のラップ**: MCP ツールの呼び出しを適切な REST API リクエストに変換します。
+3. **認証と検証の処理**: 許可された操作のみが実行されるようにします。
+4. **レスポンスのフォーマット**: API レスポンスを MCP 互換のツール結果に変換します。
 
-The Fantaco deployment includes 2 MCP servers, one for each domain:
+FantaCo のデプロイメントには、ドメインごとに 1 つずつ、計 2 つの MCP サーバーが含まれています。
 
 [NOTE]
 ====
-*The MCP servers don't contain business logic.* They are thin adapters that translate MCP tool invocations into REST API calls. The actual business rules, data validation, and database queries stay in the backend services. This separation means you can add AI capabilities to existing systems without modifying them.
+**MCP サーバーにはビジネスロジックは含まれていません。** これらは、MCP ツールの呼び出しを REST API 呼び出しに変換する薄いアダプターです。実際のビジネスルール、データ検証、およびデータベースクエリはバックエンドサービスに留まります。この分離により、既存のシステムを変更することなく AI 機能を追加できます。
 ====
 
 [.console-input]
@@ -431,27 +430,25 @@ postgresql-customer-ff78dffdf-tpj9c             1/1     Running   0          34m
 postgresql-finance-689d97894f-2fq89             1/1     Running   0          34m
 ----
 
+== まとめ (Summary)
 
-== Summary
+このモジュールでは、エージェントがビジネス機能にアクセスできるようにするためのインフラストラクチャをデプロイしました。
 
-In this module, you deployed the infrastructure that enables agents to access business functions:
+**バックエンドサービスのデプロイ**::
+PostgreSQL データベースを備えた 2 つのマイクロサービス (Customer と Finance) が、現実的なビジネス機能を提供します。
 
-**Deployed backend services**::
-2 microservices (Customer and Finance) with PostgreSQL databases provide realistic business capabilities
+**MCP サーバーのデプロイ**::
+2 つの MCP サーバーが Llama Stack とバックエンドサービスの間の架け橋として機能し、エージェントのツール呼び出しを API リクエストに変換します。
 
-**Deployed MCP servers**::
-2 MCP servers act as bridges between Llama Stack and the backend services, translating agent tool calls into API requests
+**統合の検証**::
+curl コマンドを使用して、以下を確認しました。
+- バックエンド API が直接の REST 呼び出しに応答すること
+- MCP サーバーがデプロイされていること
 
-**Verified the integration**::
-Using curl commands, you confirmed that:
-- Backend APIs respond to direct REST calls
-- MCP servers are deployed
+**実証された主要概念**::
+* **エージェントからビジネス機能へのフロー**: エージェントが実装の詳細を知ることなく、エンタープライズ機能にアクセスする方法
+* **抽象化レイヤーとしての MCP**: ツールの検出と呼び出しのための標準化されたプロトコル
+* **動的なツールの検出**: エージェントはデプロイ時ではなく実行時に利用可能な機能を学習する
+* **クリーンな分離**: ビジネスロジックはバックエンドサービスに留まり、MCP は変換を処理し、エージェントは推論を処理する
 
-
-**Key concepts demonstrated**::
-* **Agent-to-business-function flow**: How agents access enterprise capabilities without knowing implementation details
-* **MCP as abstraction layer**: Standardized protocol for tool discovery and invocation
-* **Dynamic tool discovery**: Agents learn available capabilities at runtime, not deployment time
-* **Clean separation**: Business logic stays in backend services, MCP handles translation, agents handle reasoning
-
-The infrastructure is now ready for agents to invoke these tools. In the next module, you'll use Python clients (Llama Stack Client and LangGraph) to interact with these MCP servers that intelligently combine these business functions to answer complex user queries.
+これで、エージェントがこれらのツールを呼び出すためのインフラストラクチャが整いました。次のモジュールでは、Python クライアント（Llama Stack Client および LangGraph）を使用してこれらの MCP サーバーと対話し、ビジネス機能をインテリジェントに組み合わせて複雑なユーザーの質問に答えます。
