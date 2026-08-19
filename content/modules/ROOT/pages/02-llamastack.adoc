@@ -1,20 +1,20 @@
-= Deploying Llama Stack
+= Llama Stack のデプロイ
 
-== Understanding Llama Stack
+== Llama Stack の理解
 
-Llama Stack is an open source standardized, opinionated framework for building and deploying generative AI applications. It provides a unified API interface and building blocks that abstract the complexity of working with large language models, enabling developers to focus on building agentic AI applications rather than managing infrastructure.
+Llama Stack は、生成 AI アプリケーションの構築とデプロイのための、オープンソースで標準化されたオピニオネーテッド（設計思想が統一された）フレームワークです。大規模言語モデルの操作に関する複雑さを抽象化する統一 API インターフェースとビルディングブロックを提供し、開発者がインフラストラクチャの管理ではなくエージェンティック AI アプリケーションの構築に集中できるようにします。
 
-As part of Red Hat AI 3 running on this lab, Llama Stack brings enterprise-grade capabilities for deploying production AI workloads with the scalability, security, and operational excellence that Red Hat platforms provide.
+本ラボで稼働している Red Hat AI 3 の一部として、Llama Stack は Red Hat プラットフォームが提供するスケーラビリティ、セキュリティ、および運用上の卓越性を備えた、商用環境 AI ワークロードのデプロイ向けエンタープライズグレード機能をもたらします。
 
-=== What is Llama Stack?
+=== Llama Stack とは？
 
-Llama Stack is designed around the concept of distributions - pre-configured stacks that combine inference engines, model providers, and additional capabilities like retrieval-augmented generation (RAG), safety guardrails, and tool execution. Each distribution is a composition of:
+Llama Stack はディストリビューションの概念を中心に設計されています。ディストリビューションとは、推論エンジン、モデルプロバイダー、および検索拡張生成（RAG）、セーフティガードレール、ツール実行などの追加機能を組み合わせた事前構成済みのスタックです。各ディストリビューションは以下の要素で構成されます。
 
-* **Inference providers**: vLLM, AWS Bedrock, Fireworks AI, Together AI, and others
-* **Memory and vector stores**: For conversational context and retrieval
-* **Safety components**: Content moderation and guardrails
-* **Tool runtime**: Integration with external systems and APIs
-* **Agent framework**: Orchestration for multi-step reasoning
+* **推論プロバイダー (Inference providers)**: vLLM、AWS Bedrock、Fireworks AI、Together AI、その他
+* **メモリおよびベクトルストア (Memory and vector stores)**: 対話コンテキストと検索用
+* **セーフティコンポーネント (Safety components)**: コンテンツモデレーションとガードレール
+* **ツールランタイム (Tool runtime)**: 外部システムやAPIとの統合
+* **エージェントフレームワーク (Agent framework)**: 多段階推論のオーケストレーション
 
 .Llama Stack core architecture
 [mermaid,width=100%]
@@ -73,31 +73,31 @@ graph TB
     style Infra fill:#f3e5f5
 ----
 
-=== Why use Llama Stack with Red Hat AI?
+=== なぜ Red Hat AI で Llama Stack を使用するのか？
 
-Llama Stack on Red Hat OpenShift provides several key advantages for enterprise AI deployments:
+Red Hat OpenShift 上の Llama Stack は、エンタープライズ AI デプロイメントにおいていくつかの主要な利点を提供します。
 
-**Standardization and portability**::
-The unified API allows you to switch between different model providers (vLLM, AWS Bedrock, Azure OpenAI) without rewriting application code. This helps to address vendor lock-in across hybrid cloud deployments.
+**標準化とポータビリティ (Standardization and portability)**::
+統合された API により、アプリケーションコードを書き換えることなく、さまざまなモデルプロバイダー（vLLM、AWS Bedrock、Azure OpenAI）を切り替えることができます。これにより、ハイブリッドクラウドデプロイメントにおけるベンダーロックインの問題に対処できます。
 
-**Enterprise-grade operations**::
-Running on OpenShift provides automated deployment, scaling, monitoring, and security features. The Llama Stack operator manages the lifecycle of your AI infrastructure using Kubernetes-native patterns.
+**エンタープライズグレードの運用 (Enterprise-grade operations)**::
+OpenShift 上で実行することで、自動化されたデプロイメント、スケーリング、モニタリング、およびセキュリティ機能が提供されます。Llama Stack オペレーター (Llama Stack operator) は、Kubernetes ネイティブなパターンを使用して、AI インフラストラクチャのライフサイクルを管理します。
 
-**Production-ready tooling**::
-Llama Stack includes built-in capabilities for production AI applications:
-- **Agent framework**: Multi-turn conversations with tool calling and reasoning
-- **RAG support**: Vector storage and retrieval for knowledge-grounded responses
-- **Safety guardrails**: Content moderation and prompt injection protection
-- **Observability**: OpenAPI-compliant endpoints with health checks and monitoring
+**本番環境に対応したツール群 (Production-ready tooling)**::
+Llama Stack には、本番環境の AI アプリケーション向けの組み込み機能が含まれています。
+- **エージェントフレームワーク (Agent framework)**: ツール呼び出しと推論を備えたマルチターン対話
+- **RAG サポート (RAG support)**: 知識に基づいた回答のためのベクトルストレージと検索
+- **セーフティガードレール (Safety guardrails)**: コンテンツモデレーションとプロンプトインジェクション保護
+- **オブザーバビリティ (Observability)**: ヘルスチェックとモニタリングを備えた OpenAPI 準拠のエンドポイント
 
-**Model flexibility**::
-Support for multiple model hosting approaches in a single distribution:
-- **Local inference**: Using vLLM for low-latency, cost-effective serving
-- **Model-as-a-Service**: Integration with cloud providers like AWS Bedrock
-- **Mixed deployments**: Combine local and remote models based on workload requirements
+**モデルの柔軟性 (Model flexibility)**::
+単一のディストリビューションで、複数のモデルホスティングアプローチをサポートします。
+- **ローカル推論 (Local inference)**: 低遅延でコスト効率の高いサービングのための vLLM の使用
+- **Model-as-a-Service**: AWS Bedrock などのクラウドプロバイダーとの統合
+- **混合デプロイメント (Mixed deployments)**: ワークロードの要件に基づいてローカルモデルとリモートモデルを組み合わせる
 
-**Developer experience**::
-The OpenAPI specification and client SDKs in Python, Node.js, and other languages provide a consistent developer experience. The same code works across development, staging, and production environments.
+**開発者エクスペリエンス (Developer experience)**::
+OpenAPI 仕様と Python、Node.js、およびその他の言語のクライアント SDK により、一貫した開発者エクスペリエンスが提供されます。同じコードが開発、ステージング、および本番環境で動作します。
 
 .Llama Stack on Red Hat OpenShift deployment architecture
 [mermaid,width=100%]
@@ -139,21 +139,21 @@ graph TB
     style RHAI fill:#f3e5f5
 ----
 
-=== Llama Stack distributions
+=== Llama Stack ディストリビューション (Llama Stack distributions)
 
-A distribution defines which providers and capabilities are available in your Llama Stack deployment. The `starter` distribution includes:
+ディストリビューションは、Llama Stack のデプロイメントで利用可能なプロバイダーと機能を定義します。`starter` ディストリビューションには以下が含まれます。
 
-* **Inference**: vLLM for local model serving, with optional cloud provider support
-* **Vector databases**: For RAG and semantic search
-* **Tool runtime**: Built-in tools for web search (Tavily) and RAG
-* **Safety**: Content moderation and guardrails
-* **Agent orchestration**: Multi-turn conversations with tool calling
+* **推論 (Inference)**: ローカルモデルサービング用の vLLM（オプションでクラウドプロバイダーのサポートあり）
+* **ベクトルデータベース (Vector databases)**: RAG およびセマンティック検索用
+* **ツールランタイム (Tool runtime)**: Web 検索 (Tavily) および RAG 用の組み込みツール
+* **セーフティ (Safety)**: コンテンツモデレーションとガードレール
+* **エージェントオーケストレーション (Agent orchestration)**: ツール呼び出しを備えたマルチターン対話
 
-This lab uses the `starter` distribution with vLLM as the primary inference provider, configured to use OpenShift AI's Model-as-a-Service (MaaS) capability.
+このラボでは、主要な推論プロバイダーとして vLLM を使用する `starter` ディストリビューションを使用し、OpenShift AI の Model-as-a-Service (MaaS) 機能を使用するように構成されています。
 
-== Deploying your Llama Stack instance
+== Llama Stack インスタンスのデプロイ (Deploying your Llama Stack instance)
 
-First of all, in both *Terminal 1* and *Terminal 2* login to your OpenShift cluster with provided credentials `{user}` and `{password}`:
+まず最初に、ターミナル 1 (Terminal 1) と ターミナル 2 (Terminal 2) の両方で、提供された資格情報 `{user}` および `{password}` を使用して OpenShift クラスターにログインします。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -161,7 +161,7 @@ First of all, in both *Terminal 1* and *Terminal 2* login to your OpenShift clus
  {login_command}
 ----
 
-And answer *y* to the *Use insecure connections*
+そして、*Use insecure connections* に対し *y* と入力します。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -171,8 +171,7 @@ You can bypass the certificate check, but any data you send to the server could 
 Use insecure connections? (y/n): y
 ----
 
-
-You should successfully login with your user and see your project agentic-{user} who has been already created for you:
+ユーザーでのログインに成功すると、あらかじめ作成されているプロジェクト `agentic-{user}` が表示されます。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -185,14 +184,14 @@ Using project "agentic-{user}".
 Welcome! See 'oc help' to get started.
 ----
 
-Your cluster and namespace have a Custom Resource Definition (CRD) available for the Kind *LlamaStackDistribution* therefore you can create your own instance of a Llama Stack Server.
+クラスターとネームスペースには、Kind *LlamaStackDistribution* 用のカスタムリソース定義 (Custom Resource Definition: CRD) が用意されているため、独自の Llama Stack サーバーインスタンスを作成できます。
 
 [TIP]
 ====
-*What is a CRD?* A Custom Resource Definition extends the Kubernetes API with new resource types. The `LlamaStackDistribution` CRD teaches OpenShift how to manage Llama Stack servers as first-class Kubernetes objects — meaning you can create, update, and delete Llama Stack instances using the same `oc apply` workflow you use for any other OpenShift resource.
+**CRD とは何ですか？** カスタムリソース定義 (Custom Resource Definition: CRD) は、新しいリソースタイプで Kubernetes API を拡張するものです。`LlamaStackDistribution` CRD は、Llama Stack サーバーを第一級の Kubernetes オブジェクト (first-class Kubernetes objects) として管理する方法を OpenShift に教えます。つまり、他の OpenShift リソースと同じ `oc apply` ワークフローを使用して、Llama Stack インスタンスの作成、更新、削除を行うことができます。
 ====
 
-Using *Terminal 1*, check if the LlamaStackDistribution CRD is available:
+ターミナル 1 (Terminal 1) を使用して、LlamaStackDistribution CRD が利用可能かどうかを確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -208,9 +207,9 @@ LlamaStackOperator
 LlamaStackDistribution  true
 ----
 
-The lab materials are stored in a GitHub repository, you can find the URL in the *Resources* section of this page.
+ラボの資料は GitHub リポジトリに保存されています。URL はこのページの リソース (Resources) セクションで確認できます。
 
-Now, git-clone a copy of the project files into your home directory:
+次に、プロジェクトファイルのコピーをホームディレクトリに git clone します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -220,10 +219,9 @@ git clone https://github.com/burrsutter/fantaco-redhat-one-2026
 cd fantaco-redhat-one-2026/
 ----
 
-Red Hat OpenShift AI 3 comes with a supported version of Llama Stack Operator and a supported Llama Stack distribution named `rh-dev`.
+Red Hat OpenShift AI 3 には、サポート対象バージョンの Llama Stack Operator と、`rh-dev` という名前のサポート対象 Llama Stack ディストリビューションが付属しています。
 
-The LlamaStack setup is configurable using a ConfigMap and the Llama StackDistribution CR as follows: 
-
+LlamaStack のセットアップは、次のように ConfigMap と LlamaStackDistribution CR を使用して構成できます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -258,10 +256,10 @@ openshift-service-ca.crt      1      65m
 
 [TIP]
 ====
-*What does the ConfigMap configure?* The `llama-stack-config` ConfigMap contains a `run.yaml` file that defines which providers (inference engines, vector stores, safety shields) your Llama Stack distribution will use, along with their connection details. This separates configuration from the deployment manifest, making it easy to change providers without redeploying the server.
+**ConfigMap は何を構成しますか？** `llama-stack-config` ConfigMap には、Llama Stack ディストリビューションが使用するプロバイダー（推論エンジン、ベクトルストア、セーフティシールド）とその接続の詳細を定義する `run.yaml` ファイルが含まれています。これにより、構成がデプロイメントマニフェストから分離され、サーバーを再デプロイすることなく簡単にプロバイダーを変更できるようになります。
 ====
 
-You can also view the llamastack configuration in the ConfigMap via the `oc` command.
+`oc` コマンドを使用して、ConfigMap 内の LlamaStack 構成を表示することもできます。
 
 [.console-input]
 [source,yaml,role="copypaste",subs=attributes+]
@@ -269,7 +267,7 @@ You can also view the llamastack configuration in the ConfigMap via the `oc` com
 oc get configmap llama-stack-config -o jsonpath='{.data.run\.yaml}' ; echo
 ----
 
-You can review the models available on the provided link:{litellm_api_base_url}[Model as a Service - MaaS^] using the following command:
+次のコマンドを使用して、提供されたリンク link:{litellm_api_base_url}[Model as a Service - MaaS^] で利用可能なモデルを確認できます。
 
 [.console-input]
 [source,yaml,role="copypaste",subs=attributes+]
@@ -277,17 +275,16 @@ You can review the models available on the provided link:{litellm_api_base_url}[
 curl -sS {litellm_api_base_url}/models   -H "Authorization: Bearer {litellm_virtual_key}" | jq
 ----
 
-
-Review the Llama Stack Server manifest below and apply by copy and paste the command in the terminal in order to install a Llama Stack Distribution for vLLM using Model-as-a-Service (MaaS):
+以下の Llama Stack サーバーのマニフェストを確認し、ターミナルにコマンドをコピー＆ペーストして実行して、Model-as-a-Service (MaaS) を使用する vLLM 用の Llama Stack ディストリビューションをインストールします。
 
 [TIP]
 ====
-*Key fields in the manifest below:*
+**以下のマニフェストの主要フィールド:**
 
-* `distribution.name: rh-dev` — selects the Red Hat development distribution, which pre-configures supported providers
-* `port: 8321` — the standard Llama Stack server port that all clients connect to
-* `VLLM_API_URL` / `VLLM_API_TOKEN` — points Llama Stack at the MaaS endpoint where your models are hosted, so Llama Stack proxies inference requests to vLLM
-* `userConfig.configMapName` — links to the ConfigMap you just created, which defines the full provider configuration
+* `distribution.name: rh-dev` — サポートされているプロバイダーを事前構成する Red Hat 開発ディストリビューションを選択します。
+* `port: 8321` — すべてのクライアントが接続する標準の Llama Stack サーバーポートです。
+* `VLLM_API_URL` / `VLLM_API_TOKEN` — モデルがホストされている MaaS エンドポイントを Llama Stack に指定します。これにより、Llama Stack は推論リクエストを vLLM にプロキシします。
+* `userConfig.configMapName` — 先ほど作成した ConfigMap にリンクし、完全なプロバイダー構成を定義します。
 ====
 
 [.console-input]
@@ -349,14 +346,13 @@ EOF
 llamastackdistribution.llamastack.io/llamastack-distribution-vllm created
 ----
 
-In *Terminal 2*, check that the LlamaStack pod is running, it will takes a few seconds to init and start.
+ターミナル 2 (Terminal 2) で、LlamaStack ポッドが実行されていることを確認します。初期化と起動には数秒かかります。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
 ----
 oc get pods -w
 ----
-
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -365,9 +361,9 @@ NAME                                           READY   STATUS    RESTARTS   AGE
 llamastack-distribution-vllm-94bf699bf-84sx9   1/1     Running   0          2m59s
 ----
 
-TIP: You can stop watching the pod with CTRL+C
+ヒント: CTRL+C を押すと、ポッドの監視を停止できます。
 
-In *Terminal 1*, check LlamaStack service, we will use it to connect to LlamaStack within the namespace:
+ターミナル 1 (Terminal 1) で、LlamaStack サービスを確認します。これを使用して、ネームスペース内の LlamaStack に接続します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -384,7 +380,7 @@ llamastack-distribution-vllm-service   ClusterIP   172.231.210.76   <none>      
 
 [NOTE]
 ====
-*What just happened?* The Llama Stack Operator saw your `LlamaStackDistribution` custom resource and automatically created a Deployment (which manages the pod) and a ClusterIP Service (which gives it a stable DNS name within the cluster). Your applications will connect to Llama Stack via the service name `llamastack-distribution-vllm-service` on port `8321` — you'll use this URL throughout the remaining lab modules.
+**何が起きましたか？** Llama Stack Operator は、作成された `LlamaStackDistribution` カスタムリソースを検出し、Deployment（ポッドを管理）と ClusterIP サービス（クラスター内で安定した DNS 名を提供）を自動的に作成しました。アプリケーションは、ポート `8321` のサービス名 `llamastack-distribution-vllm-service` を介して Llama Stack に接続します。この URL は、残りのラボモジュール全体で使用します。
 ====
 
-If you see the pod and service then congratulations, you have a successfully deployed Llama Stack.  In the next chapter, you will be exploring Llama Stack.
+ポッドとサービスが表示されていれば、Llama Stack のデプロイは成功です。次の章では、Llama Stack について詳しく見ていきます。
