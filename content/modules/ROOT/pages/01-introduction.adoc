@@ -1,61 +1,41 @@
-= Introduction
+= はじめに (Introduction)
 
-Welcome to this hands-on workshop on building agentic AI applications using
-*Llama Stack*, *LangGraph*, *Langfuse*, *Langflow*, *FastAPI* and *FastMCP* on Red Hat OpenShift AI. 
-This lab series takes you from deploying your first Llama Stack instance to 
-building AI agents that interact with enterprise systems through the Model Context
-Protocol (MCP).
+Red Hat OpenShift AI 上での *Llama Stack*、*LangGraph*、*Langfuse*、*Langflow*、*FastAPI*、*FastMCP* を使用した Agentic AI アプリケーション構築に関するハンズオンワークショップへようこそ。このラボシリーズでは、最初の Llama Stack インスタンスのデプロイから、Model Context Protocol (MCP) を通じてエンタープライズシステムと連携する AI エージェントの構築までを扱います。
 
 image::lab_arch_flow.png[]
 
-== Slack Discussions
+== Slack でのディスカッション (Slack Discussions)
 
-link:https://redhat.enterprise.slack.com/archives/C0AB4CS98EM[Join the Slack discussion #forum-ai-agent-builders]
+link:[https://redhat.enterprise.slack.com/archives/C0AB4CS98EM](https://redhat.enterprise.slack.com/archives/C0AB4CS98EM)[Slack ディスカッション #forum-ai-agent-builders に参加する (Join the Slack discussion #forum-ai-agent-builders)]
 
-== What you\'ll learn
+== 学習内容 (What you'll learn)
 
-**Deploy and explore Llama Stack**:: You\'ll deploy a Llama Stack
-distribution on OpenShift, discover its comprehensive API landscape, and
-interact with language models through multiple inference interfaces
-including the native Response API.
+**Llama Stack のデプロイと探索 (Deploy and explore Llama Stack)**:: OpenShift 上に Llama Stack ディストリビューションをデプロイし、その包括的な API 機能を探索して、ネイティブな Response API を含む複数の推論インターフェースを通じて言語モデルと対話します。
 
-**Implement RAG capabilities**:: Build Retrieval-Augmented Generation (RAG)
-systems using Llama Stack\'s built-in vector stores, embedding models, and
-file search tools to ground AI responses in your own documents.
+**RAG 機能の実装 (Implement RAG capabilities)**:: Llama Stack 組み込みのベクトルストア、埋め込みモデル、ファイル検索ツールを使用して検索拡張生成 (RAG) システムを構築し、自社のドキュメントに基づいて AI レスポンスを生成させます。
 
-**Apply safety guardrails**:: Learn how to implement content moderation and
-safety shields to ensure your AI applications meet enterprise security and
-compliance requirements.
+**セーフティガードレールの適用 (Apply safety guardrails)**:: AI アプリケーションがエンタープライズレベルのセキュリティおよびコンプライアンス要件を満たすよう、コンテンツモデレーションとセーフティシールドを実装する方法を学びます。
 
-**Web Search Tool**:: Leverage Tavily to augment context and address your 
-model's knowledge cutoff and limited training data.
+**Web 検索ツール (Web Search Tool)**:: Tavily を活用してコンテキストを拡張し、モデルのナレッジカットオフや制限された学習データを補完します。
 
-**Integrate business systems via MCP**:: Deploy and register Model Context
-Protocol servers that bridge Llama Stack and LangGraph agents with backend microservices,
-enabling AI to access customer data, financial transactions, and other
-enterprise capabilities.
+**MCP を通じたビジネスシステムの統合 (Integrate business systems via MCP)**:: Llama Stack および LangGraph エージェントをバックエンドマイクロサービスと接続する Model Context Protocol (MCP) サーバーをデプロイ・登録し、AI が顧客データ、金融取引、その他のエンタープライズ機能にアクセスできるようにします。
 
-**Build autonomous agents**:: Create intelligent agents using both the
-native Llama Stack Client and popular frameworks like LangGraph that can
-reason about tool usage, execute multi-step workflows, and provide natural
-language interfaces to complex business functions.
+**自律型エージェントの構築 (Build autonomous agents)**:: ネイティブの Llama Stack Client と LangGraph のような人気フレームワークの両方を使用してインテリジェントエージェントを作成します。これにより、ツールの利用について推論し、マルチステップのワークフローを実行して、複雑なビジネス機能に対する自然言語インターフェースを提供できるようにします。
 
-**Deploy production applications**:: Complete the journey by deploying a
-full-stack AI agent application with a web-based chat interface that brings
-together inference, tools, MCP, traces, evals and feedback.
+**本番アプリケーションのデプロイ (Deploy production applications)**:: 推論、ツール、MCP、トレース、評価、フィードバックを統合した Web ベースのチャットインターフェースを持つフルスタック AI エージェントアプリケーションをデプロイして、本コースを締めくくります。
 
-== Prerequisites
+== 前提条件 (Prerequisites)
 
-This workshop assumes basic familiarity with:
+本ワークショップでは、以下の基本的な知識があることを前提としています：
 
-* Linux command line (terminal usage) and bash scripting
-* Python programming fundamentals
-* REST APIs and JSON
-* Kubernetes/OpenShift concepts (pods, services, routes, configmaps)
+* Linux コマンドライン（ターミナル操作）および bash スクリプティング
+* Python プログラミングの基礎
+* REST API および JSON
+* Kubernetes/OpenShift の概念（Pod、Service、Route、ConfigMap）
 
-=== Command line tools included in your environment:
+=== 環境に含まれているコマンドラインツール (Command line tools included in your environment):
 
-This workshop comes with a provided terminal (Showroom Terminal) that contains already all the tools you need such as:
+本ワークショップには、以下のような必要なツールがすべて入ったターミナル (Showroom Terminal) が用意されています：
 
 * python
 * pip
@@ -67,50 +47,38 @@ This workshop comes with a provided terminal (Showroom Terminal) that contains a
 * openssl
 * watch
 
+このページの右側には *Terminal 1* と *Terminal 2* の2つのターミナルがあります。ラボの大部分は *Terminal 1* のみで使用できますが、デプロイの進行中や2つのプロセスを同時に起動したい場合などは、両方を使用すると便利です。
 
-You have two terminals on the right side of this page, *Terminal 1* and *Terminal 2*. While you can use just *Terminal 1* for most of the lab, sometimes it's comfortable to use both while deploying is in progress or when you have two processes to start.
-
-== Lab architecture
+== ラボアーキテクチャ (Lab architecture)
 
 image::lab_diagram.png[]
 
+本ワークショップを通じて、OpenShift 上で動作する以下のエンタープライズ AI アーキテクチャを扱います：
 
-Throughout this workshop, you\'ll work with an enterprise AI
-architecture running on OpenShift:
+* **Llama Stack Distribution**: 推論、エージェント、RAG、ツールのための統合 API を提供する中核となる AI プラットフォーム
+* **vLLM**: Qwen3 14B モデル、Llama Scout 17B、Llama Guard 3 1B などを使用した高性能モデルサービング
+* **MCP サーバー (MCP Servers)**: エージェントをバックエンドシステムに接続するプロトコル変換層
+* **バックエンドマイクロサービス (Backend Microservices)**: 顧客および財務機能を提供する PostgreSQL バックエンドの REST API
+* **エージェントアプリケーション (Agent Applications)**: さまざまなエージェントアーキテクチャやフレームワークを実証する Python アプリケーション
 
-* **Llama Stack Distribution**: The core AI platform providing unified APIs
-for inference, agents, RAG, and tools
-* **vLLM**: High-performance model serving using the Qwen3
-14B model, Llama Scout 17B, Llama Guard 3 1B, etc.
-* **MCP Servers**: Protocol translation layer connecting agents to backend
-systems
-* **Backend Microservices**: PostgreSQL-backed REST APIs providing customer
-and finance capabilities
-* **Agent Applications**: Python applications demonstrating
-various agent architectures and frameworks
+すべてのコンポーネントは Red Hat OpenShift AI 3 上で動作し、本番環境向け AI ワークロードに対応したエンタープライズグレードのインフラストラクチャを活用します。
 
-All components run on Red Hat OpenShift AI 3, leveraging enterprise-grade
-infrastructure for production AI workloads.
+== ワークショップモジュール (Workshop Modules)
 
-== Workshop Modules
+1. **はじめに (Introduction)**（本モジュール）- ワークショップの概要と目的
+2. **Llama Stack のデプロイ (Deploying Llama Stack)** - AI プラットフォームのインストールと設定
+3. **Llama Stack の探索 (Exploring Llama Stack)** - API の探索と推論機能のテスト
+4. **RAG** - ドキュメント検索とナレッジのグラウンディングの実装 *オプショナル*
+5. **評価 (Evals)** - モデルからのレスポンスの評価 *オプショナル*
+6. **シールド (Shields)** - セーフティとコンテンツモデレーションの適用 *オプショナル*
+7. **Web 検索 (Web Search)** - Tavily を使用した Web 検索結果によるコンテキスト拡張 *オプショナル*
+8. **バックエンドのセットアップ (Backend Setup)** - マイクロサービスと MCP サーバーのデプロイ
+9. **MCP** - MCP 経由でビジネス機能ツールを使用する Python エージェントの構築
+10. **エージェント (Agent)** - Llama Stack Agent API の探索
+11. **エージェント (Agent)** - 完全な LangGraph ベースのエージェントアプリケーションのデプロイ
+12. **トレース (Traces)** - トレース、評価、フィードバックのための Langfuse の使用
+13. **ワークベンチ (Workbench)** - RHOAI 内に組み込まれたクラスター内・ブラウザ内 VS Code *オプショナル*
 
-1. **Introduction** (this module) - Workshop overview and objectives
-2. **Deploying Llama Stack** - Install and configure your AI platform
-3. **Exploring Llama Stack** - Discover APIs and test inference capabilities
-4. **RAG** - Implement document retrieval and knowledge grounding *Optional*
-5. **Evals** - Evaluate the responses from models *Optional*
-6. **Shields** - Apply safety and content moderation *Optional*
-7. **Web Search** - Using Tavily to augment context with web results *Optional*
-8. **Backend Setup** - Deploy microservices and MCP servers
-9. **MCP** - Build agents with Python that use business function tools via MCP
-10. **Agent** - Explore the Llama Stack Agent API
-11. **Agent** - Deploy a complete LangGraph-based agent application
-12. **Traces** - Using Langfuse for traces, evals and feedback
-13. **Workbench** - RHOAI has an in-cluster, in-browser VS Code *Optional*
+本ワークショップの最後までに、Llama Stack、FastMCP、LangGraph、FastAPI、Langfuse、およびエンタープライズインフラストラクチャを使用し、OpenShift 上で Agentic AI システムを構築、デプロイ、運用するハンズオン経験を得ることができます。
 
-By the end of this workshop, you\'ll have hands-on experience building,
-deploying, and operating agentic AI systems on OpenShift using Llama Stack,
-FastMCP, LangGraph, FastAPI, Langfuse, and enterprise infrastructure.
-
-Let\'s begin!
-
+はじめましょう！
