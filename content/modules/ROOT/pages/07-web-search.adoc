@@ -1,23 +1,21 @@
-= Web Search with Llama Stack
+Llama Stack の Web 検索 (Web Search with Llama Stack)
 
-One of the more powerful out of the box tools in Llama Stack is *web search* and an integration with https://www.tavily.com/[Tavily^].  
+Llama Stack の標準機能で最も強力なツールの一つが **Web 検索 (web search)** であり、これは link:https://www.tavily.com/[Tavily^] と統合されています。
 
-This means your agent/application can have the latest and greatest information available from Internet sources and not wholly rely on its training data.
+これにより、エージェントやアプリケーションは、トレーニングデータだけに頼ることなく、インターネット上のソースから最新かつ最高の情報を入手できるようになります。
 
 [TIP]
 ====
-*What is Tavily?* Tavily is an AI-optimized search engine designed specifically for LLM applications. Unlike general web search APIs that return raw HTML, Tavily returns clean, structured content that models can directly reason about. The free tier provides enough API calls for development and testing.
+**Tavily とは何ですか？** Tavily は、LLM アプリケーション向けに特別に設計された AI 最適化検索エンジンです。生の HTML を返す一般的な Web 検索 API とは異なり、Tavily はモデルが直接推論できるクリーンで構造化されたコンテンツを返します。無料枠でも、開発やテストに十分な API 呼び出しが可能です。
 ====
 
-
-
-You will *need* a Tavily API key to activate. Sign up at https://www.tavily.com/[www.tavily.com^] and create an API key.
+有効にするには Tavily の API キーが**必要**です。link:https://www.tavily.com/[www.tavily.com^] でサインアップして API キーを作成してください。
 
 image::tavily.png[]
 
-WARNING: This module *requires* you to have a *TAVILY_SEARCH_API_KEY*. Once you signed up to Tavily and get one, continue with the following instructions.
+警告：このモジュールには **TAVILY_SEARCH_API_KEY** が**必須**です。Tavily にサインアップしてキーを取得したら、以下の手順に進んでください。
 
-Make sure you are in the correct base directory
+正しいベースディレクトリにいることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -32,7 +30,7 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026
 ----
 
-If needed, create a Python virtual environment (venv) 
+必要に応じて、Python 仮想環境 (venv) を作成します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -40,7 +38,7 @@ If needed, create a Python virtual environment (venv)
 python -m venv .venv
 ----
 
-How do you know if you need to create one? You can look for an existing .venv folder
+作成が必要かどうかを確認するには、既存の .venv フォルダを探します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -48,7 +46,7 @@ How do you know if you need to create one? You can look for an existing .venv fo
 ls .venv
 ----
 
-The following response indicates you need to create your Python venv
+以下のレスポンスが表示された場合は、Python venv を作成する必要があります。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -56,7 +54,7 @@ The following response indicates you need to create your Python venv
 ls: cannot access '.venv': No such file or directory
 ----
 
-Set environment
+環境を設定します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -64,8 +62,7 @@ Set environment
 source .venv/bin/activate 
 ----
 
-
-Tavily was configured as part of the LlamaStack ConfigMap, it will use your own Tavily key as an environment variable. 
+Tavily は LlamaStack ConfigMap の一部として構成されており、環境変数として設定した独自の Tavily キーを使用します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -83,7 +80,7 @@ grep -A 3 "tavily" $HOME/fantaco-redhat-one-2026/llama-stack-scripts/llamastack-
           max_results: 3   
 ----
 
-Change to the web-search sub-directory
+web-search サブディレクトリに移動します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -92,7 +89,7 @@ cd web-search
 pwd
 ----
 
-Install the dependencies
+依存関係をインストールします。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -100,8 +97,7 @@ Install the dependencies
 pip install -r requirements.txt
 ----
 
-
-Copy and paste your API key from Tavily and add it to the following environment variable in the terminal:
+Tavily から API キーをコピー＆ペーストし、ターミナルの以下の環境変数に追加します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -109,9 +105,9 @@ Copy and paste your API key from Tavily and add it to the following environment 
 export TAVILY_SEARCH_API_KEY=
 ----
 
-TIP: It will be something like: export TAVILY_SEARCH_API_KEY=tvly-dev-abcde...
+ヒント：`export TAVILY_SEARCH_API_KEY=tvly-dev-abcde...` のようになります。
 
-Make sure your `INFERENCE_MODEL` env variable is set correctly
+`INFERENCE_MODEL` 環境変数が正しく設定されていることを確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -150,24 +146,23 @@ Total toolgroups: 2
 ==================================================
 ----
 
-=== Who won the last Super Bowl?
+=== 最後のスーパーボウルで優勝したのは誰ですか？ (Who won the last Super Bowl?)
 
-Review the code snippet to use Response API to ask who won last Super Bowl.
+Response API を使用して、最後のスーパーボウルで誰が優勝したかを尋ねるコードスニペットを確認してください。
 
-[source,python]
-----
-# Initialize client
+````python
+# クライアントを初期化
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
-# Create response without web search (non-streaming)
+# Web 検索なしでレスポンスを作成（非ストリーミング）
 response = client.responses.create(
     model=INFERENCE_MODEL,
     input="Who won the last Super Bowl?",
     stream=False,
 )
-----
+````
 
-Run the script with **NO** web search and only the model's training data:
+Web 検索を使用**せず**、モデルのトレーニングデータのみを使用してスクリプトを実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -178,40 +173,39 @@ python 2_no_web_search.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-The last Super Bowl, **Super Bowl LVIII**, was played on **February 11, 2024**, at Allegiant Stadium in Las Vegas. The **Kansas City Chiefs** defeated the **San Francisco 49ers** with a final score of **25-22**.
+最後のスーパーボウルである **第58回スーパーボウル (Super Bowl LVIII)** は、**2024年2月11日**にラスベガスのアレジアント・スタジアムで開催されました。**カンザスシティ・チーフス**が **25-22** のスコアで **サンフランシスコ・フォーティナイナーズ**を破りました。
 
-**Patrick Mahomes** of the Chiefs was named **Super Bowl MVP**, leading his team to victory with a strong performance. This marked the Chiefs' second Super Bowl win in three years (following their 2020 victory).
+チーフスの **パトリック・マホームズ** が **スーパーボウル MVP** に選ばれ、強力なパフォーマンスでチームを勝利に導きました。これは、チーフスにとって 3 年間で 2 度目（2020年の勝利に続く）のスーパーボウル制覇となりました。
 ----
 
-The response you receive will be different than the one above as you are dealing with a non-deterministic LLM.  Typically the response includes the winner from 2023 or 2024.
+非確定的な LLM を扱っているため、受け取る回答は上記とは異なる場合があります。通常、回答には 2023 年または 2024 年の勝者が含まれます。
 
 [NOTE]
 ====
-*Why is the answer outdated?* The model's training data has a cutoff date (typically mid-2024 for Qwen3). It can only answer based on what it learned during training. Events after that cutoff — like Super Bowl LIX in February 2025 — are invisible to the model without external tools.
+**なぜ回答が古いのですか？** モデルのトレーニングデータにはカットオフ日（Qwen3 の場合は通常 2024 年半ば）があります。トレーニング中に学習した内容に基づいてしか回答できません。そのカットオフ後の出来事（2025 年 2 月の第 59 回スーパーボウルなど）は、外部ツールなしではモデルには見えません。
 ====
 
-Now we can use the builtin tool to use Tavily websearch to **POTENTIALLY** receive a more up to date answer.  
+次に、組み込みツールを使用して Tavily Web 検索を使用し、**より最新の回答を受け取れる可能性**を高めます。
 
-See the snippet below:
+以下のスニペットを確認してください。
 
-[source,python]
-----
-# Initialize client with Tavily API key
+````python
+# Tavily API キーを使用してクライアントを初期化
 client = LlamaStackClient(
     base_url=LLAMA_STACK_BASE_URL,
     provider_data={"tavily_search_api_key": TAVILY_SEARCH_API_KEY} if TAVILY_SEARCH_API_KEY else None,
 )
 
-# Create response with web search (non-streaming)
+# Web 検索を使用してレスポンスを作成（非ストリーミング）
 response = client.responses.create(
     model=INFERENCE_MODEL,
     input=QUESTION,
     tools=[{"type": "web_search"}],
     stream=False,
 )
-----
+````
 
-Run the script:
+スクリプトを実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -219,25 +213,23 @@ Run the script:
 QUESTION="Who won the last Super Bowl?" python 3_web_search.py
 ----
 
-Note: If you are running this query after February 8 2026 then you will likely have a different response.
+注：2026 年 2 月 8 日以降にこのクエリを実行している場合は、おそらく異なる回答が返されます。
 
 [TIP]
 ====
-*How does it work?* When `tools=[{"type": "web_search"}]` is specified, Llama Stack instructs the model to call Tavily before answering. Tavily searches the web, returns relevant snippets, and the model incorporates that fresh information into its response. Notice the code also passes the Tavily API key via `provider_data` so Llama Stack can authenticate with the search service.
+**どのように動作しますか？** `tools=[{"type": "web_search"}]` が指定されると、Llama Stack は回答する前に Tavily を呼び出すようモデルに指示します。Tavily は Web を検索し、関連するスニペットを返し、モデルはその最新の情報を回答に取り込みます。コードでは、Llama Stack が検索サービスで認証できるように、`provider_data` を介して Tavily API キーも渡していることに注目してください。
 ====
 
 [.console-output]
 [source,text,subs=attributes+]
 ----
-Tavily Key: Set
-Question:   Who won the last Super Bowl?
+Tavily Key: セット完了
+質問: Who won the last Super Bowl?
 
-The Philadelphia Eagles won the most recent Super Bowl (Super Bowl LIX in 2025), defeating the Kansas City Chiefs with a score of **40-22** in New Orleans. This marked the Eagles' second Super Bowl championship and their first since 2018.
+フィラデルフィア・イーグルスが直近のスーパーボウル（2025年の第59回スーパーボウル）で優勝し、ニューオーリンズでカンザスシティ・チーフスを **40-22** のスコアで破りました。これはイーグルスにとって 2 度目のスーパーボウル制覇であり、2018年以来の優勝となりました。
 ----
 
-
-
-=== Who is the current US President?
+=== 現在のアメリカ大統領は誰ですか？ (Who is the current US President?)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -248,12 +240,12 @@ python 2_no_web_search_president.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-As of the latest information available (up to July 2024), **Joe Biden** is the 46th President of the United States. His term began on **January 20, 2021**, following the 2020 presidential election. The next U.S. presidential election is scheduled for **November 5, 2024**, with the new president to be inaugurated on **January 20, 2025**.
+利用可能な最新の情報（2024年7月まで）に基づくと、**ジョー・バイデン** が第46代アメリカ合衆国大統領です。彼の任期は、2020年の大統領選挙を受けて **2021年1月20日**に始まりました。次のアメリカ大統領選挙は **2024年11月5日**に予定されており、新大統領は **2025年1月20日**に就任する予定です。
 
-If you're asking this question after July 2024, the answer may change depending on the election results. Let me know if you'd like updates on the 2024 race!
+2024年7月以降にこの質問をしている場合、選挙結果によって回答が変わる可能性があります。2024年の選挙戦に関する最新情報が必要な場合はお知らせください！
 ----
 
-And now with a web search:
+今度は Web 検索を使用します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -261,24 +253,19 @@ And now with a web search:
 python 3_web_search_president.py
 ----
 
-Note: Non-deterministic behavior means even with the web search tool 
-this can report that Joe Biden is president.  We attempt to help the LLM+Tavily by providing Today as seen later in this module.
-
+注：非確定的な動作のため、Web 検索ツールを使用してもジョー・バイデンが大統領であると報告される場合があります。このモジュールの後半で説明するように、**「今日 (Today)」**を提供することで、LLM+Tavily の判断を支援する試みを行っています。
 
 [.console-output]
 [source,text,subs=attributes+]
 ----
-The current President of the United States is **Donald John Trump**. 
-He was sworn into office on **January 20, 2025**, and his term is set 
-to end on **January 20, 2029**. This information is consistent across 
-multiple sources, including official government websites and encyclopedic
-references.
+現在のアメリカ合衆国大統領は **ドナルド・ジョン・トランプ** です。
+彼は **2025年1月20日**に就任し、任期は **2029年1月20日**に終了する予定です。
+この情報は、政府の公式ウェブサイトや百科事典の参照資料を含む、複数の情報源で一貫しています。
 ----
 
+モデルの知識のカットオフ日を確認しておいてください。
 
-Make sure to know your model's knowledge cutoff date
-
-=== Knowledge Cutoff Date
+=== 知識のカットオフ日 (Knowledge Cutoff Date)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -289,32 +276,28 @@ python 4_what_is_my_knowledge_cutoff.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-My knowledge cutoff is **Q3 2024**, meaning my training data includes 
-information up to that time. However, I do **not** have real-time internet 
-access, so I cannot provide updates or information beyond this cutoff. 
-For the most current data, I recommend checking reliable sources directly. 
-Let me know if you'd like help with anything within my training scope!
+私の知識のカットオフは **2024年第3四半期 (Q3 2024)** であり、私のトレーニングデータにはその時期までの情報が含まれています。ただし、私はリアルタイムのインターネットアクセスを持って**いない**ため、このカットオフ以降の更新情報や提供はできません。最新のデータについては、信頼できる情報源を直接確認することをお勧めします。私のトレーニング範囲内で何かお手伝いできることがあればお知らせください！
 ----
 
 [NOTE]
 ====
-*Why check the cutoff?* Knowing your model's knowledge cutoff tells you which questions need web search augmentation and which can rely on training data alone. For factual questions about events after the cutoff, web search is essential. For stable knowledge (math, science, history), the model's training data is typically sufficient.
+**なぜカットオフを確認するのですか？** モデルの知識のカットオフを知ることで、どの質問に Web 検索による拡張が必要で、どの質問にトレーニングデータだけで対応できるかがわかります。カットオフ後の出来事に関する事実に基づいた質問には、Web 検索が不可欠です。安定した知識（数学、科学、歴史）については、通常、モデルのトレーニングデータで十分です。
 ====
 
-=== Today
+=== 今日 (Today)
 
-A key tip to make your search results better is to simply add *Today* to every prompt.
+検索結果を向上させるための重要なヒントは、すべてのプロンプトに **「今日 (Today)」** を追加することです。
 
 ----
 today = date.today()
 prompt=f"Today is {today}. Who is the current US President?"
 ----
 
-Simply knowing about today's date helps the model reason about things that are temporal in nature such as "current", "Q2" or "last year".
+今日の目的の日付を知るだけで、「現在 (current)」、「第2四半期 (Q2)」、「昨年 (last year)」といった時間的な性質を持つ事柄についてモデルが推論するのに役立ちます。
 
 [TIP]
 ====
-*A simple but powerful pattern:* Prepending `Today is {date}` to every prompt is a low-cost, high-impact technique. It helps the model distinguish between "current" (needs web search) and "historical" (training data is fine), and it helps Tavily return more relevant, time-appropriate results. Consider making this a standard part of your prompt template in production.
+**シンプルだが強力なパターン:** すべてのプロンプトの先頭に `Today is {date}` を追加することは、低コストで効果の高い手法です。これにより、モデルは「現在」（Web 検索が必要）と「過去」（トレーニングデータで十分）を区別できるようになり、Tavily もより関連性の高い、時期に合った結果を返すことができます。本番環境のプロンプトテンプレートの標準的な一部として検討してください。
 ====
 
 [.console-input]
@@ -326,14 +309,14 @@ python 5_web_search_president_today.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-As of January 8, 2026, the current U.S. President is **Donald Trump**. 
-He secured a second term in the 2024 election, as indicated by multiple 
-sources, including news articles and the official White House website.
+2026年1月8日現在、現在のアメリカ大統領は **ドナルド・トランプ** です。
+ニュース記事やホワイトハウスの公式ウェブサイトを含む複数の情報源が示すように、
+彼は2024年の選挙で2期目を獲得しました。
 ----
 
-=== Responses
+### 回答 (Responses)
 
-You can also use the web search tool via the Responses API
+Responses API を介して Web 検索ツールを使用することもできます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -354,14 +337,14 @@ cat << EOF | curl -sS "$LLAMA_STACK_BASE_URL/v1/responses" \
 EOF
 ----
 
-== Summary
+== まとめ (Summary)
 
-In this module you:
+このモジュールでは以下のことを行いました。
 
-* Compared model responses *with and without* web search, seeing how training data cutoffs create stale answers
-* Used Tavily via Llama Stack's built-in `web_search` tool to get current information
-* Learned the importance of knowing your model's *knowledge cutoff date*
-* Applied the *"Today is..."* prompt pattern to improve temporal reasoning and search relevance
-* Accessed web search through both the Python SDK and direct REST API calls
+* Web 検索の**あり・なし**でモデルの回答を比較し、トレーニングデータのカットオフによって回答が古くなる様子を確認しました。
+* Llama Stack の組み込み `web_search` ツールを介して Tavily を使用し、最新情報を取得しました。
+* モデルの **知識カットオフ日 (knowledge cutoff date)** を知ることの重要性を学びました。
+* 時間的推論と検索の関連性を向上させるために、**"Today is..."** プロンプトパターンを適用しました。
+* Python SDK と直接の REST API 呼び出しの両方から Web 検索にアクセスしました。
 
-Web search is one of the simplest tools to add to your agents, and it immediately addresses one of the most common complaints about LLMs -- outdated information.
+Web 検索はエージェントに追加できる最もシンプルなツールの一つであり、LLM に対する最も一般的な不満の一つである「情報の古さ」を即座に解決します。
