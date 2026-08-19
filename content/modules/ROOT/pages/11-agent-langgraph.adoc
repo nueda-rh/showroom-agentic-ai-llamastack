@@ -1,19 +1,19 @@
-= Agent - LangGraph
+= エージェント - LangGraph
 
-You should have completed the modules called *Backend Setup* and *MCP* before attempting this module.  
+このモジュールを試行する前に、*バックエンドのセットアップ (Backend Setup)* および *MCP* というモジュールを完了しておく必要があります。
 
-This module focuses on the deployment of a backend and frontend - a web-based chat user interface frontend based on Node and a Python-based backend. 
+このモジュールでは、Node ベースの Web チャットユーザーインターフェース・フロントエンドと、Python ベースのバックエンドのデプロイに焦点を当てます。
 
-There is a helm chart to deploy both the frontend and backend to keep things simple.
+物事をシンプルに保つため、フロントエンドとバックエンドの両方をデプロイするための Helm チャートが用意されています。
 
 [TIP]
 ====
-*What are you deploying?* The Helm chart deploys two pods: a *LangGraph FastAPI backend* (Python agent that handles reasoning, tool calling, and MCP communication) and a *Chat UI* (Node.js web interface that provides a conversational front-end). Together they form a complete agent application that users can interact with through a browser.
+**何をデプロイしていますか？ (What are you deploying?)** Helm チャートは 2 つのポッドをデプロイします。*LangGraph FastAPI バックエンド*（推論、ツール呼び出し、および MCP 通信を処理する Python エージェント）と、*チャット UI (Chat UI)*（対話型のフロントエンドを提供する Node.js Web インターフェース）です。これらを合わせることで、ユーザーがブラウザを通じて対話できる完全なエージェントアプリケーションを形成します。
 ====
 
-== Agent with Chat UI
+== チャット UI を備えたエージェント (Agent with Chat UI)
 
-Make sure you are in the correct directory
+正しいディレクトリにいることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -46,7 +46,7 @@ REVISION: 1
 TEST SUITE: None
 ----
 
-This will deploy two new pods and a new route for the frontend UI. 
+これにより、2 つの新しいポッドと、フロントエンド UI 用の新しいルートがデプロイされます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -69,9 +69,9 @@ postgresql-finance-689d97894f-5xz8d            1/1     Running   0          74m
 simple-agent-chat-ui-6d7794dc6b-zk95v          1/1     Running   0          72s
 ----
 
-A LangGraph Fast API backend as well as a chat UI as the two new pods. 
+2 つの新しいポッドとして、LangGraph FastAPI バックエンドとチャット UI が追加されます。
 
-Get the URL to the Chat UI
+チャット UI への URL を取得します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -86,13 +86,13 @@ echo $CHAT_URL
 http://simple-agent-chat-ui-showroom-nn2ct-1-user1.apps.cluster-nn2ct.dynamic.redhatworkshops.io
 ----
 
-And open in a new browser tab.
+そして、新しいブラウザタブで開きます。
 
-You can also view the whole architecture deployed in your namespace via the OpenShift Developer Console Topology view
+OpenShift デベロッパーコンソール (OpenShift Developer Console) の トポロジー (Topology) ビューから、ネームスペースにデプロイされたアーキテクチャ全体を確認することもできます。
 
 image::topology.png[]
 
-Now you can ask it questions interactively such as:
+これで、次のような質問を対話形式で行うことができます。
 
 [.console-input]
 [source,text,role="copypaste",subs=attributes+]
@@ -110,10 +110,10 @@ The tools available to me are designed for managing customer data, order history
 
 [NOTE]
 ====
-*Why did the agent refuse?* The LangGraph backend is configured with a system prompt that restricts it to customer and finance operations only. When asked general knowledge questions, the agent correctly identifies that none of its registered tools can help and declines to guess. This is intentional — in production, you want agents to stay within their defined scope.
+**なぜエージェントは拒否したのですか？ (Why did the agent refuse?)** LangGraph バックエンドは、顧客および財務の運用のみに制限するシステムプロンプトで構成されています。一般的な知識に関する質問をされた場合、エージェントは登録されたツールのどれも役に立たないことを正しく認識し、推測による回答を拒否します。これは意図的なものです。本番環境では、エージェントが定義された範囲内に留まることが求められます。
 ====
 
-Try questions specific to the domain of the Agent thanks to the previously deployed and registered Customer and Finance MCP servers
+以前にデプロイおよび登録された Customer および Finance MCP サーバーのおかげで、エージェントのドメインに特化した質問を試すことができます。
 
 [.console-input]
 [source,text,role="copypaste",subs=attributes+]
@@ -123,7 +123,7 @@ Who are the customers?
 
 image::chat_ui_2.png[]
 
-In Terminal 1, check the logs of your Llama Stack instance to see what's going on under the hood:
+ターミナル 1 (Terminal 1) で Llama Stack インスタンスのログを確認し、内部で何が起きているかを確認します。
 
 
 [.console-input]
@@ -132,7 +132,7 @@ In Terminal 1, check the logs of your Llama Stack instance to see what's going o
 oc logs -f deploy/llamastack-distribution-vllm
 ----
 
-Execute several other queries that combine customer and order data.
+顧客データと注文データを組み合わせた他のクエリをいくつか実行します。
 
 [.console-input]
 [source,text,role="copypaste",subs=attributes+]
@@ -150,7 +150,6 @@ What is the status of order 6 for Fran Wilson?
 
 image::chat_ui_4.png[]
 
-== Summary
+== まとめ (Summary)
 
-In this module you deployed a complete agent application stack — a LangGraph FastAPI backend connected to MCP servers for customer and finance data, fronted by a web-based Chat UI. You saw how the agent stays within its domain (refusing general knowledge questions), how it leverages MCP tools to answer business questions, and how you can monitor agent behavior through Llama Stack logs. This architecture — chat UI, agent backend, MCP servers, business microservices — is a reference pattern for production enterprise AI applications.
-
+このモジュールでは、顧客および財務データ用の MCP サーバーに接続された LangGraph FastAPI バックエンドと、その前面にある Web ベースのチャット UI という、完全なエージェントアプリケーションスタックをデプロイしました。エージェントが自身のドメイン内に留まる様子（一般知識の質問を拒否する）、ビジネス上の質問に答えるために MCP ツールをどのように活用するか、そして Llama Stack のログを通じてエージェントの動作をどのように監視できるかを確認しました。このアーキテクチャ（チャット UI、エージェントバックエンド、MCP サーバー、ビジネスマイクロサービス）は、本番のエンタープライズ AI アプリケーションにおけるリファレンスパターンです。
