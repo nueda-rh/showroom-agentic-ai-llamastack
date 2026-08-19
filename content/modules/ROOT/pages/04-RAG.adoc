@@ -1,37 +1,30 @@
-= RAG with Llama Stack
+= Llama Stack による RAG
 
-This module walks through an example of using Llama Stack\'s built-in RAG
-capabilities. 
+このモジュールでは、Llama Stack の組み込み RAG 機能を使用する例を順を追って説明します。
 
-RAG stands for Retrieval Augmented Generation and is a pattern often used to augment the knowledge of a LLM.  Allowing you to bring private data without having to train nor fine-tune a model.
+RAG は Retrieval-Augmented Generation（検索拡張生成）の略で、LLM の知識を拡張するために頻繁に使用されるパターンです。モデルのトレーニングや微調整を行うことなく、プライベートなデータを利用できるようになります。
 
 [NOTE]
 ====
-*Why RAG instead of fine-tuning?* Fine-tuning bakes knowledge directly into model weights — it's expensive, slow, and the data becomes stale. RAG keeps your data external in a searchable store, so updates are instant (re-ingest the document), there's no GPU-intensive training step, and the model can cite its sources. This makes RAG the preferred approach for enterprise knowledge bases that change frequently.
+**なぜ微調整ではなく RAG なのですか？** 微調整（Fine-tuning）は知識をモデルの重みに直接焼き付けますが、これにはコストと時間がかかり、データがすぐに古くなってしまいます。RAG はデータを外部の検索可能なストアに保持するため、ドキュメントを再取り込みするだけで即座に更新でき、GPU を集中的に使用するトレーニングステップも不要で、モデルが情報源を引用することも可能です。そのため、頻繁に変更されるエンタープライズナレッジベースには RAG が好まれます。
 ====
 
-Typical RAG implementations involve both an ingestion as well as retrieval process.  Some folks refer to these processes as pipelines.
+一般的な RAG の実装には、インジェクション（取り込み）プロセスとリトリーバル（検索）プロセスの両方が含まれます。これらをパイプラインと呼ぶこともあります。
 
 image::rag_high_level_diagram.png[]
 
-Llama Stack provides native RAG support through its **Agent API** with the
-`file_search` tool:
+Llama Stack は、**Agent API** と `file_search` ツールを通じてネイティブな RAG サポートを提供します。
 
-1. **Vector Store Creation**: Documents are uploaded and chunked into
-   smaller pieces
-2. **Embedding Generation**: Each chunk is converted to a vector embedding
-   using an embedding model
-3. **Vector Search**: When a query is made, it\'s embedded and compared
-   against stored chunks using:
-   - **Semantic search**: Vector similarity (cosine/dot product)
-   - **Keyword search**: BM25 algorithm
-   - **Hybrid search**: Combination of both (configurable weights)
-4. **Retrieval**: Top matching chunks are retrieved based on relevance
-   scores
-5. **Generation**: The LLM uses retrieved context to generate answers,
-   citing sources
+1. **ベクトルストアの作成 (Vector Store Creation)**: ドキュメントがアップロードされ、小さなピース（チャンク）に分割されます。
+2. **埋め込みの生成 (Embedding Generation)**: 埋め込みモデルを使用して、各チャンクがベクトル埋め込みに変換されます。
+3. **ベクトル検索 (Vector Search)**: クエリが実行されると、そのクエリも埋め込まれ、以下の手法で保存されたチャンクと比較されます。
+   - **セマンティック検索 (Semantic search)**: ベクトルの類似性（コサイン類似度/ドット積）
+   - **キーワード検索 (Keyword search)**: BM25 アルゴリズム
+   - **ハイブリッド検索 (Hybrid search)**: 両方の組み合わせ（重み付け構成可能）
+4. **リトリーバル/抽出 (Retrieval)**: 関連性スコアに基づいて、最も一致するチャンクが抽出されます。
+5. **生成 (Generation)**: LLM は抽出されたコンテキストを使用して、出典を引用しながら回答を生成します。
 
-Make sure you are in the correct directory
+正しいディレクトリにいることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -46,7 +39,7 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026
 ----
 
-Create a Python virtual environment (venv)
+Python の仮想環境 (venv) を作成します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -54,7 +47,7 @@ Create a Python virtual environment (venv)
 python -m venv .venv
 ----
 
-Set environment
+環境を設定します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -62,7 +55,7 @@ Set environment
 source .venv/bin/activate 
 ----
 
-Change to the correct sub-directory
+正しいサブディレクトリに移動します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -70,14 +63,13 @@ Change to the correct sub-directory
 cd rag-llama-stack
 ----
 
-If you did this correctly then your terminal prompt should look like the following:
+正しく行われていれば、ターミナルのプロンプトは次のようになります。
 
 ----
 ((.venv) ) [lab-user: ~/fantaco-redhat-one-2026/rag-llama-stack]$
 ----
 
-
-Install the dependencies
+依存関係をインストールします。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -85,7 +77,7 @@ Install the dependencies
 pip install -r requirements.txt
 ----
 
-First see what embedding models are available on your server
+まず、サーバーで利用可能な埋め込みモデルを確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -108,10 +100,10 @@ Found 1 embedding model(s):
 
 [TIP]
 ====
-*What is an embedding model?* Unlike LLMs that generate text, an embedding model converts text into a fixed-size numerical vector (here, 768 dimensions). Texts with similar meaning produce vectors that are close together in this high-dimensional space. This is what makes semantic search possible — your query is embedded and compared against all document chunk embeddings to find the most relevant matches.
+**埋め込みモデルとは何ですか？** テキストを生成する LLM とは異なり、埋め込みモデル（Embedding model）はテキストを固定サイズの数値ベクトル（ここでは 768 次元）に変換します。意味が似ているテキストは、この多次元空間で互いに近いベクトルを生成します。これによりセマンティック検索が可能になります。つまり、クエリが埋め込まれ、すべてのドキュメントチャンクの埋め込みと比較されて、最も関連性の高い一致が見つけられます。
 ====
 
-Set env variables to use *nomic-embed* from HuggingFace.
+HuggingFace の *nomic-embed* を使用するために環境変数を設定します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -120,9 +112,7 @@ export EMBEDDING_MODEL=sentence-transformers/nomic-ai/nomic-embed-text-v1.5
 export EMBEDDING_DIMENSION=768
 ----
 
-Then run the ingestion and vector store creation script.  
-
-This will take approximately 1 minute. 
+次に、インジェクションとベクトルストア作成スクリプトを実行します。これには約 1 分かかります。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -160,31 +150,30 @@ Vector store ID: vs_5c464ca9-58dc-4f3d-bda9-d7333e4eb2a1
 --------------------------------------------------------------------------------
 ----
 
-The `1_create_vector_store.py` script:
+`1_create_vector_store.py` スクリプトが行うこと：
 
-* Creates a database called "hr-benefits-hybrid" that can search documents using:
-    - Keyword search (finding exact words) - 50% weight
-    - Semantic search (finding similar meaning) - 50% weight
+* 次の機能を使ってドキュメントを検索できる "hr-benefits-hybrid" というデータベースを作成します。
+    - キーワード検索（正確な単語の検索） - 重み 50%
+    - セマンティック検索（似た意味の検索） - 重み 50%
 
-* Downloads the HR Document
-  - Fetches a text file called link:https://raw.githubusercontent.com/burrsutter/fantaco-redhat-one-2026/refs/heads/main/rag-llama-stack/source_docs/FantaCoFabulousHRBenefits_clean.txt[FantaCoFabulousHRBenefits_clean.txt] from GitHub
+* 人事（HR）ドキュメントのダウンロード
+  - GitHub から link:https://raw.githubusercontent.com/burrsutter/fantaco-redhat-one-2026/refs/heads/main/rag-llama-stack/source_docs/FantaCoFabulousHRBenefits_clean.txt[FantaCoFabulousHRBenefits_clean.txt] というテキストファイルを取得します。
 
-* Upload the document to Llama Stack Server
+* ドキュメントを Llama Stack サーバーにアップロード
 
-* Chunks the uploaded document
-  - Splits the uploaded document into small pieces (100 tokens each, with 10-token overlap)
+* アップロードされたドキュメントのチャンク化
+  - ドキュメントを小さな断片（各 100 トークン、10 トークンのオーバーラップあり）に分割します。
 
-* Waits to see if the document has been successfully indexed
+* ドキュメントのインデックス作成が正常に完了したかを確認するための待機
 
 [TIP]
 ====
-*Why chunk and overlap?* LLMs have limited context windows and embedding models work best on shorter passages. Chunking splits a large document into small, focused pieces. The 10-token overlap ensures that sentences split across chunk boundaries still have context in both chunks, reducing the chance of losing information at the edges.
+**なぜチャンク化とオーバーラップを行うのですか？** LLM にはコンテキストウィンドウの制限があり、埋め込みモデルは短い一節で最も効果的に機能します。チャンク化（Chunking）は大きなドキュメントを小さく焦点の絞られた断片に分割します。10 トークンのオーバーラップ（重ね合わせ）により、チャンクの境界で分割された文も両方のチャンクにコンテキストを持つようになり、端の部分で情報が失われる可能性を低減します。
 
-*Why hybrid search?* Keyword search (BM25) excels at finding exact terms like product names or policy numbers. Semantic search finds conceptually similar content even when different words are used. The 50/50 weighting combines both strengths.
+**なぜハイブリッド検索なのですか？** キーワード検索 (BM25) は、製品名やポリシー番号などの正確な用語を見つけるのに優れています。セマンティック検索は、異なる単語が使われていても概念的に類似したコンテンツを見つけます。50/50 の重み付けにより、両方の長所を組み合わせることができます。
 ====
 
-You can list the vector stores that Llama Stack is aware of by using
-curl
+curl を使用して、Llama Stack が認識しているベクトルストアをリスト表示できます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -199,7 +188,7 @@ jq -r '.data[] | "\(.name) \(.id)"'
 hr-benefits-hybrid vs_5c464ca9-58dc-4f3d-bda9-d7333e4eb2a1
 ----
 
-Or by using Python
+または Python を使用します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -219,12 +208,9 @@ Files: 1
 --------------------------------------------------------------------------------
 ----
 
-The RAG pattern typically involves two phases - first you ingest and then you augment the retrieval. 
-You have just completed ingestion therefore what is next is retrieval.
+RAG パターンには通常 2 つのフェーズがあります。まず取り込み（Ingest）を行い、次に検索（Retrieval）を拡張します。取り込みが完了したので、次は検索です。
 
-
-Here is an example of the retrieval process via Llama Stack client Agent API and file_search tool
-
+以下は、Llama Stack クライアントの Agent API と `file_search` ツールを使用した検索プロセスの例です。
 
 [source,python]
 ----
@@ -244,10 +230,10 @@ questions by searching the provided documents.",
 
 [TIP]
 ====
-*How does this work?* The `Agent` is configured with a `file_search` tool pointed at your vector store. When you ask a question, the agent automatically: (1) embeds your query, (2) searches the vector store for the most relevant chunks, (3) passes those chunks as context to the LLM, and (4) generates an answer grounded in the retrieved content. The `instructions` field tells the model it *must* search the documents rather than relying on its training data.
+**これはどのように動作しますか？** `Agent` は、作成したベクトルストアを指す `file_search` ツールを使用するように構成されています。質問をすると、エージェントは自動的に次のことを行います。(1) クエリを埋め込む、(2) ベクトルストアから最も関連性の高いチャンクを検索する、(3) それらのチャンクをコンテキストとして LLM に渡す、(4) 抽出されたコンテンツに基づいて回答を生成する。`instructions`（指示）フィールドは、トレーニングデータに頼るのではなく、*必ず* ドキュメントを検索するようにモデルに伝えています。
 ====
 
-Let's go execute the retrieval process via Python script.
+Python スクリプトを使用して検索プロセスを実行してみましょう。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -255,7 +241,7 @@ Let's go execute the retrieval process via Python script.
 python 3_test_rag_hr_benefits.py 
 ----
 
-To answer the question of *What do I receive when I retire?*
+「退職時には何を受け取れますか？ (*What do I receive when I retire?*)」という質問に答えます。
 
 [.console-output]
 [source,text,subs=attributes+]
@@ -267,36 +253,27 @@ Query: What do I receive when I retire?
 --------------------------------------------------------------------------------
 🤔 
 
-
-
-🔧 Executing file_search (server-side)...
+🔧 file_search を実行中 (サーバー側)... (Executing file_search (server-side)...)
 🤔 
 
-When you retire, you receive a life-sized statue of yourself crafted from
-Belgian chocolate (or artisanal vegan carob), a lifetime supply of the
-chosen item, and a personal bard to sing your praises at inconvenient
-moments, according to the "Midas Touch & Beyond" Retirement Plan described
-in the document <|file-c66eed6f65464296bf46a05437f4362a|>.
+ドキュメント <|file-c66eed6f65464296bf46a05437f4362a|> に記載されている「Midas Touch & Beyond」退職プランによると、退職時には、ベルギー産チョコレート（または職人によるヴィーガン・キャロブ）で作られた等身大の自分自身の像、選択したアイテムの生涯供給、および不都合な瞬間にあなたを称える歌を歌う専属の吟遊詩人を受け取ります。
 ----
 
 [NOTE]
 ====
-*What is `<|file-c66eed6f...|>`?* This is a source citation tag. The model includes it to reference which document the answer came from. In a production application, you would map this file ID back to the original document name and display a clickable link so users can verify the source.
+**`<|file-c66eed6f...|>` とは何ですか？** これは出典引用タグです。モデルは、回答がどのドキュメントから来たかを参照するためにこれを含めます。本番アプリケーションでは、このファイル ID を元のドキュメント名にマッピングし、ユーザーが出典を確認できるようにクリック可能なリンクを表示します。
 ====
 
-The ultra unique content in the source document is to make it obvious
-that the responses are NOT in the model\'s original training data.  In a typical
-enterprise setting you would use documents such as:
+ソースドキュメントに非常にユニークな内容が含まれているのは、回答がモデルの元のトレーニングデータに存在し**ない**ことを明確にするためです。一般的なエンタープライズ環境では、次のようなドキュメントを使用します。
 
-* Policy 
-* Standard Operating Procedures
-* Strategy
-* Onboarding guides
-* Meeting minutes
-* Slide decks 
+* ポリシー
+* 標準作業手順書 (SOP)
+* 戦略
+* オンボーディングガイド
+* 議事録
+* スライド資料
 
-
-TIP: From *Terminal 2*, you can watch LlamaStack logs to see which APIs are used under the hood by the LlamaStack Client, such as the Response API:
+ヒント：ターミナル 2 (Terminal 2) から LlamaStack のログを確認すると、Response API など、LlamaStack クライアントが内部でどの API を使用しているかを確認できます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -304,10 +281,9 @@ TIP: From *Terminal 2*, you can watch LlamaStack logs to see which APIs are used
 oc logs -f -l app=llama-stack
 ----
 
-You can then continue working in *Terminal 1* with the following instructions.
+その後、ターミナル 1 (Terminal 1) で以下の手順を続行できます。
 
-More examples of queries that dive into the unique content, responses
-truncated a bit for readability. The whimsical content (chocolate statues, office griffins, dolphin language requirements) serves as proof that RAG is working — no model was trained on this data, so correct answers can only come from the retrieved document chunks.
+ユニークな内容に踏み込んだクエリの例をさらにいくつか示します（読みやすくするために回答を少し省略しています）。風変わりな内容（チョコレート像、オフィスのグリフィン、イルカ語の要件）は、RAG が機能していることの証明となります。モデルはこれらのデータでトレーニングされていないため、正しい回答は抽出されたドキュメントチャンクからしか得られません。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -380,7 +356,7 @@ whimsical and unconventional workplace policies.
 <|file-c66eed6f65464296bf46a05437f4362a|>
 ----
 
-Once you're done querying, you can delete the vector stores to clean things up. In production, vector stores are long-lived and updated as documents change — but for this lab, cleaning up avoids conflicts if you re-run the scripts.
+クエリが終わったら、ベクトルストアを削除して整理できます。本番環境ではベクトルストアは長期間保持され、ドキュメントが変更されるたびに更新されますが、このラボでは、スクリプトを再実行した場合の衝突を避けるために整理します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -408,7 +384,7 @@ Delete options:
 Enter choice (1-4):
 ----
 
-Select 1 and answer `yes` when prompted
+1 を選択し、プロンプトが表示されたら `yes` と入力します。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -421,4 +397,3 @@ Deleting 1 vector store(s)...
 
 Done!
 ----
-
