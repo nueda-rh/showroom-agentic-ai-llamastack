@@ -1,21 +1,19 @@
 = Langflow
 
-Langflow is an open-source, visual workflow builder designed to make it easy to design, prototype, and run LLM-powered applications without losing architectural rigor. Instead of wiring prompts, models, tools, retrievers, and agents together purely in code, Langflow lets you compose these building blocks as a graph—making complex AI systems easier to reason about, debug, and evolve.  
+Langflowは、アーキテクチャの厳密さを損なうことなく、LLMを活用したアプリケーションの設計、プロトタイプ作成、および実行を容易にするために設計された、オープンソースの視覚的なワークフロービルダーです。プロンプト、モデル、ツール、リトリーバー（Retrievers）、エージェントを純粋にコードだけで接続する代わりに、Langflowではこれらのビルディングブロックをグラフとして構成できます。これにより、複雑なAIシステムの推論、デバッグ、進化が容易になります。
 
-Langflow dramatically shortens the path from idea to working AI application while still producing production-ready artifacts: flows can be versioned, exported as JSON, executed via APIs, and integrated into real systems. For teams experimenting with RAG, agentic workflows, tool calling, or MCP servers, Langflow provides a shared visual language that aligns developers, architects, and product stakeholders
+Langflowは、アイデアから動作するAIアプリケーションまでの道のりを劇的に短縮しつつ、本番環境に対応したアーティファクトを生成します。フローはバージョン管理、JSONとしてのエクスポート、API経由の実行、および実際のシステムへの統合が可能です。RAG、エージェンティック・ワークフロー（Agentic workflows）、ツール呼び出し、またはMCPサーバーを実験しているチームにとって、Langflowは開発者、アーキテクト、および製品ステークホルダーの認識を合わせるための共通の視覚言語を提供します。
 
 [TIP]
 ====
-*How does Langflow relate to what you've built so far?* In previous modules you wrote Python scripts to create agents, configure tools, and invoke MCP servers. Langflow provides the same capabilities through a visual drag-and-drop interface. The flow you'll build here is functionally equivalent to your Python agents — it connects to the same vLLM models and MCP servers — but makes the architecture visible and easier to iterate on.
+*Langflowは、これまでに構築したものとどのように関連していますか？* 以前のモジュールでは、Pythonスクリプトを記述してエージェントを作成し、ツールを構成し、MCPサーバーを呼び出しました。Langflowは、視覚的なドラッグ・アンド・ドロップ・インターフェースを通じて同じ機能を提供します。ここで構築するフローは、機能的にはPythonエージェントと同等であり、同じvLLMモデルやMCPサーバーに接続しますが、アーキテクチャを可視化し、反復（イテレーション）を容易にします。
 ====
 
-Note: This is a fairly advanced exercise as it involves the building of the agent from scratch.
+注：これは、エージェントをゼロから構築するため、かなり高度な演習です。
 
+== 前提条件 (Prerequisites)
 
-
-== Prerequites
-
-You have the FantaCo Backend and MCP Servers up and running.
+FantaCoバックエンドとMCPサーバーが稼働している必要があります。
 
 [.console-input]
 [source,bash,subs=attributes+]
@@ -34,11 +32,11 @@ https://mcp-customer-route-agentic-user1.apps.ocp.zr7nb.sandbox2823.opentlc.com/
 https://mcp-finance-route-agentic-user1.apps.ocp.zr7nb.sandbox2823.opentlc.com/mcp
 ----
 
-At this end of this module, you should have something that looks similiar to the following:
+このモジュールの最後には、以下のような構成が完成します。
 
 image::vllm-agent-18.png[]
 
-== Setup
+== セットアップ (Setup)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -91,9 +89,9 @@ postgresql-finance-689d97894f-qrch2            1/1     Running             0    
 simple-agent-chat-ui-6d7794dc6b-4kngc          1/1     Running             0              29m
 ----
 
-It can take several minutes to bring up the langflow pod
+langflowポッドが起動するまで数分かかる場合があります。
 
-Wait for *1/1* and *Running*
+*1/1* および *Running* になるまで待機してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -102,32 +100,31 @@ export LANGFLOW_URL="https://$(oc get route langflow -o jsonpath='{.spec.host}')
 echo $LANGFLOW_URL
 ----
 
-
 == Hello World
 
-Create a new flow - Click **Create first flow**
+新しいフローを作成します。 「**最初のフローを作成 (Create first flow)**」をクリックします。
 
 image::langflow-1.png[Langflow UI]
 
-Click **Blank Flow**
+「**空のフロー (Blank Flow)**」をクリックします。
 
 image::langflow-2.png[Langflow UI]
 
-Drag a **Text Input** component onto the canvas
+「**テキスト入力 (Text Input)**」コンポーネントをキャンバスにドラッグします。
 
 image::langflow-3.png[Langflow UI]
 
-Drag a **Chat Output** component onto the canvas
+「**チャット出力 (Chat Output)**」コンポーネントをキャンバスにドラッグします。
 
 image::langflow-4.png[Langflow UI]
 
-Connect them together (drag from the output node to the input node)
+それらを接続します（出力ノードから入力ノードへドラッグします）。
 
 image::langflow-5.png[Langflow UI]
 
-Provide a message **Hello Aloha Bonjour**
+メッセージ **Hello Aloha Bonjour** を入力します。
 
-Click the **Playground** button 
+「**プレイグラウンド (Playground)**」ボタンをクリックします。
 
 image::langflow-6.png[Langflow UI]
 
@@ -135,49 +132,47 @@ image::langflow-7.png[Langflow UI]
 
 image::langflow-8.png[Langflow UI]
 
-Using this icon to get back to the list of all projects and flows
+このアイコンを使用して、すべてのプロジェクトとフローのリストに戻ります。
 
 image::langflow-9.png[Langflow UI]
 
-You can use the ellipses **...** on the Project or Flow to make changes such as its name 
+プロジェクトまたはフローの省略記号「**...**」を使用して、名前の変更などの変更を行うことができます。
 
 image::langflow-10.png[Langflow UI]
 
 image::langflow-11.png[Langflow UI]
 
+== vLLM チャットボット (vLLM chatbot)
 
-== vLLM chatbot
+**「+ 新規フロー (+ New Flow)」**
 
-**+ New Flow**
+**「+ 空のフロー (+ Blank Flow)」**
 
-**+ Blank Flow**
-
-
-Langflow does **NOT** have an out-of-the-box (OOTB) Component that works with vLLM via MaaS where you need to override:
+Langflowには、以下の項目をオーバーライドする必要があるMaaS経由のvLLMで動作する「そのまま使える (OOTB)」コンポーネントは**ありません**。
 
 * API URL 
-* API Key
-* Model Name
+* APIキー (API Key)
+* モデル名 (Model Name)
 
-We have a custom component. Click **+New Custom Component**
+そのため、カスタムコンポーネントを使用します。 **「+新規カスタムコンポーネント (+New Custom Component)」** をクリックします。
 
 image::vllm-custom-component-1.png[]
 
-Click **Code**
+**「コード (Code)」** をクリックします。
 
-Delete the current code
+現在のコードを削除します。
 
 image::vllm-custom-component-2.png[]
 
-Copy the code from this link 
+こちらのリンクからコードをコピーしてください。
 
 link:https://raw.githubusercontent.com/burrsutter/fantaco-redhat-one-2026/main/langflow-setup/custom_components/vllm_model_component.py[vllm_model_component.py^]
 
-Paste and then click **Check & Save**
+貼り付けて、**「チェックして保存 (Check & Save)」** をクリックします。
 
-Enter the URL, Model Name and API Key
+URL、モデル名、およびAPIキーを入力します。
 
-Here are your vLLM MaaS endpoint, API key.
+以下は、vLLM MaaSエンドポイントとAPIキーの情報です。
 
 vLLM MaaS URL 
 
@@ -187,7 +182,7 @@ vLLM MaaS URL
 {litellm_api_base_url}
 ----
 
-vLLM MaaS API Key
+vLLM MaaS APIキー (vLLM MaaS API Key)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -195,7 +190,7 @@ vLLM MaaS API Key
 {litellm_virtual_key}
 ----
 
-Model Name 
+モデル名 (Model Name)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -203,78 +198,76 @@ Model Name
 qwen3-14b
 ----
 
-And change **Language Model** to **Response** (we will use Language Model later)
+また、**「Language Model」** を **「Response」** に変更します（Language Modelは後で使用します）。
 
 image::vllm-custom-component-4.png[vLLM]
 
-Add a **Chat Input** and **Chat Output** and connect the dots
+**「チャット入力 (Chat Input)」** と **「チャット出力 (Chat Output)」** を追加して、ドットを接続します。
 
 image::vllm-custom-component-5.png[vLLM]
 
-Click **Playground**
+**「プレイグラウンド (Playground)」** をクリックします。
 
-**what model are you?**
+**what model are you?** と入力します。
 
 image::vllm-custom-component-6.png[vLLM]
 
 [NOTE]
 ====
-*Why a custom component?* Langflow includes built-in components for OpenAI and other hosted providers, but vLLM served via MaaS requires a custom API URL, API key, and model name. The custom component wraps these configuration details so that vLLM appears as a native Langflow building block. Once created, it can be reused across any number of flows.
+*なぜカスタムコンポーネントを使用するのですか？* LangflowにはOpenAIやその他のホスト型プロバイダー向けの組み込みコンポーネントが含まれていますが、MaaS経由で提供されるvLLMにはカスタムのAPI URL、APIキー、およびモデル名が必要です。カスタムコンポーネントはこれらの構成詳細をラップし、vLLMがLangflowのネイティブなビルディングブロックとして表示されるようにします。一度作成すれば、任意の数のフローで再利用できます。
 ====
 
+== エージェント (Agent)
 
-== Agent
-
-
-Remove Chat Input and Chat Output (for now) by single-clicking them and hitting the delete key on the keyboard. Or selecting "Delete" from the ellipsis menu.
+「チャット入力 (Chat Input)」と「チャット出力 (Chat Output)」を（一時的に）削除します。これを行うには、それらをシングルクリックしてキーボードのDeleteキーを押すか、省略記号メニューから「削除 (Delete)」を選択します。
 
 image::vllm-agent-0.png[vLLM Agent]
 
-Find "Agent" in the list of Components
+コンポーネントのリストから「エージェント (Agent)」を見つけます。
 
 image::vllm-agent-1.png[vLLM Agent]
 
-Change the output of the vLLM Model Component to be **Language Model**
+vLLMモデルコンポーネントの出力を **「Language Model」** に変更します。
 
-Add an Agent 
+「エージェント (Agent)」を追加します。
 
-And
+そして
 
-Click on **Model Provider**
+**「モデルプロバイダー (Model Provider)」** をクリックします。
 
 image::vllm-agent-2.png[vLLM Agent]
 
-**+ Connect other models**
+**「+ 他のモデルを接続 (+ Connect other models)」** をクリックします。
 
 image::vllm-agent-3.png[vLLM Agent]
 
-Awaiting model input...
+モデル入力待機中...
 
 image::vllm-agent-4.png[vLLM Agent]
 
-Connect the vLLM Model to Agent
+vLLMモデルをエージェントに接続します。
 
 image::vllm-agent-4.1.png[vLLM Agent]
 
-Add Chat Input and Chat Output to the Agent
+エージェントに「チャット入力 (Chat Input)」と「チャット出力 (Chat Output)」を追加します。
 
 image::vllm-agent-5.png[vLLM Agent]
 
-Add MCP Component for Customer
+顧客用のMCPコンポーネントを追加します。
 
-Drag **MCP Tools** Component to the canvas
+**「MCP Tools」** コンポーネントをキャンバスにドラッグします。
 
-Click on **Select a server...**
+**「サーバーを選択... (Select a server...)」** をクリックします。
 
 image::vllm-agent-6.png[vLLM Agent]
 
-Click **+ Add MCP Server**
+**「+ MCPサーバーを追加 (+ Add MCP Server)」** をクリックします。
 
 image::vllm-agent-7.png[vLLM Agent]
 
-Select **Streamable HTTP/SSE**
+**「Streamable HTTP/SSE」** を選択します。
 
-Name: **Customer**
+名前：**Customer**
 
 Streamable HTTP/SSE URL
 
@@ -285,19 +278,19 @@ export CUSTOMER_MCP_SERVER_URL=https://$(oc get routes -l app=mcp-customer -o js
 echo $CUSTOMER_MCP_SERVER_URL
 ----
 
-Click **Add Server**
+**「サーバーを追加 (Add Server)」** をクリックします。
 
 image::vllm-agent-8.png[vLLM Agent]
 
-Toggle **Tool Mode**
+**「ツールモード (Tool Mode)」** を切り替えます。
 
 image::vllm-agent-9.png[vLLM Agent]
 
-When Response switches to Toolset, you can then connect it to the Agents Tools input
+「Response」が「Toolset」に切り替わったら、それをエージェントの「Tools」入力に接続できます。
 
 image::vllm-agent-10.png[vLLM Agent]
 
-Playground and test with 
+プレイグラウンドで以下をテストしてください。
 
 [.console-input]
 [source,text,role="copypaste",subs=attributes+]
@@ -305,11 +298,12 @@ Playground and test with
 who does Thomas Hardy work for?
 ----
 
-Remember, you are dealing with a LLM and it non-determinstic behavior. In some cases, this query MAY respond with:
+LLMを扱っているため、その挙動は非決定的（non-deterministic）であることに注意してください。場合によっては、このクエリに対して次のような回答が返されることが**あります**。
 
 "Thomas Hardy was an English novelist and poet, best known for his works such as Tess of the d'Urbervilles and Far from the Madding Crowd. He was a prolific writer during the 19th and early 20th centuries. As he passed away in 1928, he does not work for anyone today. If you're referring to a different person named Thomas Hardy, feel free to clarify!"
+（トーマス・ハーディはイギリスの小説家であり詩人であり、『テス』や『狂乱の群れを離れて』などの作品で知られています。彼は19世紀から20世紀初頭にかけて多作な作家でした。1928年に亡くなっているため、現在は誰のためにも働いていません。別のトーマス・ハーディという人物について言及している場合は、詳細を教えてください。）
 
-You can be more explicit with something like 
+このような場合は、より具体的に次のように入力してください。
 
 [.console-input]
 [source,text,role="copypaste",subs=attributes+]
@@ -317,26 +311,26 @@ You can be more explicit with something like
 what about the customer Thomas Hardy?
 ----
 
-Keep going, we will work on this behavior in a bit.
+そのまま進めましょう。後ほどこの挙動を修正します。
 
 image::vllm-agent-11.png[vLLM Agent]
 
 [NOTE]
 ====
-*Why did the agent confuse the customer with the author?* Without a system prompt, the agent has no context that "Thomas Hardy" refers to a customer record. The LLM defaults to its training data, which knows Thomas Hardy as a famous English novelist. This demonstrates why *system prompts are essential* for domain-specific agents — you'll fix this behavior later in the module by adding agent instructions.
+*なぜエージェントは顧客と作家を混同したのですか？* システムプロンプトがない場合、エージェントは「トーマス・ハーディ」が顧客レコードを指しているというコンテキストを持ちません。LLMはデフォルトで学習データを使用し、そこではトーマス・ハーディを有名なイギリスの小説家として認識しています。これは、ドメイン固有のエージェントにとって**システムプロンプトが不可欠**である理由を示しています。この後の手順でエージェントへの指示を追加することで、この挙動を修正します。
 ====
 
-Add MCP Component for Finance
+財務用のMCPコンポーネントを追加します。
 
 image::vllm-agent-12.png[vLLM Agent]
 
-**+ Add MCP Server**
+**「+ MCPサーバーを追加 (+ Add MCP Server)」** をクリックします。
 
 image::vllm-agent-13.png[vLLM Agent]
 
-Select **Streamable HTTP/SSE**
+**「Streamable HTTP/SSE」** を選択します。
 
-Name: **Finance**
+名前：**Finance**
 
 Streamable HTTP/SSE URL
 
@@ -347,15 +341,15 @@ export FINANCE_MCP_SERVER_URL=https://$(oc get routes -l app=mcp-finance -o json
 echo $FINANCE_MCP_SERVER_URL
 ----
 
-Click **Add Server**
+**「サーバーを追加 (Add Server)」** をクリックします。
 
 image::vllm-agent-14.png[vLLM Agent]
 
-Toggle **Tool Mode**
+**「ツールモード (Tool Mode)」** を切り替えます。
 
 image::vllm-agent-15.png[vLLM Agent]
 
-Connect MCP Servers to Agent Tools input
+MCPサーバーをエージェントの「Tools」入力に接続します。
 
 image::vllm-agent-16.png[vLLM Agent]
 
@@ -365,16 +359,13 @@ image::vllm-agent-16.png[vLLM Agent]
 What are the orders for Thomas Hardy?
 ----
 
-
 image::vllm-agent-17.png[vLLM Agent]
 
+エージェント、特に比較的小規模なオープンモデルを使用している場合を支援するには、より適切な「システムプロンプト (System Prompt)」が必要です。
 
-To help the Agent out, especially when using smaller open models, you need a better System Prompt
-
-Add **Agent Instructions**
+**「エージェントへの指示 (Agent Instructions)」** を追加します。
 
 image::vllm-agent-18.png[vLLM Agent]
-
 
 [.console-input]
 [source,text,role="copypaste",subs=attributes+]
@@ -395,22 +386,20 @@ WORKFLOW for customer questions:
 2. Extract customer_id from results
 3. Use that customer_id for other queries
 
-Always use tools first. Never answer from general knowledge about people.   
+Always use tools first. Never answer from general knowledge about people.
 ----
 
 image::vllm-agent-19.png[vLLM Agent]
 
 [TIP]
 ====
-*Anatomy of a good agent system prompt:* This prompt does three things: (1) establishes the agent's role ("customer service assistant"), (2) sets behavioral rules ("ALWAYS search as a customer first", "MUST use tools"), and (3) documents the available tools with their exact parameter names. Listing tool signatures in the prompt helps smaller models call tools correctly — larger models can usually figure it out from the MCP tool descriptions alone.
+*優れたエージェントシステムプロンプトの構造：* このプロンプトは3つのことを行っています。(1) エージェントの役割を確立する（「カスタマーサービスアシスタント」）、(2) 行動規則を設定する（「必ず最初に顧客として検索する」、「必ずツールを使用する」）、(3) 利用可能なツールを正確なパラメータ名とともに文書化する。プロンプト内にツールのシグネチャを記載することで、小規模なモデルでも正しくツールを呼び出せるようになります。大規模なモデルであれば、通常はMCPツールの説明だけで理解できます。
 ====
 
-And now go give your agent another round of tests
+それでは、エージェントに再度テストを行ってみてください。
 
 image::vllm-agent-20-1.png[vLLM Agent]
 
-== What you've accomplished
+== 達成したこと (What you've accomplished)
 
-You've successfully built a production-ready agentic AI application using a visual, no-code/low-code approach. Starting with a simple text input/output flow, you progressed to creating a custom vLLM component that connects to your OpenShift-hosted models, integrated multiple MCP servers as business tools (customer and finance data), and crafted effective system prompts to guide agent behavior. This visual workflow is functionally equivalent to the Python-based agents you built earlier in the workshop, but with the added benefits of easier debugging, faster iteration, and a shared visual language that bridges technical and non-technical stakeholders. Langflow demonstrates that sophisticated AI systems—complete with model inference, tool calling, and agentic reasoning—can be composed, tested, and deployed without sacrificing architectural rigor or production readiness. The flow you created can be versioned, exported as JSON, executed via API, and integrated into real enterprise systems, making it a valuable tool for both rapid prototyping and production deployment.
-
-
+視覚的なノーコード/ローコードのアプローチを使用して、本番環境に対応したエージェンティックAIアプリケーションの構築に成功しました。シンプルなテキスト入出力フローから始めて、OpenShiftでホストされたモデルに接続するカスタムvLLMコンポーネントを作成し、複数のMCPサーバーをビジネスツール（顧客および財務データ）として統合し、エージェントの挙動を導く効果的なシステムプロンプトを作成しました。この視覚的なワークフローは、ワークショップの前の段階で構築したPythonベースのエージェントと機能的に同等ですが、デバッグの容易さ、反復（イテレーション）の迅速化、および技術的および非技術的なステークホルダー間の橋渡しとなる共通の視覚言語という利点が加わっています。Langflowは、モデル推論、ツール呼び出し、エージェンティックな推論を備えた洗練されたAIシステムが、アーキテクチャの厳密さや本番環境への対応を犠牲にすることなく、構成、テスト、およびデプロイできることを証明しています。作成したフローは、バージョン管理、JSONとしてのエクスポート、API経由の実行、および実際のエンタープライズシステムへの統合が可能であり、ラピッドプロトタイピングと本番デプロイの両方において価値のあるツールとなります。
