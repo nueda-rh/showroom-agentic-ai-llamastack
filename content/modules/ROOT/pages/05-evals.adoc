@@ -1,32 +1,32 @@
-= Evals with Llama Stack
+= Llama Stack による Evals
 
-Any change to one of the following can have a major impact on the behaviors and responses of an AI-infused application:
+以下のいずれかの変更は、AI を組み込んだアプリケーションの動作や回答に大きな影響を与える可能性があります。
 
-* model vendor (e.g. Llama, Qwen, Mistral, Google, OpenAI)
-* model version (e.g. Gemini2.5, Qwen3)
-* model parameter count (e.g. 7B, 14B, 70B)
-* model quantization (e.g. q4_K_M, fp16)
-* model server vendor (e.g. vLLM, Ollama, OpenAI)
-* model server configuration (e.g. tool-call-parser, chat-template)
-* prompts
-* and of course the application code (e.g. .py, .js, .ts, .java)
+* モデルベンダー (model vendor)（例：Llama、Qwen、Mistral、Google、OpenAI）
+* モデルバージョン (model version)（例：Gemini2.5、Qwen3）
+* モデルパラメーター数 (model parameter count)（例：7B、14B、70B）
+* モデルの量子化 (model quantization)（例：q4_K_M、fp16）
+* モデルサーバーベンダー (model server vendor)（例：vLLM、Ollama、OpenAI）
+* モデルサーバーの構成 (model server configuration)（例：tool-call-parser、chat-template）
+* プロンプト (prompts)
+* そしてもちろん、アプリケーションコード (application code)（例：.py、.js、.ts、.java）
 
 [NOTE]
 ====
-*Why does this matter?* A model upgrade that improves math reasoning might simultaneously degrade tool-calling accuracy. A quantization change that halves memory usage could introduce subtle factual errors. Without automated evals, teams discover these regressions in production — the most expensive place to find them.
+**なぜこれが重要なのですか？** 数学的推論を向上させるモデルのアップグレードが、同時にツール呼び出しの精度を低下させる可能性があります。メモリ使用量を半分にする量子化の変更が、微妙な事実誤認を引き起こすこともあります。自動化された評価（Evals）がなければ、チームは本番環境（これを発見するのに最もコストがかかる場所）でこれらの退行（リグレッション）を発見することになります。
 ====
 
-Llama Stack includes first-class evaluation (Evals) capabilities. Evals in Llama Stack are dataset-driven and integrate directly with agents, tools, and models, enabling teams to measure correctness, safety, and behavior across real workflows—not isolated prompts. By supporting golden answers, deterministic scoring, and LLM-as-judge patterns, Llama Stack makes evaluations repeatable, automatable, and CI/CD-friendly, so teams can confidently test changes to prompts, tools, models, or agent logic before deploying to production. 
+Llama Stack には、ファーストクラスの評価 (Evals) 機能が含まれています。Llama Stack の Evals はデータセット駆動型であり、エージェント、ツール、モデルと直接統合されます。これにより、チームは分離されたプロンプトではなく、実際のワークフロー全体で正確性、安全性、および動作を測定できます。ゴールデンアンサー (golden answers)、確定的スコーリング、および LLM-as-judge パターンをサポートすることで、Llama Stack は評価を反復可能、自動化可能、かつ CI/CD フレンドリーにします。これにより、チームは本番環境にデプロイする前に、プロンプト、ツール、モデル、またはエージェントロジックへの変更を自信を持ってテストできます。
 
-Therefore having an automated way to perform evals is mission critical to the ongoing care and feeding of your model candidates to support an agent or any LLM-wrapping application. 
+したがって、エージェントや LLM をラップするアプリケーションをサポートするために、候補となるモデルの継続的な管理と維持において、自動化された評価実行方法を持つことはミッションクリティカルです。
 
-For this module, we are going to focus on how to setup and execute model evals - tests that you run against different candidate models 
+このモジュールでは、モデル評価（異なる候補モデルに対して実行するテスト）のセットアップと実行方法に焦点を当てます。
 
-== Setup
+== セットアップ (Setup)
 
-The `evals-llama-stack` directory contains a set of numbered Python scripts (`1_list_eval_related_providers.py`, `2_register_dataset_basic_subset_of.py`, etc.) that progressively build up the eval pipeline, plus a `datasets/` folder with CSV test data containing questions and expected answers. You will run these scripts in order.
+`evals-llama-stack` ディレクトリには、一連の番号付き Python スクリプト（`1_list_eval_related_providers.py`、`2_register_dataset_basic_subset_of.py` など）が含まれており、これらによって評価パイプラインを段階的に構築します。また、`datasets/` フォルダには、質問と期待される回答を含む CSV テストデータが格納されています。これらのスクリプトを順番に実行します。
 
-Make sure you are in the correct directory
+正しいディレクトリにいることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -41,7 +41,7 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026
 ----
 
-If needed, create a Python virtual environment (venv)
+必要に応じて、Python 仮想環境 (venv) を作成します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -49,7 +49,7 @@ If needed, create a Python virtual environment (venv)
 python -m venv .venv
 ----
 
-Set environment
+環境を設定します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -57,7 +57,7 @@ Set environment
 source .venv/bin/activate 
 ----
 
-Change to the correct sub-directory
+正しいサブディレクトリに移動します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -65,7 +65,7 @@ Change to the correct sub-directory
 cd evals-llama-stack
 ----
 
-Install the dependencies
+依存関係をインストールします。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -73,19 +73,19 @@ Install the dependencies
 pip install -r requirements.txt
 ----
 
-== Objects & APIs
+== オブジェクトと API (Objects & APIs)
 
-The Llama Stack Evals capabilities involves the following objects/APIs:
+Llama Stack の Evals 機能には、以下のオブジェクト/API が含まれます。
 
-* Datasets
-* Scoring Functions
-* Benchmarks
-* Evals 
-* Jobs 
+* データセット (Datasets)
+* スコーリング機能 (Scoring Functions)
+* ベンチマーク (Benchmarks)
+* 評価 (Evals)
+* ジョブ (Jobs)
 
-First see if the appropriate providers are configured on your Llama Stack Server instance
+まず、Llama Stack サーバーインスタンスに適切なプロバイダーが構成されているか確認します。
 
-=== APIs and providers
+=== API とプロバイダー (APIs and providers)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -127,12 +127,12 @@ Found 2 Scoring provider(s):
 
 [TIP]
 ====
-*What are providers?* Providers are pluggable backends that implement Llama Stack APIs. For datasets, `localfs` stores data on the local filesystem while `huggingface` pulls from HuggingFace Hub. For scoring, `basic` uses deterministic string-matching (fast, no LLM call needed), while `llm-as-judge` uses a second LLM to grade responses (richer feedback, but slower and more expensive). The `meta-reference` eval provider is Llama Stack's built-in evaluation engine.
+**プロバイダーとは何ですか？** プロバイダーは、Llama Stack API を実装するプラグイン可能なバックエンドです。データセットの場合、`localfs` はローカルファイルシステムにデータを保存し、`huggingface` は HuggingFace Hub から取得します。スコーリングの場合、`basic` は確定的な文字列一致（高速で LLM 呼び出し不要）を使用し、`llm-as-judge` は別の LLM を使用して回答を採点します（より詳細なフィードバックが得られますが、低速でコストがかかります）。`meta-reference` 評価プロバイダーは、Llama Stack に組み込まれた評価エンジンです。
 ====
 
-=== Datasets
+=== データセット (Datasets)
 
-Any datasets registered?
+データセットが登録されているか確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -148,11 +148,11 @@ curl -s -H "Authorization: Bearer notapplicable" $LLAMA_STACK_BASE_URL/v1/datase
 }
 ----
 
-Register a Dataset based on a CSV file.  
+CSV ファイルに基づいてデータセットを登録します。
 
-The CSV file is located at link:https://github.com/burrsutter/fantaco-redhat-one-2026/blob/main/evals-llama-stack/datasets/basic-subset-of-evals.csv[GitHub^]
+CSV ファイルは link:https://github.com/burrsutter/fantaco-redhat-one-2026/blob/main/evals-llama-stack/datasets/basic-subset-of-evals.csv[GitHub^] にあります。
 
-The dataset contains rows with an `input_query` (the question to ask the model), an `expected_answer` (the "golden answer" to score against), and a `chat_completion_input` (the prompt formatted for the Llama Stack chat API). For example, one row asks "What is 2+2?" with an expected answer of "4".
+このデータセットには、`input_query`（モデルへの質問）、`expected_answer`（採点基準となる「ゴールデンアンサー」）、および `chat_completion_input`（Llama Stack チャット API 用にフォーマットされたプロンプト）を含む行が含まれています。例えば、ある行では「2+2 は？」と問い、期待される回答として「4」が設定されています。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -169,7 +169,7 @@ Using dataset provider: localfs
 Registered dataset: basic-subset-of-evals
 ----
 
-List the registered datasets
+登録されたデータセットをリスト表示します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -187,13 +187,11 @@ Found 1 dataset(s):
   Dataset ID: basic-subset-of-evals
     Provider: localfs
     Source: https://raw.githubusercontent.com/burrsutter/fantaco-redhat-one-2026/main/evals-llama-stack/datasets/basic-subset-of-evals.csv
-
 ----
 
+=== スコーリング機能 (Scoring Functions)
 
-=== Scoring Functions
-
-List the scoring functions available
+利用可能なスコーリング機能をリスト表示します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -243,15 +241,15 @@ Found 8 scoring function(s):
 
 [TIP]
 ====
-These scoring functions fall into two categories:
+これらのスコーリング機能は 2 つのカテゴリに分類されます。
 
-* *Deterministic (`basic::*`)* — Fast, binary (0.0 or 1.0), no LLM call needed. `subset_of` checks if the expected answer appears anywhere in the response. `equality` requires an exact match. Best for factual checks with clear right/wrong answers.
-* *LLM-as-Judge (`llm-as-judge::*`)* — Uses a second model to evaluate quality and nuance on a richer scale. More expensive but can assess open-ended questions where there is no single correct answer.
+* **確定的 (Deterministic) (`basic::*`)** — 高速、バイナリ（0.0 または 1.0）、LLM 呼び出し不要。`subset_of` は、期待される回答が生成された回答のどこかに含まれているかを確認します。`equality` は完全一致を要求します。正解/不正解が明確な事実確認に最適です。
+* **LLM-as-Judge (`llm-as-judge::*`)** — 別のモデルを使用して、品質とニュアンスをより詳細なスケールで評価します。コストは高くなりますが、正解が一つではない自由形式の質問を評価できます。
 ====
 
-=== Benchmarks
+=== ベンチマーク (Benchmarks)
 
-List the benchmarks available
+利用可能なベンチマークをリスト表示します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -267,13 +265,12 @@ Fetching available benchmarks...
 No benchmarks found
 ----
 
-Register a benchmark. A *Benchmark* combines a *Dataset* (what questions to ask) with one or more *Scoring Functions* (how to grade the answers). An *Eval* then runs a benchmark against a specific *candidate model* to produce scored results.
+ベンチマークを登録します。**ベンチマーク (Benchmark)** は、**データセット (Dataset)**（どの質問をするか）と、1 つ以上の **スコーリング機能 (Scoring Functions)**（どのように採点するか）を組み合わせたものです。**評価 (Eval)** は、特定の **候補モデル (candidate model)** に対してベンチマークを実行し、採点結果を生成します。
 
-Here's the snippet of code used by the script to register the benchmark in LlamaStack:
+以下は、スクリプトが Llama Stack にベンチマークを登録するために使用するコードのスニペットです。
 
-[source,python]
-----
-# Create the Llama Stack client
+```python
+# Llama Stack クライアントを作成
 client = LlamaStackClient(base_url=base_url)
 
 provider_id = os.getenv("LLAMA_STACK_BENCHMARK_PROVIDER_ID")
@@ -288,9 +285,9 @@ try:
         dataset_id="basic-subset-of-evals",
         scoring_functions=["basic::subset_of"]
     )
-----
+```
 
-Run this command to register it:
+このコマンドを実行して登録します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -306,7 +303,7 @@ Registering benchmark: my-basic-quality-benchmark
 Benchmark registered successfully
 ----
 
-List benchmarks
+ベンチマークをリスト表示します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -327,9 +324,9 @@ Found 1 benchmark(s):
     Provider: meta-reference
 ----
 
-=== Evals
+=== 評価 (Evals)
 
-Now that you have a dataset, scoring function and benchmark you are ready to execute your eval.   Before you execute an eval it is important to know what models are available to you as one will be your `CANDIDATE_MODEL`.
+データセット、スコーリング機能、ベンチマークが揃ったので、評価を実行する準備が整いました。評価を実行する前に、1 つのモデルを `CANDIDATE_MODEL`（候補モデル）として使用するため、どのモデルが利用可能かを知っておくことが重要です。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -375,7 +372,7 @@ Found 7 model(s):
     Provider: vllm
 ----
 
-Set your `CANDIDATE_MODEL`
+`CANDIDATE_MODEL` を設定します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -383,7 +380,7 @@ Set your `CANDIDATE_MODEL`
 export CANDIDATE_MODEL=vllm/qwen3-14b
 ----
 
-Execute the eval
+評価を実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -400,9 +397,9 @@ Using candidate model: vllm/qwen3-14b
 Eval job started: 0
 ----
 
-Make note of the *Eval job started: 0*.  That number is significant and will be needed to reveal the results of the eval job. Set an env var called *LLAMA_STACK_JOB_ID* accordingly.
+*Eval job started: 0* を控えておいてください。この番号は重要で、評価ジョブの結果を確認するために必要です。それに応じて *LLAMA_STACK_JOB_ID* という環境変数を設定してください。
 
-You can also get a listing of the current benchmarks 
+現在のベンチマークの一覧を取得することもできます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -430,8 +427,7 @@ curl -s "$LLAMA_STACK_BASE_URL/v1/eval/benchmarks" | jq
 }
 ----
 
-There is no API to ask for the list of all jobs but you can guess at the number if you happened to forget it and check the status
-
+すべてのジョブのリストを要求する API はありませんが、番号を忘れた場合は推測してステータスを確認できます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -468,19 +464,19 @@ Scores:
    Row 3: {'score': 1.0} | Generation: {'generated_answer': "<think>\nOkay, so the user is asking who wrote Romeo and Juliet. Let me think. I know that Shakespeare is the most famous author associated with that play. But wait, I should make sure I'm not missing any details. Let me recall: Romeo and Juliet is one of the most well-known tragedies by William"}
 ----
 
-*Understanding the output:*
+**出力内容の理解:**
 
-* `accuracy: 1.0, num_correct: 3.0, num_total: 3` — all 3 test cases passed. This aggregated score is what you would track over time to detect regressions when changing models or prompts.
-* `score: 1.0` on each row means the expected answer (e.g. "4", "blue", "Shakespeare") was found somewhere within the model's generated response. That is what `basic::subset_of` does — a simple substring check.
-* The `<think>` tags you see in the generated answers are Qwen3's chain-of-thought reasoning. The model "thinks out loud" before producing its final answer. The scorer ignores these tags and just checks if the expected answer appears in the full response.
+* `accuracy: 1.0, num_correct: 3.0, num_total: 3` — 3 つのテストケースすべてに合格しました。この集計スコアは、モデルやプロンプトを変更した際のリグレッションを検出するために、長期的に追跡すべきものです。
+* 各行の `score: 1.0` は、期待される回答（例：「4」、「blue」、「Shakespeare」）がモデルの生成した回答のどこかに見つかったことを意味します。これが `basic::subset_of` の動作であり、単純な部分文字列チェックです。
+* 生成された回答に見られる `<think>` タグは、Qwen3 の思考連鎖（Chain-of-Thought）推論です。モデルは最終的な回答を出す前に「独り言」を言います。スコアラーはこれらのタグを無視し、期待される回答が全文の中に現れるかどうかだけをチェックします。
 
-The *basic::subset_of* scorer is effective for clear-cut factual questions, but it cannot assess whether an explanation is clear, accurate, or well-structured. A more sophisticated way to review and judge the response string from a model is to use the LLM-as-judge pattern.
+*basic::subset_of* スコアラーは明確な事実に関する質問には効果的ですが、説明が明快か、正確か、あるいは構成が優れているかを評価することはできません。モデルからの回答文字列をレビューして判断するためのより高度な方法は、LLM-as-judge パターンを使用することです。
 
-=== LLM-as-judge
+=== LLM-as-judge 
 
-In this pattern, a separate LLM (the "judge") evaluates the candidate model's responses on a 1-5 scale and provides a written rationale. This gives much richer feedback than a binary pass/fail — the judge can assess accuracy, clarity, completeness, and presentation. The trade-off is cost and speed: every evaluation requires an inference call to the judge model in addition to the candidate.
+このパターンでは、別の LLM（「判定モデル (judge model)」）が候補モデルの回答を 1〜5 のスケールで評価し、書面で根拠を提供します。これにより、バイナリの合格/不合格よりもはるかに豊富なフィードバックが得られます。判定モデルは正確性、明快さ、完全性、および表現を評価できます。トレードオフはコストと速度です。すべての評価において、候補モデルに加えて判定モデルへの推論呼び出しが必要になります。
 
-Set the judge and candidate model environment variables. Here we use Llama Scout 17B as the judge and Qwen3 14B as the candidate being evaluated:
+判定モデルと候補モデルの環境変数を設定します。ここでは、Llama Scout 17B を判定モデルとして使用し、評価対象の候補モデルとして Qwen3 14B を使用します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -489,7 +485,7 @@ export JUDGE_MODEL=vllm/llama-scout-17b
 export CANDIDATE_MODEL=vllm/qwen3-14b
 ----
 
-The LLM-as-judge example re-uses the dataset from before called *basic-subset-of-evals* but dynamically registers a new scoring function and benchmark
+LLM-as-judge の例では、以前の *basic-subset-of-evals* というデータセットを再利用しますが、新しいスコーリング機能とベンチマークを動的に登録します。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -499,10 +495,9 @@ SCORING_FN_ID = "my-llm-as-judge-scoring-fn"
 BENCHMARK_ID = "my-llm-as-judge-benchmark"
 ----
 
-Here's the snippet from the Python script
-[source,python]
-----
-# Create the Llama Stack client
+以下は Python スクリプトからのスニペットです。
+````python
+# Llama Stack クライアントを作成
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
 try:
@@ -519,10 +514,9 @@ try:
         },
     )
     logger.info(f"Scoring function '{SCORING_FN_ID}' registered successfully")
-----
+````
 
-Execute *9_llm_as_judge.py*
-
+*9_llm_as_judge.py* を実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -629,12 +623,12 @@ Total evaluations: 3
 
 [NOTE]
 ====
-Notice how the judge model evaluates multiple dimensions — accuracy, clarity, completeness, and presentation — and provides a structured written rationale for each score. This is far richer than the binary pass/fail from `basic::subset_of`. However, the eval is only as good as the judge model's reasoning ability, so choosing a capable judge model matters.
+判定モデルが、正確性、明快さ、完全性、および表現といった複数の次元を評価し、各スコアに対して構造化された書面の根拠を提供していることに注目してください。これは、`basic::subset_of` によるバイナリの合格/不合格よりもはるかに豊富です。ただし、評価の質は判定モデルの推論能力に依存するため、能力の高い判定モデルを選択することが重要です。
 ====
 
-Now let's have a little fun and evaluate two different models. This test asks each model to identify itself. The expected answer is "Qwen". When we run a model that *is* Qwen, it should score well. When we run a completely different model (Granite), it will honestly identify itself as an IBM model — and the judge will score it low because it doesn't match the expected answer. This demonstrates how evals can verify model identity and catch cases where a model has been swapped or misconfigured in your serving infrastructure.
+ここで、少し趣向を変えて、2 つの異なるモデルを評価してみましょう。このテストでは、各モデルに自分自身を特定するように求めます。期待される回答は「Qwen」です。Qwen *である* モデルを実行すると、良いスコアが出るはずです。全く別のモデル（Granite）を実行すると、正直に IBM モデルであると自己特定しますが、期待される回答と一致しないため、判定モデルは低いスコアを付けます。これは、評価によってモデルのアイデンティティを検証し、サービングインフラストラクチャでモデルが入れ替わったり誤設定されたりしているケースをキャッチできることを示しています。
 
-First, register a new dataset with a "what model are you?" question:
+まず、「あなたは何のモデルですか？」という質問を含む新しいデータセットを登録します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -700,7 +694,7 @@ Total evaluations: 1
 ================================================================================
 ----
 
-Now try a different model. Granite is an IBM model, so it will *not* identify itself as Qwen:
+次に、別のモデルを試してみます。Granite は IBM のモデルなので、自分を Qwen とは特定しません。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -708,7 +702,6 @@ Now try a different model. Granite is an IBM model, so it will *not* identify it
 export JUDGE_MODEL=vllm/llama-scout-17b
 export CANDIDATE_MODEL=vllm/granite-4-0-h-tiny
 ----
-
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -748,17 +741,17 @@ Total evaluations: 1
 
 [NOTE]
 ====
-As expected, Granite scores 1 — it correctly identifies itself as an IBM model, but that doesn't match the expected answer of "Qwen". This isn't a failure of the model; it is the eval working as designed. In production, a test like this ensures the model you _think_ you're running is the one actually serving requests.
+期待通り、Granite のスコアは 1 です。IBM モデルであると正しく自己特定しましたが、期待される回答である「Qwen」とは一致しません。これはモデルの失敗ではなく、評価が設計通りに機能しているということです。本番環境では、このようなテストによって、実行していると *思っている* モデルが実際にリクエストを処理しているものであることを保証します。
 ====
 
-== Summary
+== まとめ (Summary)
 
-In this module you:
+このモジュールでは以下のことを行いました。
 
-* Registered a *dataset* of questions and golden answers with Llama Stack
-* Explored *scoring functions* — both deterministic (`basic::subset_of`) and LLM-based (`llm-as-judge`)
-* Created *benchmarks* that combine datasets with scoring functions
-* Ran *evals* against candidate models and reviewed the results
-* Compared two different models (Qwen3 vs Granite) to see how evals catch differences in model behavior
+* 質問とゴールデンアンサーの **データセット (dataset)** を Llama Stack に登録しました。
+* 確定的 (`basic::subset_of`) および LLM ベース (`llm-as-judge`) の **スコーリング機能 (scoring functions)** を探索しました。
+* データセットとスコーリング機能を組み合わせた **ベンチマーク (benchmarks)** を作成しました。
+* 候補モデルに対して **評価 (evals)** を実行し、結果をレビューしました。
+* 2 つの異なるモデル（Qwen3 と Granite）を比較し、評価がモデルの動作の違いをどのようにキャッチするかを確認しました。
 
-These building blocks — datasets, scoring functions, benchmarks, and evals — are designed to be integrated into CI/CD pipelines so that model changes, prompt updates, or configuration shifts are automatically validated before reaching production.
+これらの構成要素（データセット、スコーリング機能、ベンチマーク、評価）は、CI/CD パイプラインに統合されるように設計されています。これにより、モデルの変更、プロンプトの更新、または構成のシフトが、本番環境に到達する前に自動的に検証されるようになります。
