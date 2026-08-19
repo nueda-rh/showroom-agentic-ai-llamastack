@@ -150,7 +150,7 @@ Total toolgroups: 2
 
 Response API を使用して、最後のスーパーボウルで誰が優勝したかを尋ねるコードスニペットを確認してください。
 
-````python
+```python
 # クライアントを初期化
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
@@ -160,7 +160,7 @@ response = client.responses.create(
     input="Who won the last Super Bowl?",
     stream=False,
 )
-````
+```
 
 Web 検索を使用**せず**、モデルのトレーニングデータのみを使用してスクリプトを実行します。
 
@@ -189,7 +189,7 @@ python 2_no_web_search.py
 
 以下のスニペットを確認してください。
 
-````python
+```python
 # Tavily API キーを使用してクライアントを初期化
 client = LlamaStackClient(
     base_url=LLAMA_STACK_BASE_URL,
@@ -203,7 +203,7 @@ response = client.responses.create(
     tools=[{"type": "web_search"}],
     stream=False,
 )
-````
+```
 
 スクリプトを実行します。
 
@@ -223,10 +223,10 @@ QUESTION="Who won the last Super Bowl?" python 3_web_search.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-Tavily Key: セット完了
-質問: Who won the last Super Bowl?
+Tavily Key: Set
+Question:   Who won the last Super Bowl?
 
-フィラデルフィア・イーグルスが直近のスーパーボウル（2025年の第59回スーパーボウル）で優勝し、ニューオーリンズでカンザスシティ・チーフスを **40-22** のスコアで破りました。これはイーグルスにとって 2 度目のスーパーボウル制覇であり、2018年以来の優勝となりました。
+The Philadelphia Eagles won the most recent Super Bowl (Super Bowl LIX in 2025), defeating the Kansas City Chiefs with a score of **40-22** in New Orleans. This marked the Eagles' second Super Bowl championship and their first since 2018.
 ----
 
 === 現在のアメリカ大統領は誰ですか？ (Who is the current US President?)
@@ -240,9 +240,9 @@ python 2_no_web_search_president.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-利用可能な最新の情報（2024年7月まで）に基づくと、**ジョー・バイデン** が第46代アメリカ合衆国大統領です。彼の任期は、2020年の大統領選挙を受けて **2021年1月20日**に始まりました。次のアメリカ大統領選挙は **2024年11月5日**に予定されており、新大統領は **2025年1月20日**に就任する予定です。
+As of the latest information available (up to July 2024), **Joe Biden** is the 46th President of the United States. His term began on **January 20, 2021**, following the 2020 presidential election. The next U.S. presidential election is scheduled for **November 5, 2024**, with the new president to be inaugurated on **January 20, 2025**.
 
-2024年7月以降にこの質問をしている場合、選挙結果によって回答が変わる可能性があります。2024年の選挙戦に関する最新情報が必要な場合はお知らせください！
+If you're asking this question after July 2024, the answer may change depending on the election results. Let me know if you'd like updates on the 2024 race!
 ----
 
 今度は Web 検索を使用します。
@@ -258,9 +258,11 @@ python 3_web_search_president.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-現在のアメリカ合衆国大統領は **ドナルド・ジョン・トランプ** です。
-彼は **2025年1月20日**に就任し、任期は **2029年1月20日**に終了する予定です。
-この情報は、政府の公式ウェブサイトや百科事典の参照資料を含む、複数の情報源で一貫しています。
+The current President of the United States is **Donald John Trump**.
+He was sworn into office on **January 20, 2025**, and his term is set
+to end on **January 20, 2029**. This information is consistent across
+multiple sources, including official government websites and encyclopedic
+references.
 ----
 
 モデルの知識のカットオフ日を確認しておいてください。
@@ -276,7 +278,11 @@ python 4_what_is_my_knowledge_cutoff.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-私の知識のカットオフは **2024年第3四半期 (Q3 2024)** であり、私のトレーニングデータにはその時期までの情報が含まれています。ただし、私はリアルタイムのインターネットアクセスを持って**いない**ため、このカットオフ以降の更新情報や提供はできません。最新のデータについては、信頼できる情報源を直接確認することをお勧めします。私のトレーニング範囲内で何かお手伝いできることがあればお知らせください！
+My knowledge cutoff is **Q3 2024**, meaning my training data includes
+information up to that time. However, I do **not** have real-time internet
+access, so I cannot provide updates or information beyond this cutoff.
+For the most current data, I recommend checking reliable sources directly.
+Let me know if you'd like help with anything within my training scope!
 ----
 
 [NOTE]
@@ -309,9 +315,9 @@ python 5_web_search_president_today.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-2026年1月8日現在、現在のアメリカ大統領は **ドナルド・トランプ** です。
-ニュース記事やホワイトハウスの公式ウェブサイトを含む複数の情報源が示すように、
-彼は2024年の選挙で2期目を獲得しました。
+As of January 8, 2026, the current U.S. President is **Donald Trump**.
+He secured a second term in the 2024 election, as indicated by multiple
+sources, including news articles and the official White House website.
 ----
 
 ### 回答 (Responses)
