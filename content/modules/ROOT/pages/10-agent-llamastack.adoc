@@ -1,26 +1,26 @@
-= Agent - Llama Stack
+= エージェント - Llama Stack
 
-== Introduction
+== はじめに (Introduction)
 
-In this module, you'll learn how to build intelligent agents using Llama Stack's powerful agent framework. Agents are AI systems that can reason, make decisions, and take actions to accomplish complex tasks—going beyond simple question-answering to become autonomous problem solvers.
+このモジュールでは、Llama Stack の強力なエージェントフレームワークを使用してインテリジェントエージェントを構築する方法を学びます。エージェントとは、単なる質問への回答を超えて、複雑なタスクを達成するために推論し、意思決定を行い、アクションを実行できる自律的な問題解決者としての AI システムです。
 
-Throughout this hands-on exercise, you'll progress through a carefully structured journey:
+このハンズオン演習を通じて、慎重に構成されたステップを進めていきます。
 
-* *Getting Started*: You'll begin with simple "Hello World" agents to understand the basic agent creation and execution patterns, including both standard and streaming responses.
+* **はじめに (Getting Started)**: シンプルな「Hello World」エージェントから始めて、標準レスポンスとストリーミングレスポンスの両方を含む、基本的なエージェントの作成と実行パターンを理解します。
 
-* *Working with Tools*: You'll discover how agents become truly powerful by connecting them to tools—both built-in capabilities and custom tools that interact with real business systems like customer databases and financial services.
+* **ツールとの連携 (Working with Tools)**: 組み込み機能や、顧客データベースや財務サービスなどの実際のビジネスシステムと対話するカスタムツールに接続することで、エージェントが真に強力になる方法を確認します。
 
-* *MCP Integration*: Building on your MCP knowledge from the previous module, you'll integrate Model Context Protocol servers as tool providers, enabling your agents to access rich, structured data sources.
+* **MCP 統合 (MCP Integration)**: 前のモジュールで学んだ MCP の知識に基づき、モデルコンテキストプロトコル (Model Context Protocol) サーバーをツールプロバイダーとして統合し、エージェントが豊富で構造化されたデータソースにアクセスできるようにします。
 
-* *Advanced Agent Patterns*: You'll explore sophisticated patterns including multi-tool agents that coordinate between different systems, multi-turn conversations that maintain context, and human-in-the-loop (HITL) workflows that combine AI autonomy with human oversight.
+* **高度なエージェントパターン (Advanced Agent Patterns)**: 異なるシステム間を調整するマルチツールエージェント、コンテキストを維持するマルチターン対話、AI の自律性と人間の監視を組み合わせたヒューマンインザループ (human-in-the-loop: HITL) ワークフローなど、高度なパターンを探索します。
 
-By the end of this module, you'll have hands-on experience building agents that can autonomously query databases, process financial data, and interact intelligently across multiple business domains—all using Llama Stack's production-ready agent framework.
+このモジュールの終わりには、Llama Stack の本番環境に対応したエージェントフレームワークを使用して、データベースへの自律的なクエリ、財務データの処理、および複数のビジネスドメインにわたるインテリジェントな対話が可能なエージェントを構築する実務経験を得ることができます。
 
-Let's get started by setting up your environment and running your first agent!
+それでは、環境をセットアップして最初のエージェントを実行しましょう。
 
-== Environment Setup
+== 環境のセットアップ (Environment Setup)
 
-Make sure you are in the correct base directory
+正しいベースディレクトリにいることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -35,7 +35,7 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026
 ----
 
-If needed, create a Python virtual environment (venv) 
+必要に応じて、Python 仮想環境 (venv) を作成します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -43,7 +43,7 @@ If needed, create a Python virtual environment (venv)
 python -m venv .venv
 ----
 
-How do you know if you need to create one? You can look for an existing .venv folder
+作成が必要かどうかを確認するには、既存の .venv フォルダを探します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -51,7 +51,7 @@ How do you know if you need to create one? You can look for an existing .venv fo
 ls .venv
 ----
 
-The following response indicates you need to create your Python venv
+以下のレスポンスが表示された場合は、Python venv を作成する必要があります。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -59,7 +59,7 @@ The following response indicates you need to create your Python venv
 ls: cannot access '.venv': No such file or directory
 ----
 
-Set environment
+環境を設定します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -67,16 +67,15 @@ Set environment
 source .venv/bin/activate 
 ----
 
-And if you use Terminal 2 you wish to make sure all the env vars are set up there as well.
+ターミナル 2 (Terminal 2) を使用する場合は、そこでもすべての環境変数が設定されていることを確認してください。
 
-The execution of the *source* command will change the prompt itself to look like the following:
+*source* コマンドを実行すると、プロンプト自体が次のように変わります。
 
 [.console-output]
 [source,bash,subs=attributes+]
 ----
 ((.venv) ) [lab-user: ~/fantaco-redhat-one-2026]
 ----
-
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -91,7 +90,7 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026/agents-llama-stack
 ----
 
-You will need the following env variables:
+以下の環境変数が必要になります。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -120,7 +119,7 @@ CUSTOMER_MCP_SERVER_URL: https://mcp-customer-route-showroom-nhfhb-1-user1.apps.
 FINANCE_MCP_SERVER_URL: https://mcp-finance-route-showroom-nhfhb-1-user1.apps.cluster-nhfhb.dynamic.redhatworkshops.io/mcp
 ----
 
-=== Install dependencies
+=== 依存関係のインストール (Install dependencies)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -128,9 +127,9 @@ FINANCE_MCP_SERVER_URL: https://mcp-finance-route-showroom-nhfhb-1-user1.apps.cl
 pip install -r requirements.txt
 ----
 
-== Exercises 
+== 演習 (Exercises)
 
-Run this to verify your Llama Stack connection works by creating a simple agent that returns a complete response.
+これを実行して、完全なレスポンスを返すシンプルなエージェントを作成し、Llama Stack への接続が機能することを確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -145,10 +144,10 @@ Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
 
 
-An AI agent is a software or system that perceives its environment, processes information, and takes actions to achieve specific goals or objectives.
+AI エージェントとは、環境を認識し、情報を処理し、特定の目標や目的を達成するためにアクションを実行するソフトウェアまたはシステムです。
 ----
 
-Run this to see token-by-token streaming output, demonstrating real-time response generation.
+これを実行して、リアルタイムの回答生成を示す、トークンごとのストリーミング出力を確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -161,18 +160,16 @@ python 1_hello_world_agent_streaming.py
 ----
 Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
-🤔 
 
-An AI agent is an autonomous system that perceives its environment, processes information, and takes actions to achieve specific goals, often through learning and adaptation.
-
+AI エージェントとは、多くの場合、学習と適応を通じて、環境を認識し、情報を処理し、特定の目標を達成するためにアクションを実行する自律型システムです。
 ----
 
 [TIP]
 ====
-*Streaming vs non-streaming:* The non-streaming version waits for the complete response before returning. The streaming version (`1_hello_world_agent_streaming.py`) returns tokens as they're generated — the thinking emoji appears while the model processes, then text flows in progressively. Streaming provides a better user experience for interactive applications because users see the response building in real-time.
+**ストリーミング vs 非ストリーミング:** 非ストリーミングバージョンは、完全な回答が完成するまで待機してから結果を返します。ストリーミングバージョン（`1_hello_world_agent_streaming.py`）は、トークンが生成されるたびに順次返します。モデルの処理中には思考中であることを示すメッセージが表示され、その後テキストが段階的に流れてきます。ストリーミングは、ユーザーが回答がリアルタイムで構築される様子を確認できるため、インタラクティブなアプリケーションにおいてより優れたユーザーエクスペリエンスを提供します。
 ====
 
-Run this to discover all registered toolgroups and MCP endpoints available on your Llama Stack server.
+これを実行して、Llama Stack サーバーで利用可能なすべての登録済みツールグループと MCP エンドポイントを確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -209,7 +206,7 @@ Total toolgroups: 4
 ==================================================
 ----
 
-Run this to inspect the specific tools exposed by the Customer MCP server (e.g., search customers by email).
+これを実行して、Customer MCP サーバーによって公開されている特定のツール（例：メールによる顧客検索）を検査します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -255,7 +252,7 @@ Total tools: 2
 ==================================================
 ----
 
-Run this to inspect the specific tools exposed by the Finance MCP server (e.g., get orders by customer ID).
+これを実行して、Finance MCP サーバーによって公開されている特定のツール（例：顧客 ID による注文取得）を検査します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -312,8 +309,7 @@ Total tools: 2
 ==================================================
 ----
 
-Review the snippet below to see an agent use a single MCP server to look up customer information by email address.
-
+以下のスニペットを確認して、エージェントが単一の MCP サーバーを使用してメールアドレスから顧客情報を検索する様子を見てみましょう。
 
 [source,python]
 ----
@@ -350,10 +346,10 @@ response = agent.create_turn(
 
 [TIP]
 ====
-*Agents vs direct tool invocation:* Compare this with the Llama Stack Client approach in the previous module. Here, you give the agent a natural language instruction ("tell me about the customer with the email address...") and it decides which tool to call and how to format the results. The agent manages sessions and turns, maintaining context across interactions.
+**エージェント vs 直接的なツール呼び出し:** 前のモジュールでの Llama Stack クライアントのアプローチと比較してください。ここでは、エージェントに自然言語の指示（「メールアドレス...の顧客について教えて」）を与えると、エージェントがどのツールを呼び出し、結果をどのようにフォーマットするかを決定します。エージェントはセッションとターンを管理し、インタラクション全体でコンテキストを維持します。
 ====
 
-Run the script:
+スクリプトを実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -371,18 +367,18 @@ Customer MCP: https://mcp-customer-route-showroom-nhfhb-1-user1.apps.cluster-nhf
 
 Here is the information for the customer with the email **thomashardy@example.com**:
 
-**Company:** Around the Horn (ID: AROUT)  
-**Contact:** Thomas Hardy  
-**Title:** Sales Representative  
-**Address:** 120 Hanover Sq., London, WA1 1DP, UK  
-**Phone:** (171) 555-7788  
-**Fax:** (171) 555-6750  
-**Email:** thomashardy@example.com  
+**Company:** Around the Horn (ID: AROUT)
+**Contact:** Thomas Hardy
+**Title:** Sales Representative
+**Address:** 120 Hanover Sq., London, WA1 1DP, UK
+**Phone:** (171) 555-7788
+**Fax:** (171) 555-6750
+**Email:** thomashardy@example.com
 
 This record was created and last updated on January 7, 2026. Let me know if you need additional details!
 ----
 
-Run this to see an agent use a single MCP server to retrieve order data by customer ID.
+これを実行して、エージェントが単一の MCP サーバーを使用して顧客 ID から注文データを取得する様子を確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -400,25 +396,25 @@ Finance MCP: https://mcp-finance-route-showroom-nhfhb-1-user1.apps.cluster-nhfhb
 
 Here are the orders for customer **AROUT**:
 
-1. **Order #ORD-008**  
-   - Date: January 30, 2024 @ 3:20 PM  
-   - Total: $59.99  
+1. **Order #ORD-008**
+   - Date: January 30, 2024 @ 3:20 PM
+   - Total: $59.99
    - Status: **PENDING**
 
-2. **Order #ORD-003**  
-   - Date: January 25, 2024 @ 9:45 AM  
-   - Total: $89.99  
+2. **Order #ORD-003**
+   - Date: January 25, 2024 @ 9:45 AM
+   - Total: $89.99
    - Status: **PENDING**
 
-3. **Order #ORD-004**  
-   - Date: January 10, 2024 @ 4:20 PM  
-   - Total: $199.99  
+3. **Order #ORD-004**
+   - Date: January 10, 2024 @ 4:20 PM
+   - Total: $199.99
    - Status: **DELIVERED**
 
 Found **3 orders** in total. Let me know if you'd like details about a specific order!
 ----
 
-Run this to see an agent intelligently chain two MCP servers together—looking up a customer by email, then fetching their orders.
+これを実行して、エージェントが 2 つの MCP サーバーをインテリジェントに連鎖させる様子を確認します。まずメールで顧客を検索し、次にその注文を取得します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -438,25 +434,25 @@ Finance MCP:  https://mcp-finance-route-showroom-nhfhb-1-user1.apps.cluster-nhfh
 Here are all the orders for Thomas Hardy (thomashardy@example.com) from Around the Horn:
 
 **Order History:**
-1. **Order #ORD-008**  
-   - Status: ⏳ PENDING  
-   - Total: $59.99  
+1. **Order #ORD-008**
+   - Status: ⏳ PENDING
+   - Total: $59.99
    - Date: January 30, 2024
 
-2. **Order #ORD-003**  
-   - Status: ⏳ PENDING  
-   - Total: $89.99  
+2. **Order #ORD-003**
+   - Status: ⏳ PENDING
+   - Total: $89.99
    - Date: January 25, 2024
 
-3. **Order #ORD-004**  
-   - Status: ✅ DELIVERED  
-   - Total: $199.99  
+3. **Order #ORD-004**
+   - Status: ✅ DELIVERED
+   - Total: $199.99
    - Date: January 10, 2024
 
 Let me know if you'd like to view invoice details or filter by date range.
 ----
 
-Run this to demonstrate how an agent maintains conversation context across multiple turns within the same session.
+これを実行して、エージェントが同じセッション内の複数のターンにわたって会話コンテキストをどのように維持するかを確認します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -486,30 +482,30 @@ Turn 2: what are their orders?
 
 Here are the orders for **Around the Horn (AROUT)**:
 
-1. **Order #ORD-008**  
-   - **Date:** January 30, 2024 at 3:20 PM  
-   - **Total:** $59.99  
-   - **Status:** PENDING  
+1. **Order #ORD-008**
+   - **Date:** January 30, 2024 at 3:20 PM
+   - **Total:** $59.99
+   - **Status:** PENDING
 
-2. **Order #ORD-003**  
-   - **Date:** January 25, 2024 at 9:45 AM  
-   - **Total:** $89.99  
-   - **Status:** PENDING  
+2. **Order #ORD-003**
+   - **Date:** January 25, 2024 at 9:45 AM
+   - **Total:** $89.99
+   - **Status:** PENDING
 
-3. **Order #ORD-004**  
-   - **Date:** January 10, 2024 at 4:20 PM  
-   - **Total:** $199.99  
-   - **Status:** DELIVERED  
+3. **Order #ORD-004**
+   - **Date:** January 10, 2024 at 4:20 PM
+   - **Total:** $199.99
+   - **Status:** DELIVERED
 
 There are **3 orders** in total for this customer. Two are still pending, and one has been delivered.
 ----
 
 [NOTE]
 ====
-*Notice the context retention:* In Turn 2, the user asks "what are their orders?" — the pronoun "their" refers to Thomas Hardy from Turn 1. The agent resolved this reference because Llama Stack maintains session state across turns. The agent knew to look up orders for customer AROUT without being told the ID again. This is what `session_id` enables.
+**コンテキスト保持に注目してください:** ターン 2 で、ユーザーは「彼らの注文は何ですか？」と尋ねています。ここでの「彼ら」という代名詞は、ターン 1 の Thomas Hardy を指します。Llama Stack がターンをまたいでセッション状態を維持しているため、エージェントはこの参照を解決できました。エージェントは、ID を再度伝えられなくても、顧客 AROUT の注文を検索すべきであることを理解していました。これが `session_id` によって可能になることです。
 ====
 
-Run this for an interactive chat experience where you can have a back-and-forth conversation with the agent.
+エージェントとやり取りできるインタラクティブなチャット体験のために、これを実行します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -533,7 +529,7 @@ Type 'exit' or 'quit' to end the conversation
 
 [TIP]
 ====
-*Human-in-the-loop (HITL):* This pattern creates an interactive loop where the agent processes one request at a time and waits for the next human input. Unlike scripted agents that run a fixed set of queries, HITL agents adapt to whatever the user asks in real-time. This is the foundation for production chat interfaces and customer support systems.
+**ヒューマンインザループ (HITL):** このパターンは、エージェントが一度に 1 つのリクエストを処理し、次の人間の入力を待機するインタラクティブなループを作成します。決められたクエリセットを実行するスクリプト化されたエージェントとは異なり、HITL エージェントはユーザーの質問にリアルタイムで適応します。これは、本番環境のチャットインターフェースやカスタマーサポートシステムの基礎となります。
 ====
 
 [.console-input]
@@ -545,14 +541,14 @@ how to contact Liu Wong?
 [.console-output]
 [source,text,subs=attributes+]
 ----
-Agent: 
+Agent:
 
 Here are the contact details for Liu Wong from The Cracker Box:
 
-**Email:** liuwong@example.com  
-**Phone:** (406) 555-5834  
-**Company:** The Cracker Box  
-**Address:** 55 Grizzly Peak Rd., Butte, MT 59801, USA  
+**Email:** liuwong@example.com
+**Phone:** (406) 555-5834
+**Company:** The Cracker Box
+**Address:** 55 Grizzly Peak Rd., Butte, MT 59801, USA
 
 Let me know if you need further assistance!
 ----
@@ -566,22 +562,22 @@ what are their orders?
 [.console-output]
 [source,text,subs=attributes+]
 ----
-Agent: 
+Agent:
 
 Here are the orders for The Cracker Box (customer ID: THECR):
 
 **Order History:**
-1. **Order #ORD-005**  
-   - Date: January 22, 2024  
-   - Total: $79.99  
-   - Status: ❌ Cancelled  
+1. **Order #ORD-005**
+   - Date: January 22, 2024
+   - Total: $79.99
+   - Status: ❌ Cancelled
 
-2. **Order #ORD-007**  
-   - Date: January 28, 2024  
-   - Total: $129.99  
-   - Status: ✅ Shipped  
+2. **Order #ORD-007**
+   - Date: January 28, 2024
+   - Total: $129.99
+   - Status: ✅ Shipped
 
-**Total orders retrieved:** 2  
+**Total orders retrieved:** 2
 
 Let me know if you'd like details about a specific order!
 ----
@@ -598,19 +594,6 @@ quit
 Goodbye!
 ----
 
+== まとめ (Conclusion)
 
-== Conclusion
-
-Throughout this module, you've progressed from building simple "Hello World" agents to creating
-sophisticated, production-ready AI systems that can autonomously interact with real business data.
-You've seen how Llama Stack's agent framework transforms language models from passive responders
-into active problem-solvers by connecting them with tools and MCP servers. The journey from
-single-tool agents to multi-turn, human-in-the-loop conversations demonstrates the versatility
-and power of the agentic AI paradigm. By integrating Customer and Finance MCP servers, your
-agents can now intelligently query databases, retrieve order histories, and chain multiple data
-sources together—all while maintaining conversational context and providing natural language
-responses. These patterns and techniques form the foundation for building enterprise-grade AI
-agents that can assist customer service teams, automate business workflows, and enhance
-decision-making across your organization. In the next module, we'll explore a LangGraph+FastAPI 
-with Chat UI example.
-
+このモジュール全体を通して、シンプルな「Hello World」エージェントの構築から、実際のビジネスデータと自律的に対話できる高度で本番環境に対応した AI システムの作成まで進んできました。Llama Stack のエージェントフレームワークが、ツールや MCP サーバーと接続することで、言語モデルを受動的な応答者から能動的な問題解決者へと変える様子を確認しました。単一ツールのエージェントからマルチターンのヒューマンインザループ対話への過程は、エージェント型 AI パラダイムの汎用性とパワーを実証しています。Customer および Finance MCP サーバーを統合することで、エージェントはデータベースへのインテリジェントなクエリ、注文履歴の取得、および複数のデータソースの連鎖を、会話コンテキストを維持し自然言語で回答しながら実行できるようになりました。これらのパターンと手法は、カスタマーサービスチームを支援し、ビジネスワークフローを自動化し、組織全体の意思決定を強化できるエンタープライズグレードの AI エージェントを構築するための基盤となります。次のモジュールでは、LangGraph+FastAPI とチャット UI を使用した例を探索します。
