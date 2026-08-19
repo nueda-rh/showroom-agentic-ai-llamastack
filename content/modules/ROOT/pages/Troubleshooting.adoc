@@ -1,20 +1,20 @@
-= Workshop Troubleshooting
+= ワークショップ トラブルシューティング (Workshop Troubleshooting)
 
-== LlamaStackDistribution CRD Not Found
+== LlamaStackDistribution CRD が見つからない (LlamaStackDistribution CRD Not Found)
 
-=== Issue: I just tried to create a LlamaStackDistribution and it failed with error: resource mapping not found for name: "llamastack-distribution-vllm" namespace: "" from "STDIN": no matches for kind "LlamaStackDistribution" in version "llamastack.io/v1alpha1" ensure CRDs are installed first
+=== 問題: LlamaStackDistribution を作成しようとしたが、次のエラーで失敗した: resource mapping not found for name: "llamastack-distribution-vllm" namespace: "" from "STDIN": no matches for kind "LlamaStackDistribution" in version "llamastack.io/v1alpha1" ensure CRDs are installed first
 
-=== Solution
+=== 解決策
 
-Make sure the LlamaStack Operator is installed by visiting "Ecosystem" and installing the Operator as the admin user.
+管理者ユーザーとして「エコシステム (Ecosystem)」にアクセスし、オペレーター (Operator) をインストールして、LlamaStack オペレーター (LlamaStack Operator) がインストールされていることを確認してください。
 
-== LlamaStack Pod Stuck in Pending or CrashLoopBackOff
+== LlamaStack ポッドが Pending または CrashLoopBackOff のままになる (LlamaStack Pod Stuck in Pending or CrashLoopBackOff)
 
-=== Issue: My LlamaStack pod is stuck in Pending state or keeps restarting with CrashLoopBackOff
+=== 問題: LlamaStack ポッドが Pending 状態のままになるか、CrashLoopBackOff で再起動を繰り返す
 
-=== Solution
+=== 解決策
 
-Check the pod logs and events for more details:
+ポッドのログとイベントを確認して詳細を把握します。
 
 [source,bash]
 ----
@@ -23,71 +23,71 @@ oc describe pod <llamastack-pod-name>
 oc logs -f deploy/llamastack-distribution-vllm
 ----
 
-Common causes:
+一般的な原因:
 
-* **Pending**: The PVC may not be bound. Check if the storage class exists and has available capacity with `oc get pvc`.
-* **CrashLoopBackOff**: The VLLM_URL or VLLM_API_TOKEN environment variables may be incorrect. Verify these values match what was provided in the workshop instructions.
-* **ImagePullBackOff**: The container image may not be accessible. Check your network connectivity and image registry credentials.
+* **Pending**: PVC がバインドされていない可能性があります。`oc get pvc` を実行して、ストレージクラスが存在し、利用可能な容量があるか確認してください。
+* **CrashLoopBackOff**: VLLM_URL または VLLM_API_TOKEN 環境変数が正しくない可能性があります。これらの値がワークショップの指示で提供されたものと一致しているか確認してください。
+* **ImagePullBackOff**: コンテナイメージにアクセスできない可能性があります。ネットワーク接続とイメージレジストリの認証情報を確認してください。
 
-== Connection Refused to LlamaStack Server
+== LlamaStack サーバーへの接続が拒否される (Connection Refused to LlamaStack Server)
 
-=== Issue: I'm getting "Connection refused" or "Connection reset by peer" when trying to curl the LlamaStack server at http://llamastack-distribution-vllm-service:8321
+=== 問題: http://llamastack-distribution-vllm-service:8321 で LlamaStack サーバーを curl しようとすると、「接続が拒否されました (Connection refused)」または「ピアによって接続がリセットされました (Connection reset by peer)」というエラーが表示される
 
-=== Solution
+=== 解決策
 
-1. Verify the LlamaStack pod is running and ready:
+1. LlamaStack ポッドが実行中で準備完了状態であることを確認します。
 +
 [source,bash]
 ----
 oc get pods -l app=llama-stack
 ----
 +
-Look for a pod named `llamastack-distribution-vllm-*` with status `Running`.
+ステータスが `Running` の `llamastack-distribution-vllm-*` という名前のポッドを探します。
 
-2. Ensure the service exists:
+2. サービスが存在することを確認します。
 +
 [source,bash]
 ----
 oc get svc llamastack-distribution-vllm-service
 ----
 
-3. If running from outside the cluster, use port-forwarding:
+3. クラスターの外部から実行している場合は、ポートフォワーディングを使用します。
 +
 [source,bash]
 ----
 oc port-forward svc/llamastack-distribution-vllm-service 8321:8321
 ----
 +
-Then use `http://localhost:8321` instead.
+その後、代わりに `http://localhost:8321` を使用します。
 
-4. Wait a minute or two after pod startup - LlamaStack needs time to initialize and register with the vLLM backend.
+4. ポッドの起動後、1〜2 分待ちます。LlamaStack は、初期化して vLLM バックエンドに登録するまで時間が必要です。
 
-== Model Not Found or Inference Timeout
+== モデルが見つからない、または推論がタイムアウトする (Model Not Found or Inference Timeout)
 
-=== Issue: When I call the chat completion API, I get "Model not found" or the request times out after a long wait
+=== 問題: チャット補完（chat completion）API を呼び出すと、「モデルが見つかりません (Model not found)」と表示されるか、長時間待機した後にリクエストがタイムアウトする
 
-=== Solution
+=== 解決策
 
-1. List available models to verify the model name:
+1. 利用可能なモデルをリストして、モデル名を確認します。
 +
 [source,bash]
 ----
 curl -sS $LLAMA_STACK_BASE_URL/v1/models | jq '.data[].id'
 ----
 
-2. Make sure you're using the exact model ID from the list. The correct model for this workshop is `vllm/qwen3-14b`.
+2. リストにある正確なモデル ID を使用していることを確認してください。このワークショップの正しいモデルは `vllm/qwen3-14b` です。
 
-3. If requests timeout, the vLLM backend may be overloaded or not responding. Check the Model-as-a-Service status in the OpenShift AI dashboard.
+3. リクエストがタイムアウトする場合、vLLM バックエンドが過負荷になっているか、応答していない可能性があります。「OpenShift AI ダッシュボード (OpenShift AI dashboard)」で「Model-as-a-Service ステータス (Model-as-a-Service status)」を確認してください。
 
-4. For long responses, increase your client timeout. The model may take 30-60 seconds for complex queries.
+4. 回答が長い場合は、クライアントのタイムアウト値を増やしてください。複雑なクエリの場合、モデルの応答に 30〜60 秒かかることがあります。
 
-== MCP Server Registration Failed
+== MCP サーバーの登録に失敗した (MCP Server Registration Failed)
 
-=== Issue: When I try to register an MCP server with LlamaStack, I get an error like "Failed to connect to MCP server" or the toolgroup doesn't appear
+=== 問題: MCP サーバーを LlamaStack に登録しようとすると、「MCP サーバーへの接続に失敗しました (Failed to connect to MCP server)」のようなエラーが表示されるか、ツールグループ（toolgroup）が表示されない
 
-=== Solution
+=== 解決策
 
-1. Verify the MCP server is running and accessible:
+1. MCP サーバーが実行中でアクセス可能であることを確認します。
 +
 [source,bash]
 ----
@@ -95,9 +95,9 @@ curl -sS http://fantaco-customer-mcp:8001/health
 curl -sS http://fantaco-finance-mcp:8002/health
 ----
 
-2. Check that the MCP server URL is correct. From within the cluster, use the service name (e.g., `http://fantaco-customer-mcp:8001`), not localhost.
+2. MCP サーバーの URL が正しいことを確認してください。クラスター内からは、localhost ではなくサービス名（例: `http://fantaco-customer-mcp:8001`）を使用してください。
 
-3. Ensure you're using SSE transport (not stdio) for HTTP-based MCP servers:
+3. HTTP ベースの MCP サーバーには、stdio ではなく SSE トランスポートを使用していることを確認してください。
 +
 [source,bash]
 ----
@@ -110,34 +110,34 @@ curl -X POST $LLAMA_STACK_BASE_URL/v1/toolgroups/register \
   }'
 ----
 
-4. After registering, wait a few seconds and verify with:
+4. 登録後、数秒待ってから次のように確認します。
 +
 [source,bash]
 ----
 curl -sS $LLAMA_STACK_BASE_URL/v1/toolgroups | jq
 ----
 
-== Vector Store Creation Fails
+== ベクターストアの作成に失敗する (Vector Store Creation Fails)
 
-=== Issue: When running the RAG example, vector store creation fails with an error about embeddings or the store isn't created
+=== 問題: RAG の例を実行すると、埋め込み (embeddings) に関するエラーでベクターストアの作成に失敗するか、ストアが作成されない
 
-=== Solution
+=== 解決策
 
-1. Verify the embedding model is available:
+1. 埋め込みモデルが利用可能であることを確認します。
 +
 [source,bash]
 ----
 curl -sS $LLAMA_STACK_BASE_URL/v1/models | jq '.data[] | select(.id | contains("embed"))'
 ----
 
-2. Check that you have enough disk space on the PVC:
+2. PVC に十分なディスク容量があることを確認します。
 +
 [source,bash]
 ----
 oc exec deployment/llamastack-distribution-vllm -- df -h /opt/app-root/src/.llama
 ----
 
-3. If the vector store was partially created, list and delete it before retrying:
+3. ベクターストアが部分的に作成された場合は、再試行する前にリストを表示して削除してください。
 +
 [source,bash]
 ----
@@ -145,34 +145,34 @@ curl -sS $LLAMA_STACK_BASE_URL/v1/vector_stores | jq
 curl -X DELETE $LLAMA_STACK_BASE_URL/v1/vector_stores/<store-id>
 ----
 
-== Backend Microservices Not Responding
+== バックエンドマイクロサービスが応答しない (Backend Microservices Not Responding)
 
-=== Issue: The Fantaco Customer or Finance APIs return connection errors or 404 responses
+=== 問題: FantaCo の顧客または財務 API が接続エラーを返すか、404 レスポンスを返す
 
-=== Solution
+=== 解決策
 
-1. Check that all backend pods are running:
+1. すべてのバックエンドポッドが実行されていることを確認します。
 +
 [source,bash]
 ----
 oc get pods | grep fantaco
 ----
 
-2. Verify the services exist:
+2. サービスが存在することを確認します。
 +
 [source,bash]
 ----
 oc get svc | grep fantaco
 ----
 
-3. Check the database pods are healthy:
+3. データベースポッドが正常であることを確認します。
 +
 [source,bash]
 ----
 oc get pods | grep postgres
 ----
 
-4. Test the backend APIs directly:
+4. バックエンド API を直接テストします。
 +
 [source,bash]
 ----
@@ -180,49 +180,49 @@ export CUST_URL=http://fantaco-customer-api:8000
 curl -sS $CUST_URL/health
 ----
 
-5. If pods are crashing, check logs:
+5. ポッドがクラッシュしている場合は、ログを確認してください。
 +
 [source,bash]
 ----
 oc logs deployment/fantaco-customer-api
 ----
 
-== File Search Returns No Results
+== ファイル検索の結果が返されない (File Search Returns No Results)
 
-=== Issue: The agent uses the file_search tool but returns "I couldn't find any relevant information" even though the content should exist
+=== 問題: エージェントが file_search ツールを使用しているが、コンテンツが存在するはずなのに「関連する情報が見つかりませんでした (I couldn't find any relevant information)」と返される
 
-=== Solution
+=== 解決策
 
-1. Verify the vector store was created and has files:
+1. ベクターストアが作成され、ファイルが含まれていることを確認します。
 +
 [source,bash]
 ----
 curl -sS $LLAMA_STACK_BASE_URL/v1/vector_stores | jq '.data[] | {id, name, file_counts}'
 ----
 
-2. Check that files were successfully ingested (status should be "completed"):
+2. ファイルが正常に取り込まれたことを確認します（ステータスが "completed" である必要があります）。
 +
 [source,bash]
 ----
 curl -sS $LLAMA_STACK_BASE_URL/v1/vector_stores/<store-id>/files | jq
 ----
 
-3. Try a simpler, more specific query. The semantic search works best with natural language questions rather than single keywords.
+3. よりシンプルで具体的なクエリを試してください。セマンティック検索は、単一のキーワードよりも自然言語の質問で最適に機能します。
 
-4. If the vector store is empty, re-run the ingestion script:
+4. ベクターストアが空の場合は、取り込みスクリプトを再実行してください。
 +
 [source,bash]
 ----
 python 1_create_vector_store.py
 ----
 
-== Environment Variables Not Set
+== 環境変数が設定されていない (Environment Variables Not Set)
 
-=== Issue: Commands fail with errors like "LLAMA_STACK_BASE_URL: unbound variable" or API calls go to the wrong URL
+=== 問題: コマンドが「LLAMA_STACK_BASE_URL: 未定義の変数 (unbound variable)」などのエラーで失敗するか、API 呼び出しが間違った URL に送信される
 
-=== Solution
+=== 解決策
 
-Set the required environment variables at the start of each terminal session:
+各ターミナルセッションの開始時に、必要な環境変数を設定します。
 
 [source,bash]
 ----
@@ -230,7 +230,7 @@ export LLAMA_STACK_BASE_URL=http://llamastack-distribution-vllm-service:8321
 export INFERENCE_MODEL=vllm/qwen3-14b
 ----
 
-For the backend services:
+バックエンドサービスの場合:
 
 [source,bash]
 ----
@@ -238,4 +238,4 @@ export CUST_URL=http://fantaco-customer-api:8000
 export FIN_URL=http://fantaco-finance-api:8000
 ----
 
-You can add these to your `.bashrc` or `.zshrc` to persist them across sessions.
+これらを `.bashrc` または `.zshrc` に追加して、セッション間で永続化させることができます。
