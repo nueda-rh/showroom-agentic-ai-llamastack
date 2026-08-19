@@ -1,18 +1,18 @@
-= Exploring Llama Stack
+= Llama Stack の探索
 
-Now that you have successfully deployed a Llama Stack instance, it's time to explore its capabilities through hands-on interaction with the APIs. In this module, you'll learn how to connect to your Llama Stack server, discover available models and APIs, and interact with the inference endpoints.
+Llama Stack インスタンスのデプロイに成功しましたので、API とのハンズオン形式のインタラクションを通じて、その機能を探索してみましょう。このモジュールでは、Llama Stack サーバーへの接続方法、利用可能なモデルと API の検出方法、および推論エンドポイントとの対話方法について学習します。
 
-Llama Stack provides multiple API interfaces for different use cases:
+Llama Stack は、さまざまなユースケースに合わせて複数の API インターフェースを提供します。
 
-* **Inference APIs**: For generating responses using language models
-* **Agent APIs**: For building multi-turn conversational agents with tool calling
-* **RAG APIs**: For retrieval-augmented generation with vector databases
-* **Safety APIs**: For content moderation and guardrails
-* **Tool APIs**: For integrating external capabilities
+* **推論 API (Inference APIs)**: 言語モデルを使用して回答を生成します。
+* **エージェント API (Agent APIs)**: ツール呼び出しを備えたマルチターン対話型エージェントを構築します。
+* **RAG API (RAG APIs)**: ベクトルデータベースを使用した検索拡張生成 (Retrieval-Augmented Generation) を行います。
+* **セーフティ API (Safety APIs)**: コンテンツモデレーションとガードレールを提供します。
+* **ツール API (Tool APIs)**: 外部機能を統合します。
 
-This exploration will help you understand the Llama Stack API landscape and prepare you for building agentic applications.
+この探索により、Llama Stack の API ランドスケープを理解し、エージェントアプリケーション構築の準備を整えることができます。
 
-== Connecting to Llama Stack
+== Llama Stack への接続 (Connecting to Llama Stack)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -35,16 +35,16 @@ LLAMA_STACK_BASE_URL=http://llamastack-distribution-vllm-service.agentic-{user}.
 INFERENCE_MODEL=vllm/qwen3-14b
 ----
 
-The Llama Stack server is accessible via its internal Kubernetes service URL on port 8321. The `INFERENCE_MODEL` variable specifies which model to use for inference requests - in this lab, we're are primarily using the Qwen3-14B model.
+Llama Stack サーバーは、ポート 8321 の内部 Kubernetes サービス URL を介してアクセスできます。`INFERENCE_MODEL` 変数は、推論リクエストに使用するモデルを指定します。このラボでは、主に Qwen3-14B モデルを使用します。
 
 [TIP]
 ====
-*Reading the service URL:* `http://llamastack-distribution-vllm-service.agentic-{user}.svc:8321` follows the Kubernetes DNS convention: `<service-name>.<namespace>.svc:<port>`. This means your requests stay inside the cluster network — no external routing or authentication needed.
+**サービス URL の読み方:** `http://llamastack-distribution-vllm-service.agentic-{user}.svc:8321` は、Kubernetes の DNS 慣習である `<サービス名>.<ネームスペース>.svc:<ポート>` に従っています。これは、リクエストがクラスターネットワーク内に留まることを意味し、外部ルーティングや認証は不要です。
 ====
 
-== Discovering available resources
+== 利用可能なリソースの検出 (Discovering available resources)
 
-=== List available models
+=== 利用可能なモデルのリスト表示 (List available models)
 
 [source,bash,role="copypaste",subs=attributes+]
 ----
@@ -64,18 +64,18 @@ vllm/granite-4-0-h-tiny
 vllm/llama-scout-17b
 ----
 
-Note: Your list of models may vary depending on what is available on the MaaS
+注：モデルのリストは、MaaS 上で利用可能なものによって異なる場合があります。
 
-The Llama Stack distribution provides access to multiple vLLM-hosted models (e.g. `qwen3-14b`, `llama-scout-17b`) running on a Red Hat OpenShift AI cluster dedicated to model hosting via MaaS (model-as-a-service) architecture.
+Llama Stack ディストリビューションは、MaaS (Model-as-a-Service) アーキテクチャを介してモデルホスティング専用の Red Hat OpenShift AI クラスター上で実行されている、複数の vLLM ホストモデル（例：`qwen3-14b`、`llama-scout-17b`）へのアクセスを提供します。
 
 [TIP]
 ====
-*Model types in the list:* Notice the models fall into two categories. *Embedding* models (like `nomic-embed-text`) convert text into numerical vectors for search and retrieval — you'll use these in the RAG module. *LLM* models (like `qwen3-14b`, `granite-4-0-h-tiny`) are the language models that generate text responses. `Llama-Guard-3-1B` is a specialized safety model used for content moderation.
+**リスト内のモデルタイプ:** モデルが 2 つのカテゴリに分類されていることに注目してください。**埋め込み (Embedding)** モデル（`nomic-embed-text` など）は、テキストを検索および抽出用の数値ベクトルに変換します。これらは RAG モジュールで使用します。**LLM** モデル（`qwen3-14b`、`granite-4-0-h-tiny` など）は、テキスト回答を生成する言語モデルです。`Llama-Guard-3-1B` は、コンテンツモデレーションに使用される特殊なセーフティモデルです。
 ====
 
-=== List APIs
+=== API のリスト表示 (List APIs)
 
-Llama Stack exposes a comprehensive set of RESTful APIs following the OpenAPI specification. These APIs provide standardized interfaces for inference, agents, RAG, safety, and operational tasks. Let's explore the available endpoints:
+Llama Stack は、OpenAPI 仕様に従った包括的な RESTful API セットを公開しています。これらの API は、推論、エージェント、RAG、セーフティ、および運用タスクのための標準化されたインターフェースを提供します。利用可能なエンドポイントを探索してみましょう。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -205,24 +205,22 @@ curl -sS $LLAMA_STACK_BASE_URL/openapi.json \
 ]
 ----
 
-This comprehensive API surface demonstrates Llama Stack's capabilities across the entire AI application lifecycle. Notice the variety of endpoints:
+この広範な API サーフェスは、AI アプリケーションのライフサイクル全体にわたる Llama Stack の機能を示しています。さまざまなエンドポイントに注目してください。
 
-* **Inference endpoints** (`/v1/chat/completions`, `/v1/responses`, `/v1/completions`): Different approaches to getting model responses
-* **Agent endpoints** (`/v1/agents/*`): Full agent lifecycle including sessions, turns, and steps
-* **RAG and vector endpoints** (`/v1/vector_stores/*`, `/v1/vector-io/*`): Document storage and semantic search
-* **Tool runtime** (`/v1/toolgroups`, `/v1/tools/*`): External tool integration
-* **Safety and moderation** (`/v1/safety/*`, `/v1/shields/*`): Content filtering and guardrails
-* **OpenAI compatibility layer** (`/v1/openai/v1/*`): Drop-in replacement for OpenAI API clients
+* **推論エンドポイント (Inference endpoints)** (`/v1/chat/completions`, `/v1/responses`, `/v1/completions`): モデルの回答を得るためのさまざまなアプローチ
+* **エージェントエンドポイント (Agent endpoints)** (`/v1/agents/*`): セッション、ターン、ステップを含むエージェントの全ライフサイクル
+* **RAG およびベクトルエンドポイント (RAG and vector endpoints)** (`/v1/vector_stores/*`, `/v1/vector-io/*`): ドキュメントストレージとセマンティック検索
+* **ツールランタイム (Tool runtime)** (`/v1/toolgroups`, `/v1/tools/*`): 外部ツールの統合
+* **セーフティおよびモデレーション (Safety and moderation)** (`/v1/safety/*`, `/v1/shields/*`): コンテンツフィルタリングとガードレール
+* **OpenAI 互換レイヤー (OpenAI compatibility layer)** (`/v1/openai/v1/*`): OpenAI API クライアントのドロップイン置換
 
-== Inference APIs
+== 推論 API (Inference APIs)
 
-Llama Stack provides multiple inference APIs to suit different application needs. Let's explore two primary approaches to getting an answer from large language models.
+Llama Stack は、さまざまなアプリケーションのニーズに合わせて複数の推論 API を提供します。大規模言語モデルから回答を得るための 2 つの主要なアプローチを探索してみましょう。
 
 === ChatCompletions API
 
-The ChatCompletions API provides an OpenAI-compatible interface for interactions. This API is familiar to developers who have worked with OpenAI's GPT models and supports streaming, function calling, and multi-turn conversations.
-
-
+ChatCompletions API は、対話のための OpenAI 互換インターフェースを提供します。この API は、OpenAI の GPT モデルを使用したことがある開発者にとって馴染みがあり、ストリーミング、関数呼び出し、およびマルチターン対話をサポートしています。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -230,11 +228,11 @@ The ChatCompletions API provides an OpenAI-compatible interface for interactions
 export QUESTION="what model are you?"
 ----
 
-API_KEY is required for an OpenAI compatible API such as `v1/chat/completions` as well as `v1/responses` and since we are using Llama Stack with vLLM, self-hosted, private models, it can be set to any string you like as it is not actually being used.
+`v1/chat/completions` や `v1/responses` などの OpenAI 互換 API には API_KEY が必要です。Llama Stack を vLLM と共に使用し、セルフホストのプライベートモデルを使用しているため、実際には使用されませんが、任意の文字列を設定できます。
 
 [TIP]
 ====
-*Why `temperature: 0.0`?* The `temperature` parameter controls randomness in model responses. At `0.0`, the model always picks the most likely next token, giving deterministic (reproducible) output. Higher values (e.g. `0.7`) introduce randomness for more creative or varied responses. For testing and evals, `0.0` is useful because you get the same answer every time.
+**なぜ `temperature: 0.0` なのですか？** `temperature` パラメーターは、モデルの回答におけるランダム性を制御します。`0.0` の場合、モデルは常に最も可能性の高い次のトークンを選択し、確定的（再現可能）な出力を提供します。より高い値（例：`0.7`）は、より創造的または多様な回答のためにランダム性を導入します。テストや評価では、毎回同じ回答が得られる `0.0` が便利です。
 ====
 
 [.console-input]
@@ -263,7 +261,7 @@ I am Qwen, a large language model developed by Alibaba Cloud. I can answer
 questions, create text, and assist with various tasks. How can I help you today?
 ----
 
-Change the `INFERENCE_MODEL` and try again
+`INFERENCE_MODEL` を変更して再度試してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -293,13 +291,12 @@ and research. My exact model name isn't publicly disclosed. However, I'm designe
 provide accurate, relevant, and helpful information across a wide range of topics.
 ----
 
-
 [NOTE]
 ====
-*Provider abstraction in action:* Notice you used the exact same `curl` command and only changed the `INFERENCE_MODEL` environment variable. Llama Stack routed the request to a completely different model behind the scenes. This is the core value of the unified API — your application code doesn't change when you swap models.
+**プロバイダー抽象化の動作:** まったく同じ `curl` コマンドを使用し、`INFERENCE_MODEL` 環境変数のみを変更したことに注目してください。Llama Stack は舞台裏でリクエストをまったく異なるモデルにルーティングしました。これが統合 API の核心的な価値です。モデルを入れ替えてもアプリケーションコードを変更する必要はありません。
 ====
 
-Change the `INFERENCE_MODEL` back to Qwen 3 as we will use that for our lab.
+ラボで使用するため、`INFERENCE_MODEL` を Qwen 3 に戻します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -307,47 +304,46 @@ Change the `INFERENCE_MODEL` back to Qwen 3 as we will use that for our lab.
 export INFERENCE_MODEL=vllm/qwen3-14b
 ----
 
-
 === Responses API
 
-An OpenAI-compatible **Responses API** (`/v1/responses`) was developed by OpenAI and is also available via Llama Stack. It represents a more streamlined, purpose-built interface for AI applications. Unlike the ChatCompletions API which focuses on conversational patterns, the Responses API is designed for modern agentic workflows where you need direct, structured interaction with language models.  Responses is considered to be the successor of the historical ChatCompletions API.
+OpenAI 互換の **Responses API** (`/v1/responses`) は OpenAI によって開発され、Llama Stack を通じても利用可能です。これは、AI アプリケーション向けに、より効率化され、目的に特化したインターフェースを表しています。対話パターンに焦点を当てた ChatCompletions API とは異なり、Responses API は、言語モデルとの直接的で構造化されたインタラクションが必要な現代のエージェント型ワークフロー向けに設計されています。Responses は、歴史的な ChatCompletions API の後継とみなされています。
 
-Llama Stack has adopted the Responses API because of its well-earned popularity as a powerful tool for agentic reasoning. This API lets you avoid juggling multiple tool endpoints and identifiers. You make one API call that handles tool discovery, execution planning, and response synthesis automatically. The Responses API supports advanced patterns, such as multi-step reasoning and automatic tool chaining, that previously required extensive custom orchestration with the legacy APIs.
+Llama Stack は、エージェント推論のための強力なツールとしての定評ある人気から、Responses API を採用しました。この API を使用すると、複数のツールのエンドポイントや識別子をやりくりする必要がなくなります。ツールの検出、実行計画、および回答の統合を自動的に処理する 1 つの API 呼び出しを行います。Responses API は、以前はレガシー API で大規模なカスタムオーケストレーションを必要としていた、多段階の推論や自動ツールチェーンなどの高度なパターンをサポートします。
 
-IMPORTANT: LlamaStack will deprecate Agent API in favor of Response API. Today LlamaStack client changed the implementation to point to Response API in order to prepare for the migration, however in the near future Agent API will not be available. Suggested solution is to use directly Response API, or the `LegacyAgent` API, or to create your own class that simply wraps Response API. See this https://developers.redhat.com/articles/2025/12/09/your-ai-agents-evolved-modernize-llama-stack-agents-migrating-responses-api#the_compatibility_bridge__emulating_legacy_apis[article^] for more examples. This lab will be updated accordingly when needed.
+重要：LlamaStack は Response API を優先し、Agent API を非推奨にする予定です。現在、LlamaStack クライアントは移行に備えて Response API を指すように実装が変更されていますが、近い将来 Agent API は利用できなくなります。推奨される解決策は、Response API または `LegacyAgent` API を直接使用するか、Response API をラップする独自のクラスを作成することです。詳細な例については、こちらの link:https://developers.redhat.com/articles/2025/12/09/your-ai-agents-evolved-modernize-llama-stack-agents-migrating-responses-api#the_compatibility_bridge__emulating_legacy_apis[記事^] を参照してください。このラボは必要に応じて適宜更新されます。
 
-.Responses API workflow
+.Responses API ワークフロー (Responses API workflow)
 [mermaid,width=100%]
 ----
 sequenceDiagram
-    participant App as Your Application
-    participant LS as Llama Stack Server
-    participant Model as vLLM Model
-    participant Tools as External Tools
+    participant App as アプリケーション (Your Application)
+    participant LS as Llama Stack サーバー (Llama Stack Server)
+    participant Model as vLLM モデル (vLLM Model)
+    participant Tools as 外部ツール (External Tools)
 
     App->>LS: POST /v1/responses<br/>{model, input}
-    LS->>LS: Apply safety shields
-    LS->>Model: Forward to inference provider
-    Model->>Model: Generate response
-    Model-->>LS: Raw model output
-    LS->>LS: Structure output
-    LS->>Tools: (Optional) Execute tools
-    Tools-->>LS: Tool results
+    LS->>LS: セーフティシールドを適用
+    LS->>Model: 推論プロバイダーに転送
+    Model->>Model: 回答を生成
+    Model-->>LS: 生のモデル出力
+    LS->>LS: 出力を構造化
+    LS->>Tools: (任意) ツールを実行
+    Tools-->>LS: ツール実行結果
     LS-->>App: {output: [{content}]}
 
-    Note over App,Tools: Response API handles orchestration,<br/>safety, and tool execution
+    Note over App,Tools: Response API がオーケストレーション、<br/>セーフティ、およびツール実行を処理します
 ----
 
-==== Llama Stack's Responses API support
+#### Llama Stack の Responses API サポート (Llama Stack's Responses API support)
 
-Key features of Llama Stack's Responses API implementation:
+Llama Stack の Responses API 実装の主な機能：
 
-* **Provider abstraction**: Same API works with any configured inference provider
-* **Structured outputs**: Native support for JSON schemas, structured data extraction and structured input/output
-* **Tool integration**: Built-in support for RAG, web search, and custom tools
-* **Observability**: Request/response logging and monitoring through OpenAPI endpoints
+* **プロバイダー抽象化 (Provider abstraction)**: 構成された任意の推論プロバイダーで同じ API が動作します
+* **構造化出力 (Structured outputs)**: JSON スキーマ、構造化データ抽出、および構造化入力/出力のネイティブサポート
+* **ツール統合 (Tool integration)**: RAG、Web 検索、およびカスタムツールの組み込みサポート
+* **オブザーバビリティ (Observability)**: OpenAPI エンドポイントを介したリクエスト/レスポンスのロギングとモニタリング
 
-Let's interact with the Responses API:
+Responses API と対話してみましょう。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -373,15 +369,15 @@ curl -sS "$LLAMA_STACK_BASE_URL/v1/responses" \
 The capital of Italy is **Rome**. It is a historic city known for its rich cultural heritage, ancient landmarks like the Colosseum and Vatican City, and its role as the political and administrative center of the country.
 ----
 
-The Responses API provides a clean, direct interface for getting model responses. Notice the simplified request structure compared to ChatCompletion - you specify a `model` and `input` rather than managing message arrays. The response is structured as an array of output content, making it easy to extract text, handle tool calls, or process structured data.
+Responses API は、モデルの回答を得るためのクリーンで直接的なインターフェースを提供します。メッセージ配列を管理するのではなく、`model` と `input` を指定するという、ChatCompletion と比較して簡素化されたリクエスト構造に注目してください。レスポンスは出力コンテンツの配列として構造化されているため、テキストの抽出、ツール呼び出しの処理、または構造化データの処理が容易になります。
 
-This API becomes even more powerful when combined with Llama Stack's agent framework, which uses the Responses API as the foundation for multi-step reasoning and tool execution.
+この API は、多段階の推論とツール実行の基盤として Responses API を使用する Llama Stack のエージェントフレームワークと組み合わせると、さらに強力になります。
 
-== Tool runtime and capabilities
+== ツールランタイムと機能 (Tool runtime and capabilities)
 
-Beyond inference, Llama Stack provides a runtime environment for tools that agents can use to interact with external systems. These tools extend the capabilities of language models by allowing them to search the web, query databases, perform calculations, and integrate with enterprise systems.
+推論以外にも、Llama Stack はエージェントが外部システムと対話するために使用できるツールのランタイム環境を提供します。これらのツールは、Web 検索、データベースへのクエリ、計算の実行、およびエンタープライズシステムとの統合を可能にすることで、言語モデルの機能を拡張します。
 
-=== Available tool groups
+=== 利用可能なツールグループ (Available tool groups)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -399,10 +395,10 @@ curl -sS -H "Content-Type: application/json" $LLAMA_STACK_BASE_URL/v1/toolgroups
 
 [TIP]
 ====
-*Why are tool groups empty?* Llama Stack starts with no tools registered by default. This is intentional — tools are capabilities you explicitly opt into. You register them here so that agents can discover and invoke them during their reasoning process. Think of it as giving your agents permission to use specific external capabilities.
+**なぜツールグループが空なのですか？** Llama Stack は、デフォルトではツールが登録されていない状態で起動します。これは意図的なもので、ツールは明示的に選択して使用する機能です。ここで登録することで、エージェントが推論プロセス中にそれらを検出し、呼び出すことができるようになります。これは、エージェントに特定の外部機能を使用する許可を与えるものと考えてください。
 ====
 
-Register the RAG and Web Search tools.
+RAG と Web 検索ツールを登録します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -467,14 +463,13 @@ curl -sS -H "Content-Type: application/json" $LLAMA_STACK_BASE_URL/v1/toolgroups
 }
 ----
 
-**RAG tool**: Provides document retrieval and semantic search capabilities.  There is a module dedicated to exploring RAG. 
+**RAG ツール (RAG tool)**: ドキュメントの抽出とセマンティック検索機能を提供します。RAG の探索に特化したモジュールが用意されています。
 
-**Web Search tool**: Integrates with Tavily and augments the model context with web search data.  There is a module dedicated to exploring Web Search.
+**Web 検索ツール (Web Search tool)**: Tavily と統合し、Web 検索データでモデルのコンテキストを拡張します。Web 検索の探索に特化したモジュールが用意されています。
 
+これらのツールは、エージェントが推論プロセス中に呼び出すことができ、外部データで知識を拡張することを可能にします。後のモジュールでは、エージェントがこれらのツールをいつどのように使用するかを自動的に決定する様子を確認します。
 
-These tools can be invoked by agents during their reasoning process, allowing them to augment their knowledge with external data. In later modules, you'll see how agents automatically decide when and how to use these tools.
-
-=== Model Context Protocol (MCP)
+=== モデルコンテキストプロトコル (Model Context Protocol: MCP)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -490,19 +485,17 @@ curl -sS -H "Content-Type: application/json" \
 []
 ----
 
-There are **no** MCP Servers deployed and registered with this Llama Stack instance at this time. 
+現時点では、この Llama Stack インスタンスにデプロイおよび登録されている MCP サーバーは**ありません**。
 
-The Model Context Protocol is an open standard for integrating external tools and data sources with language models. While this instance doesn't have MCP servers configured yet, you'll learn how to add MCP capabilities in the dedicated MCP module later in this lab.
+モデルコンテキストプロトコル (Model Context Protocol: MCP) は、外部ツールやデータソースを言語モデルと統合するためのオープンな標準です。このインスタンスにはまだ MCP サーバーが構成されていませんが、このラボの後半にある専用の MCP モジュールで、MCP 機能を追加する方法を学びます。
 
-== Summary
+== まとめ (Summary)
 
-In this module, you explored the Llama Stack API landscape through hands-on interaction:
+このモジュールでは、ハンズオン形式のインタラクションを通じて Llama Stack API ランドスケープを探索しました。
 
-* **Connected to Llama Stack** and discovered available models across local and cloud providers
-* **Explored the API surface** with over 100 endpoints for inference, agents, RAG, safety, and tools
-* **Compared inference approaches** between ChatCompletion and Responses APIs
-* **Emphasized the Responses API** as Llama Stack's native interface for agentic workflows, with provider abstraction, and simplified semantics
- 
+* **Llama Stack に接続**し、ローカルおよびクラウドプロバイダー全体で利用可能なモデルを検出しました。
+* 推論、エージェント、RAG、セーフティ、およびツールに関する 100 以上のエンドポイントを持つ **API サーフェスを探索**しました。
+* ChatCompletion API と Responses API の間で**推論アプローチを比較**しました。
+* **Responses API を、プロバイダーの抽象化と簡素化されたセマンティクスを備えた、エージェント型ワークフローのための Llama Stack ネイティブインターフェースとして強調**しました。
 
-In the following modules, you'll use these APIs to implement RAG, integrate tools via MCP, and build complete agentic applications.
-
+次のモジュールでは、これらの API を使用して RAG を実装し、MCP を介してツールを統合し、完全なエージェントアプリケーションを構築します。
