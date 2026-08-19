@@ -1,22 +1,22 @@
-= Langfuse: Traces, Evals and Feedback
+= Langfuse: トレース、評価（Evals）、フィードバック
 
-Agents are applications and need the appropriate infrastructure to run them at with scale.  Many of the vital capabilities such as load-balancing and fail-over across replicas, capturing logs and metrics and automatic restart are part of OpenShift.
+エージェントはアプリケーションであり、大規模に実行するための適切なインフラストラクチャを必要とします。レプリカ間のロードバランシングやフェイルオーバー、ログとメトリクスの取得、自動再起動といった重要な機能の多くは、OpenShiftの一部として提供されています。
 
-However, Agents do have some unique aspects that require additional infrastructure services such as:
+しかし、エージェントには以下のような追加のインフラストラクチャサービスを必要とする独自の側面があります。
 
-* Traces
-* Evals
-* Feedback 
+* トレース（Traces）
+* 評価（Evals）
+* フィードバック（Feedback）
 
-The open source solution for these capabilities is in *Langfuse*.
+これらの機能を実現するためのオープンソースソリューションが *Langfuse* です。
 
 [TIP]
 ====
-*Why do agents need specialized observability?* Traditional application monitoring tracks request latency and error rates. Agent observability must also capture the *reasoning chain*: which tools were called, what data was returned, how the model synthesized its answer, and whether the user found it helpful. Langfuse provides this AI-specific observability layer on top of the platform-level monitoring that OpenShift already provides.
+*なぜエージェントには専用のオブザーバビリティが必要なのでしょうか？* 従来のアプリケーションモニタリングでは、リクエストのレイテンシーやエラー率を追跡します。エージェントのオブザーバビリティでは、**推論チェーン（reasoning chain）**も取得する必要があります。具体的には、どのツールが呼び出されたか、どのようなデータが返されたか、モデルがどのように回答を合成したか、そしてユーザーがそれを有益だと感じたか、といった点です。Langfuseは、OpenShiftがすでに提供しているプラットフォームレベルのモニタリングの上に、これらAI特有のオブザーバビリティレイヤーを提供します。
 ====
 
-Traces are mission critical for debugging, production support and for the intial capture of end-user intent and subsequent creation of evals.
-Feedback is vital to incrementally improving the quality of your agent over time. 
+トレースは、デバッグ、本番環境のサポート、およびエンドユーザーの意図の初期取得とそれに続く評価（evals）の作成において非常に重要です。
+フィードバックは、時間をかけてエージェントの品質を段階的に向上させるために不可欠です。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -31,7 +31,7 @@ pwd
 /home/lab-user/fantaco-redhat-one-2026
 ----
 
-Check that you have set key env variables
+主要な環境変数が設定されていることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -49,7 +49,7 @@ LLAMA_STACK_BASE_URL=http://llamastack-distribution-vllm-service:8321
 INFERENCE_MODEL=vllm/qwen3-14b
 ----
 
-LangGraph clients (and most clients) like having an API_KEY set, even if it is not applicable since we are using privately hosted models via Llama Stack.
+LangGraphクライアント（およびほとんどのクライアント）は、たとえLlama Stackを介してプライベートにホストされたモデルを使用しており適用外であっても、API_KEYが設定されていることを好みます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -57,8 +57,7 @@ LangGraph clients (and most clients) like having an API_KEY set, even if it is n
 export API_KEY=not-applicable
 ----
 
-And double check on your MCP server URLs
-
+また、MCPサーバーのURLを再確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -69,9 +68,7 @@ echo $CUSTOMER_MCP_SERVER_URL
 echo $FINANCE_MCP_SERVER_URL
 ----
 
-
-
-If needed, create a Python virtual environment (venv) 
+必要に応じて、Python仮想環境（venv）を作成します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -79,7 +76,7 @@ If needed, create a Python virtual environment (venv)
 python -m venv .venv
 ----
 
-or you can look for an existing .venv folder
+または、既存の .venv フォルダを探します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -87,7 +84,7 @@ or you can look for an existing .venv folder
 ls .venv
 ----
 
-The following response indicates you need to create your Python venv
+以下のレスポンスは、Python venvを作成する必要があることを示しています。
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -95,7 +92,7 @@ The following response indicates you need to create your Python venv
 ls: cannot access '.venv': No such file or directory
 ----
 
-and 
+および
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -109,7 +106,7 @@ echo $VIRTUAL_ENV
 /home/lab-user/fantaco-redhat-one-2026/.venv
 ----
 
-If needed, set environment to point to the venv
+必要に応じて、venvを指すように環境を設定します。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -117,7 +114,7 @@ If needed, set environment to point to the venv
 source .venv/bin/activate 
 ----
 
-Now change to the agent backend directory.  We have another LangGraph-based agent that has been instrumented for Langfuse traces.
+次に、エージェントのバックエンドディレクトリに移動します。ここには、Langfuseトレース用に計装された別のLangGraphベースのエージェントがあります。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -125,7 +122,7 @@ Now change to the agent backend directory.  We have another LangGraph-based agen
 cd $HOME/fantaco-redhat-one-2026/langfuse-setup
 ----
 
-== Langfuse Setup 
+== Langfuseのセットアップ (Langfuse Setup)
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -182,7 +179,7 @@ postgresql-finance-689d97894f-jlmm8             1/1     Running   0             
 simple-agent-chat-ui-6d7794dc6b-4cndl           1/1     Running   0             55m
 ----
 
-You can view logs of the worker or web pods.  There can be a few restarts while Kubernetes eventual consistency works its magic. 
+workerポッドまたはwebポッドのログを表示できます。Kubernetesの結果整合性が機能するまでの間、数回再起動が発生することがあります。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -197,63 +194,60 @@ echo $LANGFUSE_URL
 echo "Open in a new browser tab"
 ----
 
-Use the GUI of Langfuse to then create the following:
+LangfuseのGUIを使用して、以下を作成します。
 
-* Account
-* Organization
-* Project
-* API Keys
+* アカウント (Account)
+* 組織 (Organization)
+* プロジェクト (Project)
+* APIキー (API Keys)
 
-Click *Sign up*
-
+**サインアップ (Sign up)** をクリックします。
 
 image::langfuse-login-1.png[]
 
-Provide name, email address and password and click *Sign up*
+名前、メールアドレス、パスワードを入力し、**サインアップ (Sign up)** をクリックします。
 
 image::langfuse-sign-up-1.png[]
 
-Click *New Organization*
+**新規組織 (New Organization)** をクリックします。
 
 image::langfuse-sign-up-2.png[]
 
-Provide an organization name of *my-agent-org* and click *Create*
+組織名に **my-agent-org** と入力し、**作成 (Create)** をクリックします。
 
 image::langfuse-sign-up-3.png[]
 
-Click *Next*
+**次へ (Next)** をクリックします。
 
 image::langfuse-sign-up-4.png[]
 
-Provide a project name of *my-agent-project* and click *Create*
+プロジェクト名に **my-agent-project** と入力し、**作成 (Create)** をクリックします。
 
 image::langfuse-sign-up-5.png[]
 
-Click on *Settings*
+**設定 (Settings)** をクリックします。
 
 image::langfuse-sign-up-6.png[]
 
-Click on *API Keys* 
+**APIキー (API Keys)** をクリックします。
 
 image::langfuse-sign-up-7.png[]
 
-Click on *+ Create new API Keys*
+**+ 新規APIキーを作成 (+ Create new API Keys)** をクリックします。
 
 image::langfuse-sign-up-8.png[]
 
-Provide a key name of *my-key* and click *Create API keys*
+キー名に **my-key** と入力し、**APIキーを作成 (Create API keys)** をクリックします。
 
 image::langfuse-sign-up-9.png[]
 
-You will need the *.env* variables.  
+**.env** 変数が必要になります。
 
 image::langfuse-sign-up-10.png[]
 
+ターミナルに戻ります。
 
-Go back to the terminal 
-
-
-Place the values in `keys.txt`.  This is helpful if the env vars become lost due to browser refresh, timeout, cluster stop/sleep, etc.
+値を `keys.txt` に記述します。これは、ブラウザの更新、タイムアウト、クラスターの停止/スリープなどによって環境変数が失われた場合に役立ちます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -267,7 +261,6 @@ vi keys.txt
 source $HOME/fantaco-redhat-one-2026/langfuse-setup/convert-keys-txt-env-vars.sh
 ----
 
-
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
 ----
@@ -275,7 +268,6 @@ echo $LANGFUSE_SECRET_KEY
 echo $LANGFUSE_PUBLIC_KEY
 echo $LANGFUSE_HOST
 ----
-
 
 [.console-output]
 [source,bash,subs=attributes+]
@@ -285,11 +277,11 @@ pk-lf-827fb4cf-4d9b-41d3-a6fe-0bcd13aa5e6b
 https://langfuse-agentic-user2.apps.cluster-l5k54.dynamic.redhatworkshops.io
 ----
 
-== Test the agent
+== エージェントのテスト
 
-Terminal 1
+ターミナル 1
 
-Make sure you are in the backend directory 
+バックエンドディレクトリにいることを確認してください。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -325,7 +317,7 @@ INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8002 (Press CTRL+C to quit)
 ----
 
-Terminal 2
+ターミナル 2
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -371,9 +363,9 @@ Fran Wilson (LONEP) has 3 orders:
 Would you like details about any specific order or invoice history?
 ----
 
-== Traces
+== トレース (Traces)
 
-Find the traces inside of Langfuse
+Langfuse内でトレースを確認します。
 
 image::langfuse-thomas-hardy.png[]
 
@@ -381,27 +373,28 @@ image::langfuse-fran-wilson.png[]
 
 [NOTE]
 ====
-*What do traces show you?* Each trace captures the complete lifecycle of a request: the user's input, every LLM inference call, every tool invocation (including MCP calls to customer and finance services), the tool responses, and the final generated answer. This is invaluable for debugging why an agent gave a wrong answer — you can see exactly which tool returned unexpected data or where the model's reasoning went wrong.
+*トレースは何を示していますか？* 各トレースは、リクエストの完全なライフサイクルを取得します。ユーザーの入力、すべてのLLM推論呼び出し、すべてのツール実行（顧客および財務サービスへのMCP呼び出しを含む）、ツールのレスポンス、および最終的に生成された回答が含まれます。これは、エージェントがなぜ誤った回答をしたのかをデバッグする際に非常に役立ちます。どのツールが予期しないデータを返したのか、あるいはモデルの推論のどこに誤りがあったのかを正確に把握できます。
 ====
 
-== Evals
+== 評価（Evals）
 
-The backend also provides a call to execute Langfuse Evals.  If you open up `6-langgraph-langfuse-fastapi-chatbot.py` you will find an endpoint defined via `@app.post("/evaluate", response_model=EvaluationResponse)`
+バックエンドは、Langfuse評価を実行するための呼び出しも提供します。`6-langgraph-langfuse-fastapi-chatbot.py` を開くと、`@app.post("/evaluate", response_model=EvaluationResponse)` を介して定義されたエンドポイントが見つかります。
 
-And it in turn interacts with the Langfuse API to excute the evals.
+これは内部でLangfuse APIと対話して評価を実行します。
 
 [source, python]
 ----
+  # 評価実行の開始: {request.run_name or '自動生成'}
   logger.info(f"Starting evaluation run: {request.run_name or 'auto-generated'}")
   result = await run_evaluation(
-      test_cases_path=str(test_cases_path),
+      test_cases_path=test_cases_path,
       process_chat_fn=process_chat,
       run_name=request.run_name,
       record_to_langfuse=request.record_to_langfuse
   )
 ----
 
-Trigger the eval execution with a simple curl command
+シンプルなcurlコマンドで評価の実行をトリガーします。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -491,17 +484,16 @@ image::langfuse-fran-wilson-delivered-orders-1.png[]
 
 [NOTE]
 ====
-*Keyword-based evals:* These evals use a simple but effective approach — they check if specific expected keywords appear in the agent's response. For example, the "Thomas Hardy" test expects "Around the Horn" and "Sales Representative". A score of 1.0 means all keywords matched. This is lighter-weight than LLM-as-judge (which you saw in the Llama Stack Evals module) but well-suited for verifying that agents return correct factual data from their tools.
+*キーワードベースの評価（Keyword-based evals）:* これらの評価はシンプルですが効果的なアプローチを採用しています。エージェントの回答に特定の期待されるキーワードが含まれているかどうかをチェックします。例えば、「Thomas Hardy」のテストでは「Around the Horn」と「Sales Representative」を期待します。スコア1.0は、すべてのキーワードが一致したことを意味します。これは、LLM-as-judge（Llama Stack Evalsモジュールで確認したもの）よりも軽量ですが、エージェントがツールから正しい事実データを返していることを検証するのに適しています。
 ====
 
-== Feedback
+== フィードバック (Feedback)
 
-The feeback system is a thumbs-up/down feature tied to the GUI that adds the information as a score into Langfuse.
+フィードバックシステムはGUIに紐づいた親指アップ/ダウン（Thumbs-up/down）機能で、その情報をスコアとしてLangfuseに追加します。
 
-You will need access to the chatbot UI in order to interact with the feedback system.
+フィードバックシステムを使用するには、チャットボットUIにアクセスする必要があります。
 
-
-If you are using the showroom terminal, you can run the following script to see the pre-created Route.
+Showroomターミナルを使用している場合は、以下のスクリプトを実行して、事前に作成されたルート（Route）を確認できます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -515,9 +507,9 @@ $HOME/fantaco-redhat-one-2026/langfuse-setup/get-agent-route-as-student.sh
 CHAT_TRACE_URL=https://chatbot-8002-showroom-qk9xm-1-user1.apps.ocp.qk9xm.sandbox2661.opentlc.com/
 ----
 
-**OR**
+**または**
 
-**ONLY** If you are using the Workbench Code Server IDE terminal, you can add a Service and Route via the following command:
+Workbench Code Server IDEターミナルを使用している場合**のみ**、以下のコマンドでサービスとルートを追加できます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -532,15 +524,13 @@ echo "CHAT_TRACE_URL=https://$(oc get route chatbot-8002 -o jsonpath='{.spec.hos
 CHAT_TRACE_URL=https://chatbot-8002-agentic-user1.apps.ocp.82j4f.sandbox628.opentlc.com
 ----
 
-The chatbot will let you ask questions and use a Thumb Up/Down and comment to provide feedback. 
+チャットボットでは、質問をしたり、親指アップ/ダウンやコメントを使用してフィードバックを提供したりできます。
 
 image::langfuse_feedback_1.png[]
 
 image::langfuse_feedback_2.png[]
 
-
-You can get a listing of all the traces.
-
+すべてのトレースの一覧を取得できます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -566,8 +556,7 @@ dd4e1cb37e83e51e3d25bd05cc237f16   who is the primary contact for Lonesome Pine 
 5ee044f92e94fd50c133f5ac7dc82d96   who does Thomas Hardy work for?
 ----
 
-Use the trace id to get the specific score and comment.  If you do not provide a trace id it just defaults the last trace.
-
+トレースIDを使用して、特定のスコアとコメントを取得します。トレースIDを指定しない場合は、デフォルトで最後のトレースが取得されます。
 
 [.console-input]
 [source,bash,role="copypaste",subs=attributes+]
@@ -595,16 +584,15 @@ Feedback:
   Time: 2026-01-08T17:57:35.580Z
 ----
 
-You can provide the **get-trace-feedback.sh** with a specific trace id.
+**get-trace-feedback.sh** に特定のトレースIDを指定して実行することも可能です。
 
-== Summary
+== まとめ (Summary)
 
-In this module you:
+このモジュールでは以下を行いました。
 
-* Deployed *Langfuse* as an observability platform for your AI agents
-* Captured *traces* that show the complete reasoning chain for each agent interaction — from user input through tool calls to final response
-* Ran *keyword-based evals* against your agent to verify it returns correct customer and order data
-* Used the *feedback system* (thumbs up/down with comments) to capture end-user satisfaction tied to specific traces
+* AIエージェントのオブザーバビリティプラットフォームとして *Langfuse* をデプロイしました。
+* ユーザー入力からツールの呼び出し、最終的なレスポンスに至るまで、各エージェントのやり取りの完全な推論チェーンを示す **トレース（traces）** を取得しました。
+* エージェントに対して **キーワードベースの評価（evals）** を実行し、正しい顧客データと注文データが返されていることを検証しました。
+* 特定のトレースに紐づいたエンドユーザーの満足度を取得するために、**フィードバックシステム**（コメント付きの親指アップ/ダウン）を使用しました。
 
-These three capabilities — traces, evals, and feedback — form a continuous improvement loop: traces help you debug, evals help you prevent regressions, and feedback helps you discover what to improve next.
-
+これら3つの機能（トレース、評価、フィードバック）は継続的な改善ループを形成します。トレースはデバッグに役立ち、評価はデグレードの防止に役立ち、フィードバックは次に何を改善すべきかの発見に役立ちます。
