@@ -253,10 +253,16 @@ Query: What do I receive when I retire?
 --------------------------------------------------------------------------------
 🤔 
 
-🔧 file_search を実行中 (サーバー側)... (Executing file_search (server-side)...)
+
+
+🔧 Executing file_search (server-side)...
 🤔 
 
-ドキュメント <|file-c66eed6f65464296bf46a05437f4362a|> に記載されている「Midas Touch & Beyond」退職プランによると、退職時には、ベルギー産チョコレート（または職人によるヴィーガン・キャロブ）で作られた等身大の自分自身の像、選択したアイテムの生涯供給、および不都合な瞬間にあなたを称える歌を歌う専属の吟遊詩人を受け取ります。
+When you retire, you receive a life-sized statue of yourself crafted from
+Belgian chocolate (or artisanal vegan carob), a lifetime supply of the
+chosen item, and a personal bard to sing your praises at inconvenient
+moments, according to the "Midas Touch & Beyond" Retirement Plan described
+in the document <|file-c66eed6f65464296bf46a05437f4362a|>.
 ----
 
 [NOTE]
