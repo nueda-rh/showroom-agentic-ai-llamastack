@@ -782,43 +782,43 @@ python 5_langgraph_client_customer.py
 ----
 Base URL: http://localhost:8321
 Model:    vllm/qwen3-14b
-LLM 接続をテスト中... (Testing LLM connectivity...)
-LLM 接続 OK (LLM connectivity OK)
+Testing LLM connectivity...
+LLM connectivity OK
 
 ==================================================
-顧客を検索中: thomashardy@example.com (Searching for customer: thomashardy@example.com)
+Searching for customer: thomashardy@example.com
 ==================================================
 
 ==================================================
-顧客の検索結果 (CUSTOMER SEARCH RESULTS)
+CUSTOMER SEARCH RESULTS
 ==================================================
 
-顧客 ID (Customer ID):   AROUT
-会社名 (Company Name):  Around the Horn
-担当者名 (Contact Name):  Thomas Hardy
-担当者メール (Contact Email): thomashardy@example.com
+Customer ID:   AROUT
+Company Name:  Around the Horn
+Contact Name:  Thomas Hardy
+Contact Email: thomashardy@example.com
 ==================================================
 
 
 Assistant:
 
-メールアドレス **thomashardy@example.com** に一致する顧客情報は以下の通りです。
+Here is the customer information matching the email **thomashardy@example.com**:
 
-**顧客 ID (Customer ID):** AROUT
-**会社名 (Company):** Around the Horn
-**担当者名 (Contact Name):** Thomas Hardy
-**役職 (Title):** Sales Representative
-**住所 (Address):** 120 Hanover Sq.
-**市区町村 (City):** London
-**郵便番号 (Postal Code):** WA1 1DP
-**国 (Country):** UK
-**電話番号 (Phone):** (171) 555-7788
-**ファックス (Fax):** (171) 555-6750
-**メール (Email):** thomashardy@example.com
-**作成日 (Created At):** 2026-01-02 18:21:35
-**更新日 (Updated At):** 2026-01-02 18:21:35
+**Customer ID:** AROUT
+**Company:** Around the Horn
+**Contact Name:** Thomas Hardy
+**Title:** Sales Representative
+**Address:** 120 Hanover Sq.
+**City:** London
+**Postal Code:** WA1 1DP
+**Country:** UK
+**Phone:** (171) 555-7788
+**Fax:** (171) 555-6750
+**Email:** thomashardy@example.com
+**Created At:** 2026-01-02 18:21:35
+**Updated At:** 2026-01-02 18:21:35
 
-詳細の確認や、この顧客に対するアクションの実行が必要な場合はお知らせください！
+Let me know if you'd like to view more details or perform any actions for this customer!
 ----
 
 === LangGraph クライアント: Finance (LangGraph Client: Finance)
@@ -834,64 +834,64 @@ python 5_langgraph_client_finance.py
 ----
 Base URL: http://localhost:8321
 Model:    vllm/qwen3-14b
-LLM 接続をテスト中... (Testing LLM connectivity...)
-LLM 接続 OK (LLM connectivity OK)
+Testing LLM connectivity...
+LLM connectivity OK
 
 ==================================================
-顧客 AROUT の注文履歴を取得中 (Fetching order history for customer: AROUT)
+Fetching order history for customer: AROUT
 ==================================================
 
 ==================================================
-注文履歴の結果 (ORDER HISTORY RESULTS)
+ORDER HISTORY RESULTS
 ==================================================
 
-注文 #1 (Order #1):
-  注文 ID (Order ID):     8
-  注文番号 (Order Number): ORD-008
-  注文日 (Order Date):   2024-01-30T15:20:00
-  ステータス (Status):       PENDING
-  合計金額 (Total Amount): $59.99
+Order #1:
+  Order ID:     8
+  Order Number: ORD-008
+  Order Date:   2024-01-30T15:20:00
+  Status:       PENDING
+  Total Amount: $59.99
 
-注文 #2 (Order #2):
-  注文 ID (Order ID):     3
-  注文番号 (Order Number): ORD-003
-  注文日 (Order Date):   2024-01-25T09:45:00
-  ステータス (Status):       PENDING
-  合計金額 (Total Amount): $89.99
+Order #2:
+  Order ID:     3
+  Order Number: ORD-003
+  Order Date:   2024-01-25T09:45:00
+  Status:       PENDING
+  Total Amount: $89.99
 
-注文 #3 (Order #3):
-  注文 ID (Order ID):     4
-  注文番号 (Order Number): ORD-004
-  注文日 (Order Date):   2024-01-10T16:20:00
-  ステータス (Status):       DELIVERED
-  合計金額 (Total Amount): $199.99
+Order #3:
+  Order ID:     4
+  Order Number: ORD-004
+  Order Date:   2024-01-10T16:20:00
+  Status:       DELIVERED
+  Total Amount: $199.99
 
 ==================================================
-合計注文数 (Total Orders): 3
+Total Orders: 3
 ==================================================
 
 
 Assistant:
 
-顧客 AROUT の注文履歴は以下の通りです。
+Here is the order history for customer AROUT:
 
-**注文履歴（計 3 件）:**
+**Order History (3 orders total):**
 1. **ORD-008**
-   - 合計: $59.99
-   - ステータス: PENDING
-   - 日時: 2024年1月30日 15:20
+   - Total: $59.99
+   - Status: PENDING
+   - Date: January 30, 2024, 3:20 PM
 
 2. **ORD-003**
-   - 合計: $89.99
-   - ステータス: PENDING
-   - 日時: 2024年1月25日 09:45
+   - Total: $89.99
+   - Status: PENDING
+   - Date: January 25, 2024, 9:45 AM
 
 3. **ORD-004**
-   - 合計: $199.99
-   - ステータス: DELIVERED
-   - 日時: 2024年1月10日 16:20
+   - Total: $199.99
+   - Status: DELIVERED
+   - Date: January 10, 2024, 4:20 PM
 
-特定の注文の調査が必要な場合や、さらなるサポートが必要な場合はお知らせください！
+Let me know if you'd like to investigate any specific order or need further assistance!
 ----
 
 === LangGraph クライアント: Customer + Finance (LangGraph Client: Customer + Finance)
@@ -915,73 +915,73 @@ python 6_langgraph_client_list_orders_for_franwilson.py
 ----
 Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
-LLM 接続をテスト中... (Testing LLM connectivity...)
-LLM 接続 OK (LLM connectivity OK)
+Testing LLM connectivity...
+LLM connectivity OK
 
 ==================================================
-franwilson@example.com の注文を検索中 (Finding orders for: franwilson@example.com)
-==================================================
-
-==================================================
-顧客情報 (CUSTOMER INFORMATION)
-==================================================
-
-顧客 ID (Customer ID):   LONEP
-会社名 (Company Name):  Lonesome Pine Restaurant
-担当者名 (Contact Name):  Fran Wilson
-担当者メール (Contact Email): franwilson@example.com
+Finding orders for: franwilson@example.com
 ==================================================
 
 ==================================================
-注文履歴 (ORDER HISTORY)
+CUSTOMER INFORMATION
 ==================================================
 
-注文 #1 (Order #1):
-  注文 ID (Order ID):     2
-  注文番号 (Order Number): ORD-002
-  注文日 (Order Date):   2024-01-20T14:15:00
-  ステータス (Status):       SHIPPED
-  合計金額 (Total Amount): $149.5
-
-注文 #2 (Order #2):
-  注文 ID (Order ID):     1
-  注文番号 (Order Number): ORD-001
-  注文日 (Order Date):   2024-01-15T10:30:00
-  ステータス (Status):       DELIVERED
-  合計金額 (Total Amount): $299.99
-
-注文 #3 (Order #3):
-  注文 ID (Order ID):     6
-  注文番号 (Order Number): ORD-006
-  注文日 (Order Date):   2024-01-05T08:30:00
-  ステータス (Status):       DELIVERED
-  合計金額 (Total Amount): $399.99
+Customer ID:   LONEP
+Company Name:  Lonesome Pine Restaurant
+Contact Name:  Fran Wilson
+Contact Email: franwilson@example.com
+==================================================
 
 ==================================================
-合計注文数 (Total Orders): 3
+ORDER HISTORY
+==================================================
+
+Order #1:
+  Order ID:     2
+  Order Number: ORD-002
+  Order Date:   2024-01-20T14:15:00
+  Status:       SHIPPED
+  Total Amount: $149.5
+
+Order #2:
+  Order ID:     1
+  Order Number: ORD-001
+  Order Date:   2024-01-15T10:30:00
+  Status:       DELIVERED
+  Total Amount: $299.99
+
+Order #3:
+  Order ID:     6
+  Order Number: ORD-006
+  Order Date:   2024-01-05T08:30:00
+  Status:       DELIVERED
+  Total Amount: $399.99
+
+==================================================
+Total Orders: 3
 ==================================================
 
 
 Assistant:
 
-Fran Wilson (LONEP) のすべての注文は以下の通りです。
+Here are all the orders for Fran Wilson (LONEP):
 
-1. **注文 #ORD-001**
-   - 日付: 2024年1月15日
-   - ステータス: DELIVERED
-   - 合計: $299.99
+1. **Order #ORD-001**
+   - Date: January 15, 2024
+   - Status: DELIVERED
+   - Total: $299.99
 
-2. **注文 #ORD-006**
-   - 日付: 2024年1月5日
-   - ステータス: DELIVERED
-   - 合計: $399.99
+2. **Order #ORD-006**
+   - Date: January 5, 2024
+   - Status: DELIVERED
+   - Total: $399.99
 
-3. **注文 #ORD-002**
-   - 日付: 2024年1月20日
-   - ステータス: SHIPPED
-   - 合計: $149.50
+3. **Order #ORD-002**
+   - Date: January 20, 2024
+   - Status: SHIPPED
+   - Total: $149.50
 
-特定の注文の詳細が必要な場合はお知らせください！
+Let me know if you need details about a specific order!
 ----
 
 [NOTE]
@@ -1000,61 +1000,61 @@ python 7_langgraph_client_list_orders_any_customer.py liuwong@example.com
 ----
 Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
-LLM 接続をテスト中... (Testing LLM connectivity...)
-LLM 接続 OK (LLM connectivity OK)
+Testing LLM connectivity...
+LLM connectivity OK
 
 ==================================================
-liuwong@example.com の注文を検索中 (Finding orders for: liuwong@example.com)
-==================================================
-
-==================================================
-顧客情報 (CUSTOMER INFORMATION)
-==================================================
-
-顧客 ID (Customer ID):   THECR
-会社名 (Company Name):  The Cracker Box
-担当者名 (Contact Name):  Liu Wong
-担当者メール (Contact Email): liuwong@example.com
+Finding orders for: liuwong@example.com
 ==================================================
 
 ==================================================
-注文履歴 (ORDER HISTORY)
+CUSTOMER INFORMATION
 ==================================================
 
-注文 #1 (Order #1):
-  注文 ID (Order ID):     7
-  注文番号 (Order Number): ORD-007
-  注文日 (Order Date):   2024-01-28T13:45:00
-  ステータス (Status):       SHIPPED
-  合計金額 (Total Amount): $129.99
-
-注文 #2 (Order #2):
-  注文 ID (Order ID):     5
-  注文番号 (Order Number): ORD-005
-  注文日 (Order Date):   2024-01-22T11:10:00
-  ステータス (Status):       CANCELLED
-  合計金額 (Total Amount): $79.99
-
-==================================================
-合計注文数 (Total Orders): 2
+Customer ID:   THECR
+Company Name:  The Cracker Box
+Contact Name:  Liu Wong
+Contact Email: liuwong@example.com
 ==================================================
 
+==================================================
+ORDER HISTORY
+==================================================
 
-Assistant: 
+Order #1:
+  Order ID:     7
+  Order Number: ORD-007
+  Order Date:   2024-01-28T13:45:00
+  Status:       SHIPPED
+  Total Amount: $129.99
 
-liuwong@example.com (顧客 ID THECR) の注文は以下の通りです。
+Order #2:
+  Order ID:     5
+  Order Number: ORD-005
+  Order Date:   2024-01-22T11:10:00
+  Status:       CANCELLED
+  Total Amount: $79.99
 
-1. **注文 #ORD-007**  
-   - 日付: 2024年1月28日  
-   - ステータス: ✅ SHIPPED  
-   - 合計: $129.99  
+==================================================
+Total Orders: 2
+==================================================
 
-2. **注文 #ORD-005**  
-   - 日付: 2024年1月22日  
-   - ステータス: ❌ CANCELLED  
-   - 合計: $79.99  
 
-特定の注文の詳細が必要な場合はお知らせください！
+Assistant:
+
+Here are the orders for liuwong@example.com (customer ID THECR):
+
+1. **Order #ORD-007**
+   - Date: January 28, 2024
+   - Status: ✅ SHIPPED
+   - Total: $129.99
+
+2. **Order #ORD-005**
+   - Date: January 22, 2024
+   - Status: ❌ CANCELLED
+   - Total: $79.99
+
+Let me know if you need details about a specific order!
 ----
 
 [.console-input]
@@ -1068,66 +1068,66 @@ python 8_langgraph_client_list_invoices_any_customer.py liuwong@example.com
 ----
 Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
-LLM 接続をテスト中... (Testing LLM connectivity...)
-LLM 接続 OK (LLM connectivity OK)
+Testing LLM connectivity...
+LLM connectivity OK
 
 ==================================================
-liuwong@example.com の請求書を検索中 (Finding invoices for: liuwong@example.com)
-==================================================
-
-==================================================
-顧客情報 (CUSTOMER INFORMATION)
-==================================================
-
-顧客 ID (Customer ID):   THECR
-会社名 (Company Name):  The Cracker Box
-担当者名 (Contact Name):  Liu Wong
-担当者メール (Contact Email): liuwong@example.com
+Finding invoices for: liuwong@example.com
 ==================================================
 
 ==================================================
-請求履歴 (INVOICE HISTORY)
+CUSTOMER INFORMATION
 ==================================================
 
-請求書 #1 (Invoice #1):
-  請求書 ID (Invoice ID):     7
-  請求書番号 (Invoice Number): INV-007
-  請求日 (Invoice Date):   2024-01-28T13:50:00
-  ステータス (Status):         SENT
-  合計金額 (Total Amount):   $129.99
-
-請求書 #2 (Invoice #2):
-  請求書 ID (Invoice ID):     5
-  請求書番号 (Invoice Number): INV-005
-  請求日 (Invoice Date):   2024-01-22T11:15:00
-  ステータス (Status):         CANCELLED
-  合計金額 (Total Amount):   $79.99
-
-==================================================
-合計請求数 (Total Invoices): 2
+Customer ID:   THECR
+Company Name:  The Cracker Box
+Contact Name:  Liu Wong
+Contact Email: liuwong@example.com
 ==================================================
 
+==================================================
+INVOICE HISTORY
+==================================================
 
-Assistant: 
+Invoice #1:
+  Invoice ID:     7
+  Invoice Number: INV-007
+  Invoice Date:   2024-01-28T13:50:00
+  Status:         SENT
+  Total Amount:   $129.99
 
-Liu Wong (The Cracker Box) の請求書は以下の通りです。
+Invoice #2:
+  Invoice ID:     5
+  Invoice Number: INV-005
+  Invoice Date:   2024-01-22T11:15:00
+  Status:         CANCELLED
+  Total Amount:   $79.99
 
-**THECR (The Cracker Box) の請求履歴:**
-1. **請求書 #INV-007**
-   - ステータス: SENT
-   - 金額: $129.99
-   - 請求日: 2024年1月28日
-   - 支払期日: 2024年2月28日
-   - 支払日の記録なし
+==================================================
+Total Invoices: 2
+==================================================
 
-2. **請求書 #INV-005**
-   - ステータス: CANCELLED
-   - 金額: $79.99
-   - 請求日: 2024年1月22日
-   - 支払期日: 2024年2月22日
-   - 支払日の記録なし
 
-キャンセルされた請求書の詳細を確認しますか、それとも他の情報を検索しますか？
+Assistant:
+
+Here are the invoices for Liu Wong (The Cracker Box):
+
+**Invoice History for THECR (The Cracker Box):**
+1. **Invoice #INV-007**
+   - Status: SENT
+   - Amount: $129.99
+   - Invoice Date: Jan 28, 2024
+   - Due Date: Feb 28, 2024
+   - No payment date recorded
+
+2. **Invoice #INV-005**
+   - Status: CANCELLED
+   - Amount: $79.99
+   - Invoice Date: Jan 22, 2024
+   - Due Date: Feb 22, 2024
+   - No payment date recorded
+
+Would you like me to check details about the cancelled invoice or look up any other information?
 ----
 
 データは、MCP サーバーの背後にある REST API の背後にある Postgres データベースから取得されます。どの顧客に注文や請求書があるかを知りたい場合は、次のファイルを確認してください。
