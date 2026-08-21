@@ -496,7 +496,7 @@ BENCHMARK_ID = "my-llm-as-judge-benchmark"
 ----
 
 以下は Python スクリプトからのスニペットです。
-````python
+```python
 # Llama Stack クライアントを作成
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
@@ -514,7 +514,7 @@ try:
         },
     )
     logger.info(f"Scoring function '{SCORING_FN_ID}' registered successfully")
-````
+```
 
 *9_llm_as_judge.py* を実行します。
 
