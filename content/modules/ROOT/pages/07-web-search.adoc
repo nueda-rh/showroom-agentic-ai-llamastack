@@ -173,9 +173,9 @@ python 2_no_web_search.py
 [.console-output]
 [source,text,subs=attributes+]
 ----
-最後のスーパーボウルである **第58回スーパーボウル (Super Bowl LVIII)** は、**2024年2月11日**にラスベガスのアレジアント・スタジアムで開催されました。**カンザスシティ・チーフス**が **25-22** のスコアで **サンフランシスコ・フォーティナイナーズ**を破りました。
+The last Super Bowl, **Super Bowl LVIII**, was played on **February 11, 2024**, at Allegiant Stadium in Las Vegas. The **Kansas City Chiefs** defeated the **San Francisco 49ers** with a final score of **25-22**.
 
-チーフスの **パトリック・マホームズ** が **スーパーボウル MVP** に選ばれ、強力なパフォーマンスでチームを勝利に導きました。これは、チーフスにとって 3 年間で 2 度目（2020年の勝利に続く）のスーパーボウル制覇となりました。
+**Patrick Mahomes** of the Chiefs was named **Super Bowl MVP**, leading his team to victory with a strong performance. This marked the Chiefs' second Super Bowl win in three years (following their 2020 victory).
 ----
 
 非確定的な LLM を扱っているため、受け取る回答は上記とは異なる場合があります。通常、回答には 2023 年または 2024 年の勝者が含まれます。
