@@ -144,7 +144,7 @@ Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
 
 
-AI エージェントとは、環境を認識し、情報を処理し、特定の目標や目的を達成するためにアクションを実行するソフトウェアまたはシステムです。
+An AI agent is a software or system that perceives its environment, processes information, and takes actions to achieve specific goals or objectives.
 ----
 
 これを実行して、リアルタイムの回答生成を示す、トークンごとのストリーミング出力を確認します。
@@ -160,8 +160,9 @@ python 1_hello_world_agent_streaming.py
 ----
 Base URL: http://llamastack-distribution-vllm-service:8321
 Model:    vllm/qwen3-14b
+🤔
 
-AI エージェントとは、多くの場合、学習と適応を通じて、環境を認識し、情報を処理し、特定の目標を達成するためにアクションを実行する自律型システムです。
+An AI agent is an autonomous system that perceives its environment, processes information, and takes actions to achieve specific goals, often through learning and adaptation.
 ----
 
 [TIP]
